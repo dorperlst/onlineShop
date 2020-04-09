@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Weather</title>
+    <link rel="icon" href="/img/weather.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+
+          <div class="centered-form">
+            <div class="centered-form__box">
+                <h1>Join</h1>
+                <form id= "loginForm" enctype="multipart/form-data" action="/"  method="post">
+                    <label>name</label>
+                    <input type="text" value="yyyy" id ="name" name="name" placeholder="Display name" required>
+                    <label>email</label>
+                     <input type="text" value="tt@tt.com" id ="email" name="email" placeholder="email" required>
+                    <label>password</label>
+                    <input type="text" value = "kkkjkjhkjj" id="password"  name="password" placeholder="password" required>
+                    <input type="submit" value="Submit">  
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <script src="/js/login.js"></script>
+</body>
+
+</html>
