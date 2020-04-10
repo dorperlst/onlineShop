@@ -5,16 +5,35 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router()
+  
+router.use(multer().array())
 
-router.post('/users', async (req, res) => {
-    const user = new User(req.body)
+router.get('/users', async (req, res) => {
+
+    const user = await User.find()
 
     try {
-        await user.save()
-        sendWelcomeEmail(user.email, user.name)
+        if (!user) {
+            throw new Error('Unable to login')
+        }
+        res.send({ user })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+ 
+router.post('/users', async (req, res) => {
+    //console.log(req.body)
+    const user = new User(req.body)
+   
+
+    try {
+         await user.save()
+         //sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
         res.status(201).send({ user, token })
-    } catch (e) {
+     } catch (e) {
+        console.log(e)
         res.status(400).send(e)
     }
 })
