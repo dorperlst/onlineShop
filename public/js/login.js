@@ -1,10 +1,11 @@
-const form = document.getElementById( "loginForm" );
+const form = document.getElementById( "form" );
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData(form);
  
-    fetch('/users/login', { method: 'POST',  headers: {  },body: formdata})
+    fetch('/products',///login
+        { method: 'POST', body: formdata})
     .then(function(res) { return res; })
 
 })
