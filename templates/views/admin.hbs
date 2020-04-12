@@ -19,13 +19,16 @@
 
             <div class="centered-form__box">
                 <h1>Product</h1>
-                <form id= "form" enctype="multipart/form-data" action="/"  method="post">
+                <form id= "form"  action="/"  method="post">
                     <label>Product Name</label>
                     <input type="text" value="" id ="name" name="name" placeholder="Display name" required>
                     <label>Description</label>
+                      Select images: <input type="file" id="productFiles" name="myFiles" multiple>
                     <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
                      <label>Price</label>
                     <input type="text" value = "" id="price"  name="price" placeholder="price" required>
+                    <input type="hidden" value = "" id="id"  name="id">
+
                     <input type="submit" value="Submit">  
                 </form>
             </div>

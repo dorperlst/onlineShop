@@ -3,7 +3,7 @@ require('./db/mongoose')
 const multer = require('multer')
 const userRouter = require('./routers/user')
 const productRouter = require('./routers/product')
-//const taskRouter = require('./routers/task')
+const taskRouter = require('./routers/task')
 
  
 const path = require('path')
@@ -19,12 +19,12 @@ app.set('view engine', 'hbs')
 app.use(express.static(publicDirectoryPath))
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
-
+app.use(taskRouter)
 app.use(userRouter)
 app.use(productRouter)
-  
-app.use(multer().array())
 
+
+ 
 
 
 app.get('/login', (req, res) => {
