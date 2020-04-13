@@ -1,37 +1,31 @@
-const express = require('express')
-const multer = require('multer')
-const sharp = require('sharp')
+var express = require('express');
 const Product = require('../models/product')
-const auth = require('../middleware/auth')
-const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router()
+var multer = require('multer'); // v1.0.5
+
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
+  }
+});
  
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads')
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now())
-    }
-  })
-   
-  
 const upload = multer({
-    storage: storage ,
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
+  storage: storage ,
+  limits: {
+      fileSize: 10000000
+  },
+  fileFilter(req, file, cb) {
+      if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+          return cb(new Error('Please upload an image'))
+      }
 
-        cb(undefined, true)
-    }
-})
-  
+      cb(undefined, true)
+  }
+}).array('myFiles', 12)
 
-var upload2 = upload.array('myFiles', 12);
 
 router.get('/products/:id', async (req, res) => {
     const product = await Product.findById(req.params.id)
@@ -51,34 +45,84 @@ router.get('/products', async (req, res) => {
     }
 })
 
-router.post('/api/upload',function(req,res){
-    upload2(req,res,function(err) {
+router.post('/api/upload',  function(req,res){
+    var tmp=[]
+    upload(req,res,function(err) {
         if(err) {
             return res.end("Error uploading file.");
         }
-
-        req.files.forEach(element => console.log(element.fieldname));
+        req.files.forEach(function(file) {
+            tmp.push(file.filename);
+        });
 
         res.end("File is uploaded"); 
-
-
-
+ 
         const product = new Product(req.body)
+        product.images = tmp
         saveProduct(product, res)
     });
 });
 
 async function saveProduct(product, res){
 
-    console.log('-----------------------'+product);
-         try {
-            await product.save()
-            res.status(201).send({ product })
-        } catch (e) {
-            console.log(e)
-            res.status(400).send(e)
-        }
+    try {
+        await product.save()
+        // res.status(201).send({ product })
+    } catch (e) {
+        console.log(e)
+        res.status(400).send(e)
+    }
 }
+
+module.exports = router
+
+
+
+
+// const express = require('express')
+// const multer = require('multer')
+// const Product = require('../models/product')
+// const auth = require('../middleware/auth')
+// const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
+// const router = new express.Router()
+ 
+ 
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.fieldname + '-' + Date.now())
+//     }
+//   })
+   
+  
+// const upload = multer({
+//     storage: storage ,
+//     limits: {
+//         fileSize: 1000000
+//     },
+//     fileFilter(req, file, cb) {
+//         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+//             return cb(new Error('Please upload an image'))
+//         }
+
+//         cb(undefined, true)
+//     }
+// })
+// router.post('/api/upload',function(req,res){
+//     console.log('req.-------------------------------------');
+//     upload(req,res,function(err) {
+//         if(err) {
+//             return res.end("Error uploading file.");
+//         }
+//         res.end("File is uploaded"); 
+//         console.log(req.body);
+//     });
+// });
+//router.use(upload.array())
+
+//router.use(restify.plugins.bodyParser());
 
 
 // router.post('/products', async (req, res) => {

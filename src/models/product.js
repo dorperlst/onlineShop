@@ -15,7 +15,11 @@ const productSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true
-    }
+    },
+    images: [{
+        type: String
+    }]
+    
     // owner: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     required: true,
