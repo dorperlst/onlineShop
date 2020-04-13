@@ -16,15 +16,15 @@ var upload = multer({ storage : storage}).array('myFiles', 12);
 // router.use(bodyParser.json());
 // router.use(bodyParser.urlencoded({extended: true}));
 
-router.post('/api/upload',function(req,res){
-    console.log('req.body9999999999999999999');
-    multer({ storage : storage}).array('myFiles', 12)(req,res,function(err) {
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        res.end("File is uploaded"); 
-        console.log(req.body);
-    });
-});
+// router.post('/api/upload',function(req,res){
+//     console.log('req.body9999999999999999999');
+//     multer({ storage : storage}).array('myFiles', 12)(req,res,function(err) {
+//         if(err) {
+//             return res.end("Error uploading file.");
+//         }
+//         res.end("File is uploaded"); 
+//         console.log(req.body);
+//     });
+// });
 
 module.exports = router
