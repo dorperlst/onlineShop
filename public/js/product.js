@@ -1,5 +1,11 @@
 const form = document.getElementById("form");
 var productDiv = document.getElementById("productsDiv");    
+var productFiles = document.getElementById("productFiles");    
+
+
+
+
+
 getProducts()
 
 function getProducts(){
@@ -34,9 +40,9 @@ function editProduct(id){
 
         for(var data in jsonData.product){
             {
-                form.elements['name'].value=jsonData.product.name
-                form.elements['price'].value=jsonData.product.price
-                form.elements['description'].value=jsonData.product.description
+                form.elements['name'].value = jsonData.product.name
+                form.elements['price'].value = jsonData.product.price
+                form.elements['description'].value = jsonData.product.description
                 form.elements['id'].value = jsonData.product._id
 
             }
@@ -47,9 +53,24 @@ function editProduct(id){
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
-    var formdata = new FormData(form);
-     fetch('/api/upload',
-        { method: 'post', body: formdata})
+    var formdata = new FormData();
+    formdata.append('name',form.elements['name'].value)
+    formdata.append('price',form.elements['price'].value)
+
+    formdata.append('description',form.elements['description'].value)
+    formdata.append('id',form.elements['id'].value)
+
+    for (i=0 ;i<productFiles.files.length;i++)
+        formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
+
+    
+     
+    // formdata.append('myFiles', productFiles.files[0], productFiles.files[0].name);
+    // formdata.append('myFiles', productFiles.files[1], productFiles.files[1].name);
+
+
+     fetch('/products',
+        { method: 'PATCH', body: formdata})
     .then(function(res) {   
         getProducts()
         return res; })

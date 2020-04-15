@@ -2,16 +2,20 @@ var express = require('express');
 const Product = require('../models/product')
 const router = new express.Router()
 var multer = require('multer'); // v1.0.5
+  
+// parse application/json
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, './uploads');
+    callback(null, 'public/uploads');
   },
   filename: function (req, file, callback) {
     callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
   }
 });
- 
+var upload2 = multer({ dest: 'uploads/' })
+
+
 const upload = multer({
   storage: storage ,
   limits: {
@@ -26,7 +30,7 @@ const upload = multer({
   }
 }).array('myFiles', 12)
 
-
+ 
 router.get('/products/:id', async (req, res) => {
     const product = await Product.findById(req.params.id)
     try {
@@ -45,34 +49,110 @@ router.get('/products', async (req, res) => {
     }
 })
 
-router.post('/api/upload',  function(req,res){
-    var tmp=[]
+router.post('/products', function(req,res){
+    var images=[]
     upload(req,res,function(err) {
         if(err) {
             return res.end("Error uploading file.");
         }
         req.files.forEach(function(file) {
-            tmp.push(file.filename);
+            images.push(file.filename);
         });
 
         res.end("File is uploaded"); 
  
         const product = new Product(req.body)
-        product.images = tmp
+        product.images = images
         saveProduct(product, res)
     });
 });
 
-async function saveProduct(product, res){
+async function saveProduct(product){
 
     try {
         await product.save()
         // res.status(201).send({ product })
     } catch (e) {
         console.log(e)
-        res.status(400).send(e)
+        //res.status(400).send(e)
     }
 }
+
+
+
+router.patch('/products', upload2.array('myFiles', 12), function (req, res, next) {
+ 
+    images= req.files.map(x => x.filename)
+    try
+    {
+        res.send(editProduct(req.body, images))
+    }
+    catch (e) {
+         res.status(400).send(e)
+     }
+  })
+  
+
+// router.patch('/products', async function(req,res){
+   
+//     var images=[]
+//     upload(req,res,function(err) {
+//         if(err) {
+//             return res.end("Error uploading file.");
+//         }
+//         images= req.files.map(x => x.filename)
+//         res.end("File is uploaded"); 
+//         console.log('-----444--'+req.body)
+//        // editProduct(req.body, images)
+//     });
+    
+// });
+
+async function editProduct(body, images){
+    const product = await Product.findById(body.id)
+    if(images.length > 0)
+        product.images = product.images.concat( images)
+
+    const allowedUpdates = ['name', 'description', 'price']
+    allowedUpdates.forEach((update) => product[update] = body[update])
+    await product.save()
+    return product
+}
+
+// router.patch('/products', async (req, res) => {
+//     var images=[]
+//     upload(req,res,function(err) {
+//         if(err) {
+//             return res.end("Error uploading file.");
+//         }
+//         req.files.forEach(function(file) {
+//             images.push(file.filename);
+//         });
+//         console.log( req.files.map(x => x[filename]))
+//         res.end("File is uploaded"); 
+    
+//         console.log(req.body.id)
+//     // editProduct(req.body)
+// })
+
+// async function editProduct(body){
+//     const product = await Product.findById(body.id)
+ 
+//     product.images = product.images.concat( images)
+//     const allowedUpdates = ['name', 'description', 'price']
+ 
+//     try {
+//         allowedUpdates.forEach((update) => product[update] = body[update])
+//         await product.save()
+//         console.log('------------eeeeeeeeeee-----------------------')
+
+//       //  res.send(product)
+//     } catch (e) {
+//        // res.status(400).send(e)
+//     }
+// }
+
+
 
 module.exports = router
 
@@ -136,32 +216,7 @@ module.exports = router
 //     }
 // })
  
-// router.patch('/products', async (req, res) => {
-//     console.log(req.body.id)
-//     const product = await Product.findById(req.body.id)
 
-//     const updates = Object.keys(req.body)
-//     const allowedUpdates = ['name', 'description', 'price']
-//     //const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-
-//     // if (!isValidOperation) {
-
-//     //     console.log('asa9999999999999ssa'+isValidOperation)
-
-//     //     return res.status(400).send({ error: 'Invalid updates!' })
-//     // }
-//     console.log(updates+ '---------------dddddddddddddddddddddd--------------------')
-
-//     try {
-//         allowedUpdates.forEach((update) => product[update] = req.body[update])
-//         await product.save()
-//         console.log('------------eeeeeeeeeee-----------------------')
-
-//         res.send(product)
-//     } catch (e) {
-//         res.status(400).send(e)
-//     }
-// })
 
 // router.post('/api/upload',function(req,res){
 //     console.log('req.body9999999999999999999');
@@ -278,4 +333,4 @@ module.exports = router
 //     }
 // })
 
-module.exports = router
+// module.exports = router
