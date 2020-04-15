@@ -13,9 +13,7 @@ var storage =   multer.diskStorage({
     callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
   }
 });
-//var upload2 = multer({ dest: 'uploads/' })
-
-
+ 
 const upload = multer({
   storage: storage ,
   limits: {
@@ -25,12 +23,9 @@ const upload = multer({
       if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
           return cb(new Error('Please upload an image'))
       }
-
       cb(undefined, true)
   }
 })
-//.array('myFiles', 12)
-
  
 router.get('/products/:id', async (req, res) => {
     const product = await Product.findById(req.params.id)
@@ -49,22 +44,23 @@ router.get('/products', async (req, res) => {
         res.status(400).send(e)
     }
 })
-
-// router.post('/products', function(req,res){
-//     var images=[]
-//     upload(req,res,function(err) {
-//         if(err) {
-//             return res.end("Error uploading file.");
-//         }
-//         req.files.forEach(function(file) {
-//             images.push(file.filename);
-//         });
-
-//         res.end("File is uploaded"); 
  
-       
-//     });
-// });
+router.delete('/products/:id', async (req, res) => {
+     
+    try {
+        console.log('-----'+req.params.id)
+        const product = await Product.findById(req.params.id)
+        await product.remove()
+      //  console.log('-----'+product)
+        res.send(product)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send()
+    }
+})
+
+
+
 router.post('/products', upload.array('myFiles', 12),async  function (req, res, next) {
     const product = new Product(req.body)
     product.images = req.files.map(x => x.filename)
@@ -77,8 +73,6 @@ router.post('/products', upload.array('myFiles', 12),async  function (req, res, 
          res.status(400).send(e)
     }
 })
-
- 
 
 router.patch('/products', upload.array('myFiles', 12), async function (req, res, next) {
     images= req.files.map(x => x.filename)
@@ -99,7 +93,7 @@ router.patch('/products', upload.array('myFiles', 12), async function (req, res,
     }
 })
   
- 
+
  
 
 

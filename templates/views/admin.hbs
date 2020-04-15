@@ -19,16 +19,18 @@
 
             <div class="centered-form__box">
                 <h1>Product</h1>
+                <a onclick = addProduct() >Add Product</a>
                 <form id= "form"  action="/"  method="post">
                     <label>Product Name</label>
                     <input type="text" value="" id ="name" name="name" placeholder="Display name" required>
-                    
+                    <label>Description</label>
                     <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
-                     <label>Price</label>
+                    <label>Price</label>
                     <input type="text" value = "" id="price"  name="price" placeholder="price" required>
                     <input type="hidden" value = "" id="id"  name="id">
-<label>Description</label>
-                      Select images: <input type="file" id="productFiles" name="myFiles" multiple>
+
+                    Select images: <input type="file" id="productFiles" name="myFiles" multiple>
+
                     <input type="submit" value="Submit">  
                 </form>
             </div>
