@@ -63,14 +63,8 @@ form.addEventListener('submit', (e) => {
     for (i=0 ;i<productFiles.files.length;i++)
         formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
 
-    
-     
-    // formdata.append('myFiles', productFiles.files[0], productFiles.files[0].name);
-    // formdata.append('myFiles', productFiles.files[1], productFiles.files[1].name);
-
-
-     fetch('/products',
-        { method: 'PATCH', body: formdata})
+        fetch('/products',
+        { method: 'post', body: formdata})
     .then(function(res) {   
         getProducts()
         return res; })
