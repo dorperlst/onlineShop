@@ -20,11 +20,11 @@ app.use(express.static(publicDirectoryPath))
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
 
-app.use(orderRouter)
+
 
 app.use(userRouter)
 app.use(productRouter)
-
+app.use(orderRouter)
 app.get('/login', (req, res) => {
     res.render('login', {
         title: 'login',

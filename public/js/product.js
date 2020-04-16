@@ -33,7 +33,7 @@ function addToOrder(id){
    
    
     var formdata = new FormData();
-    formdata.append("products",id)
+    formdata.append("product",id)
     fetch('/orders/',
         { method: 'post', body :formdata})
     .then(function(res) {   

@@ -1,19 +1,16 @@
-const form = document.getElementById( "form" );
+const form = document.getElementById("form");
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData(form);
  
-    fetch('users/login',
+    fetch('users',///login
         { method: 'POST', body: formdata})
     .then(function(res) {
-        if (res.redirected) {
+        if (res.redirected)  
             window.location.href = res.url;
-       }
-                 // return res.redirect('/shop');
 
-        
-        
-         })
+            document.getElementById("err").textContent="Unable to login"
+    })
 
 })

@@ -7,6 +7,29 @@ const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router()
 
 
+var storage =   multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, 'public/users');
+    },
+    filename: function (req, file, callback) {
+      callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
+    }
+  });
+   
+  const upload = multer({
+    storage: storage ,
+    limits: {
+        fileSize: 10000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image'))
+        }
+        cb(undefined, true)
+    }
+  })
+
+
 router.get('/users', async (req, res) => {
 
     const user = await User.find()
@@ -20,17 +43,20 @@ router.get('/users', async (req, res) => {
         res.status(400).send(e)
     }
 })
+router.post('/users', upload.single('avatar'), async function (req, res, next) {
  
-router.post('/users', multer().none(), async (req, res) => {
-    // console.log(req.body)
     const user = new User(req.body)
-   
+    if(req.file!= undefined)
+        user.image = req.file.filename
 
     try {
          await user.save()
          //sendWelcomeEmail(user.email, user.name)
          
         const token = await user.generateAuthToken()
+        sess = req.session;
+        sess.token=token
+        res.redirect('/shop');
        // res.status(201).send({ user, token })
      } catch (e) {
         console.log(e)
@@ -44,17 +70,13 @@ router.post('/users/login', multer().none(), async (req, res) => {
         const user = await User.findByCredentials(req.body.email, req.body.password)
 
         const token = await user.generateAuthToken()   
-             console.log(token)
         sess = req.session;
         sess.token=token
-        //window.location.href = res.url
         res.redirect('/shop');
-        res.send({ token })
-
 
     } catch (e) {
  
-        res.status(400).send()
+        res.status(400).send('Unable to login')
     }
 })
 
@@ -114,18 +136,7 @@ router.delete('/users/me', auth, async (req, res) => {
     }
 })
 
-const upload = multer({
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-
-        cb(undefined, true)
-    }
-})
+ 
 
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
     const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
