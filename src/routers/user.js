@@ -31,17 +31,9 @@ var storage =   multer.diskStorage({
 
 
 router.get('/users', async (req, res) => {
-
     const user = await User.find()
-
-    try {
-        if (!user) {
-            throw new Error('Unable to login')
-        }
-        res.send({ user })
-    } catch (e) {
-        res.status(400).send(e)
-    }
+    res.send({ user })
+    
 })
 router.post('/users', upload.single('avatar'), async function (req, res, next) {
  
@@ -50,44 +42,44 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
         user.image = req.file.filename
 
     try {
-         await user.save()
-         //sendWelcomeEmail(user.email, user.name)
-         
-        const token = await user.generateAuthToken()
-        sess = req.session;
-        sess.token=token
+        await user.save()
+        //sendWelcomeEmail(user.email, user.name)
         res.redirect('/shop');
-       // res.status(201).send({ user, token })
-     } catch (e) {
+      } catch (e) {
         console.log(e)
         res.status(400).send(e)
     }
+    redirectSession(req, res, user)
+
 })
  
 router.post('/users/login', multer().none(), async (req, res) => {
- 
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
-
-        const token = await user.generateAuthToken()   
-        sess = req.session;
-        sess.token=token
-        res.redirect('/shop');
-
+        redirectSession(req, res, user)
     } catch (e) {
- 
         res.status(400).send('Unable to login')
     }
 })
 
+async function redirectSession(req, res, user){
+    const token = await user.generateAuthToken()   
+    sess = req.session;
+    sess.token=token
+    var hour = 3600000
+    req.session.cookie.expires = new Date(Date.now() + hour)
+    req.session.cookie.maxAge = hour
+    res.redirect('/shop');
+}
+
 router.post('/users/logout', auth, async (req, res) => {
-    console.log("here")
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token
         })
         await req.user.save()
-
+        res.redirect('/shop');
+        res
         res.send()
     } catch (e) {
         res.status(500).send()
