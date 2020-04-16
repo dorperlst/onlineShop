@@ -1,10 +1,9 @@
 var express = require('express');
 const Product = require('../models/product')
 const router = new express.Router()
-var multer = require('multer'); // v1.0.5
+var multer = require('multer'); 
   
-// parse application/json
-
+ 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, 'public/uploads');

@@ -1,16 +1,13 @@
-const form = document.getElementById("form");
-var productDiv = document.getElementById("productsDiv");    
-var productFiles = document.getElementById("productFiles");    
-
-
+ var productDiv = document.getElementById("productsDiv");    
+ 
+var token = ""
 
 
 
 getProducts()
 
 function getProducts(){
-    form.reset();
-    fetch('/products')
+     fetch('/products')
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -24,72 +21,28 @@ function getProducts(){
                 productDiv.innerHTML += '<div> <label>Product Name : '+jsonData.product[data].name+'</label> </br>'
                 productDiv.innerHTML += ' <label>Description   : '+jsonData.product[data].description+'</label></br>'
                 productDiv.innerHTML += '<label>Price : '+jsonData.product[data].price+'</label></br>'
-                productDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.product[data]._id+'") >Delete</a></br>'
+                productDiv.innerHTML += '<a onclick = addToOrder("'+jsonData.product[data]._id+'") >Add</a></br>'+' </div></br></br>'
 
-                productDiv.innerHTML += '<a onclick = editProduct("'+jsonData.product[data]._id+'") >Edit</a></br>'+' </div></br></br>'
-            }  
+             }  
         });
 }
 
-function addProduct(id){
-    form.reset();
-     
-}
 
-function editProduct(id){
-    form.reset();
-    fetch('/products/'+id+'/')
-    .then((res) => { 
-      if(res.status == 200)
-        return res.json() 
-      return null
-    })
-    .then((jsonData) => {
- 
-        form.elements['name'].value = jsonData.product.name
-        form.elements['price'].value = jsonData.product.price
-        form.elements['description'].value = jsonData.product.description
-        form.elements['id'].value = jsonData.product._id
-          
-        
-         
-    });
-}
 
-function deleteProduct(id){
+function addToOrder(id){
+   
+   
     var formdata = new FormData();
-
-
-
-    fetch('/products/'+id,
-        { method: 'delete',body :{}})
+    formdata.append("products",id)
+    fetch('/orders/',
+        { method: 'post', body :formdata})
     .then(function(res) {   
-        getProducts()
         return res; 
     })
 
  
 }
+ 
 
 
-
-form.addEventListener('submit', (e) => {
-    e.preventDefault()
-    var formdata = new FormData();
-    formdata.append('name',form.elements['name'].value)
-    formdata.append('price',form.elements['price'].value)
-    formdata.append('description',form.elements['description'].value)
-    formdata.append('id',form.elements['id'].value)
-    var method="post"
-    if(form.elements['id'].value!='')
-        method="PATCH"
-    for (i=0 ; i < productFiles.files.length; i++)
-        formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
-
-    fetch('/products',
-        { method: method, body: formdata})
-    .then(function(res) {   
-        getProducts()
-        return res; 
-    })
-})
+ 

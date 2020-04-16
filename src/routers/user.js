@@ -21,34 +21,45 @@ router.get('/users', async (req, res) => {
     }
 })
  
-router.post('/users', async (req, res) => {
-    //console.log(req.body)
+router.post('/users', multer().none(), async (req, res) => {
+    // console.log(req.body)
     const user = new User(req.body)
    
 
     try {
          await user.save()
          //sendWelcomeEmail(user.email, user.name)
+         
         const token = await user.generateAuthToken()
-        res.status(201).send({ user, token })
+       // res.status(201).send({ user, token })
      } catch (e) {
         console.log(e)
         res.status(400).send(e)
     }
 })
-
-router.post('/users/login', async (req, res) => {
+ 
+router.post('/users/login', multer().none(), async (req, res) => {
+ 
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        const token = await user.generateAuthToken()
-        
-        res.send({ user, token })
+
+        const token = await user.generateAuthToken()   
+             console.log(token)
+        sess = req.session;
+        sess.token=token
+        //window.location.href = res.url
+        res.redirect('/shop');
+        res.send({ token })
+
+
     } catch (e) {
+ 
         res.status(400).send()
     }
 })
 
 router.post('/users/logout', auth, async (req, res) => {
+    console.log("here")
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token

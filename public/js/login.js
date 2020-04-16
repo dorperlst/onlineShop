@@ -4,8 +4,16 @@ form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData(form);
  
-    fetch('/products',///login
+    fetch('users/login',
         { method: 'POST', body: formdata})
-    .then(function(res) { return res; })
+    .then(function(res) {
+        if (res.redirected) {
+            window.location.href = res.url;
+       }
+                 // return res.redirect('/shop');
+
+        
+        
+         })
 
 })
