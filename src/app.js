@@ -41,10 +41,13 @@ app.get('/admin', (req, res) => {
 
 app.get('/shop', (req, res) => {
     sess = req.session;
-console.log('---------------------------'+sess.token)
-     res.render('products', {
+    var userName = ''
+    if(sess!=undefined)
+        userName = sess.name
+    res.render('products', {
         title: 'products',
-        name: 'online shop'
+        name: 'online shop',
+        username: userName
     })
 })
 

@@ -44,7 +44,7 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
     try {
         await user.save()
         //sendWelcomeEmail(user.email, user.name)
-        res.redirect('/shop');
+        // res.redirect('/shop');
       } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -65,7 +65,9 @@ router.post('/users/login', multer().none(), async (req, res) => {
 async function redirectSession(req, res, user){
     const token = await user.generateAuthToken()   
     sess = req.session;
-    sess.token=token
+    sess.token = token
+    sess.name = user.name
+
     var hour = 3600000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
@@ -74,23 +76,27 @@ async function redirectSession(req, res, user){
 
 router.post('/users/logout', auth, async (req, res) => {
     try {
-        req.user.tokens = req.user.tokens.filter((token) => {
-            return token.token !== req.token
-        })
-        await req.user.save()
-        res.redirect('/shop');
-        res
-        res.send()
-    } catch (e) {
+            req.user.tokens = req.user.tokens.filter((token) => {
+                return token.token !== req.session.token
+            })
+            req.session.token=''
+            req.session.username = ''
+
+            await req.user.save()
+            res.redirect('/shop');
+     } catch (e) {
         res.status(500).send()
     }
 })
 
 router.post('/users/logoutAll', auth, async (req, res) => {
     try {
+        req.session.token=''
+        req.session.username = ''
+
         req.user.tokens = []
         await req.user.save()
-        res.send()
+        res.redirect('/shop');
     } catch (e) {
         res.status(500).send()
     }
