@@ -43,8 +43,8 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
     try {
         await user.save()
-        //sendWelcomeEmail(user.email, user.name)
-        // res.redirect('/shop');
+        sendWelcomeEmail(user.email, user.name)
+        res.redirect('/shop');
       } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -64,7 +64,7 @@ router.post('/users/login', multer().none(), async (req, res) => {
 
 async function redirectSession(req, res, user){
     const token = await user.generateAuthToken()   
-    sess = req.session;
+    var sess = req.session;
     sess.token = token
     sess.name = user.name
 

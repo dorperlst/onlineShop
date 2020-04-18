@@ -5,3 +5,5 @@ test.env
 /node_modules/
 /config/
 public/uploads/
+public/users/
+public/img/

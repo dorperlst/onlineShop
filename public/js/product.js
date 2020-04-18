@@ -1,7 +1,8 @@
  var productDiv = document.getElementById("productsDiv");    
- 
-var token = ""
 
+ var ordersDiv = document.getElementById("ordersDiv");    
+
+ 
 // function activityWatcher(){
 
 //     //The number of seconds that have passed
@@ -51,7 +52,7 @@ var token = ""
 //activityWatcher();
 
 getProducts()
-
+getOrders()
 function getProducts(){
      fetch('/products')
         .then((res) => { 
@@ -73,10 +74,32 @@ function getProducts(){
         });
 }
 
+function getOrders(){
+    fetch('/orders')
+       .then((res) => { 
+       if(res.status == 200)
+           return res.json() 
+       return null
+       })
+       .then((jsonData) => {   
+        ordersDiv.innerHTML = ''
+           for(var ordind in jsonData)
+           {
+                ordersDiv.innerHTML += '<div> <label>----order-----</label> </br>'
+
+                for(var prodind in jsonData[ordind].products )
+                {
+                    ordersDiv.innerHTML += '<div> <label>Product Name : '+ jsonData[ordind].products[prodind].product.name+'</label> </br>'
+                    ordersDiv.innerHTML += '<div> <label>Product description : '+ jsonData[ordind].products[prodind].product.description+'</label> </br>'
+                    ordersDiv.innerHTML += '<div> <label>Product Name : '+ jsonData[ordind].products[ordind].product.price+'</label> </br>'
+    
+                }  
+        }
+       });
+}
 
 
 function addToOrder(id){
-   
    
     var formdata = new FormData();
     formdata.append("product",id)
