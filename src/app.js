@@ -4,6 +4,7 @@ const express   = require('express');
 const userRouter = require('./routers/user')
 const orderRouter = require('./routers/order')
 const categoryRouter = require('./routers/cat')
+const shopRouter = require('./routers/shop')
 
 const productRouter = require('./routers/product')
 const path = require('path')
@@ -22,6 +23,7 @@ app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
 
 
+app.use(shopRouter)
 
 app.use(userRouter)
 app.use(productRouter)

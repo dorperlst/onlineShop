@@ -2,7 +2,8 @@ const express = require('express')
 const multer = require('multer')
 const sharp = require('sharp')
 const User = require('../models/user')
-const auth = require('../middleware/auth')
+const authObj = require('../middleware/auth')
+const auth = authObj.auth
 const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router()
 
@@ -35,8 +36,9 @@ router.get('/users', async (req, res) => {
     res.send({ user })
     
 })
+
 router.post('/users', upload.single('avatar'), async function (req, res, next) {
- 
+ console.log(req.body)
     const user = new User(req.body)
     if(req.file!= undefined)
         user.image = req.file.filename
@@ -44,12 +46,11 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
     try {
         await user.save()
         sendWelcomeEmail(user.email, user.name)
-        res.redirect('/shop');
-      } catch (e) {
+        redirectSession(req, res, user)
+    } catch (e) {
         console.log(e)
         res.status(400).send(e)
     }
-    redirectSession(req, res, user)
 
 })
  

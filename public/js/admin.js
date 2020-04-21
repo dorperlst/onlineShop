@@ -1,0 +1,148 @@
+const form = document.getElementById("form");
+var productDiv = document.getElementById("productsDiv");    
+var productFiles = document.getElementById("productFiles");    
+var categories = document.getElementById("categories");    
+
+
+var categoriesDiv = document.getElementById("categoriesDiv");    
+
+ 
+ getProducts()
+getCats()
+
+
+function getProducts(){
+    form.reset();
+    fetch('/products')
+        .then((res) => { 
+        if(res.status == 200)
+            return res.json() 
+        return null
+        })
+        .then((jsonData) => {   
+            productDiv.innerHTML = ''
+           
+            for(var data in jsonData.product)
+            {
+                productDiv.innerHTML += '<div> <label>Product Name : '+jsonData.product[data].name+'</label> </br>'
+                productDiv.innerHTML += ' <label>Description   : '+jsonData.product[data].description+'</label></br>'
+                productDiv.innerHTML += '<label>Price : '+jsonData.product[data].price+'</label></br>'
+
+
+                
+                productDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.product[data]._id+'") >Delete</a></br>'
+
+                productDiv.innerHTML += '<a onclick = editProduct("'+jsonData.product[data]._id+'") >Edit</a></br>'+' </div></br></br>'
+            }  
+        });
+}
+ 
+function getCats(){
+    fetch('/cats')
+        .then((res) => { 
+        if(res.status == 200)
+            return res.json() 
+        return null
+        })
+        .then((jsonData) => {   
+            categoriesDiv.innerHTML = ''
+            categories.options.l=0
+            var opt = document.createElement('option');
+            opt.value = 0;
+            opt.innerHTML = '--none--'
+            categories.appendChild(opt);
+
+            for(var data in jsonData.cat)
+            {
+                categoriesDiv.innerHTML += '<div> <label>Category Name : '+jsonData.cat[data].name+'</label> </br>'
+                categoriesDiv.innerHTML += ' <label>Description   : '+jsonData.cat[data].description+'</label></br>'
+                categoriesDiv.innerHTML += '<label>Price : '+jsonData.cat[data].price+'</label></br>'
+                categoriesDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.cat[data]._id+'") >Delete</a></br>'
+                categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cat[data]._id+'") >Edit</a></br>'+' </div></br></br>'
+
+
+                var opt = document.createElement('option');
+                opt.value = jsonData.cat[data]._id;
+                opt.innerHTML = jsonData.cat[data].name
+                categories.appendChild(opt);
+
+
+            }  
+        });
+}
+ 
+
+function addProduct(id){
+    form.reset();
+}
+
+function editProduct(id){
+    form.reset();
+    fetch('/products/'+id+'/')
+    .then((res) => { 
+        if(res.status == 200)
+            return res.json() 
+        return null
+    })
+    .then((jsonData) => {
+        form.elements['name'].value = jsonData.product.name
+        form.elements['price'].value = jsonData.product.price
+        form.elements['description'].value = jsonData.product.description
+        form.elements['id'].value = jsonData.product._id
+    });
+}
+
+function deleteProduct(id){
+    var formdata = new FormData();
+    fetch('/products/'+id,
+        { method: 'delete',body :{}})
+    .then(function(res) {   
+        getProducts()
+        return res; 
+    })
+
+ 
+}
+
+function addcat(id){
+    var formdata = new FormData();
+    formdata.append('name',form.elements['name'].value)
+    if(categories.value != 0)
+        formdata.append('category', categories.value)
+    formdata.append('description', form.elements['description'].value)
+    formdata.append('id','')
+    var method = "post"
+    if(form.elements['id'].value!='')
+        method = "PATCH"
+    if( productFiles.files.length > 0)
+        formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
+
+    fetch('/cats',
+        { method: method, body: formdata})
+    .then(function(res) {   
+        getCats()
+        return res; 
+    })
+}
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    var formdata = new FormData();
+    formdata.append('name',form.elements['name'].value)
+    formdata.append('category',categories.value)
+    formdata.append('price',form.elements['price'].value)
+    formdata.append('description',form.elements['description'].value)
+    formdata.append('id',form.elements['id'].value)
+    var method = "post"
+    if(form.elements['id'].value!='')
+        method = "PATCH"
+    for (i=0 ; i < productFiles.files.length; i++)
+        formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
+
+    fetch('/products',
+        { method: method, body: formdata})
+    .then(function(res) {   
+        getProducts()
+        return res; 
+    })
+})

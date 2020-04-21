@@ -29,17 +29,16 @@ const productSchema = new mongoose.Schema({
         trim: true
     }],
     category: {
-        
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cat',
-        required: false,
+        required: true,
         trim: true
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Shop'
     }
-    // owner: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: true,
-    //     ref: 'User'
-    // }
 }, {
     timestamps: true
 })

@@ -1,9 +1,10 @@
 var express = require('express');
-const Product = require('../models/product')
+const Cat = require('../models/cat')
 const router = new express.Router()
 var multer = require('multer'); 
 const authObj = require('../middleware/auth')
 const admin = authObj.admin
+ 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, 'public/uploads');
@@ -26,72 +27,66 @@ const upload = multer({
   }
 })
  
-router.get('/products/:id', async (req, res) => {
-    const product = await Product.findById(req.params.id)
+router.get('/cats/:id', async (req, res) => {
+    const cat = await Cat.findById(req.params.id)
     try {
-        res.send({ product })
+        res.send({ cat })
      } catch (e) {
         res.status(400).send(e)
     }
 })
 
-router.get('/products', async (req, res) => {
-    const product = await Product.find()
+router.get('/cats', async (req, res) => {
+    const cat = await Cat.find()
     try {
-        res.send({ product })
+        res.send({ cat })
      } catch (e) {
         res.status(400).send(e)
     }
 })
  
-router.delete('/products/:id', async (req, res) => {
+router.delete('/cats/:id', async (req, res) => {
      
     try {
         console.log('-----'+req.params.id)
-        const product = await Product.findById(req.params.id)
-        await product.remove()
-      //  console.log('-----'+product)
-        res.send(product)
+        const cat = await Cat.findById(req.params.id)
+        await cat.remove()
+      //  console.log('-----'+cat)
+        res.send(cat)
     } catch (e) {
         console.log(e)
         res.status(500).send()
     }
 })
 
-
-
-router.post('/products', admin, upload.array('myFiles', 12) ,async  function (req, res, next) {
-     
-    const product = new Product({
-        ...req.body,
-        owner: req.shop._id
-    })
-
-    product.images = req.files.map(x => x.filename)
+router.post('/cats', admin, upload.single('avatar'), async function (req, res, next) {
+    const cat = new Cat(req.body)
+    if(req.file != undefined)
+        cat.image = req.file.filename
     try
     {
-        await product.save()
-        res.send(product)
+        await cat.save()
+        res.send(cat)
     }
     catch (e) {
-        console.log (e)
+        console.log(e)
          res.status(400).send(e)
     }
 })
 
-router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
+router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, res, next) {
     images= req.files.map(x => x.filename)
 
-    const product = await Product.findById(req.body.id)
+    const cat = await Cat.findById(req.body.id)
     if(images.length > 0)
-        product.images = product.images.concat( images)
+        cat.images = cat.images.concat( images)
 
     const allowedUpdates = ['name', 'description', 'price']
-    allowedUpdates.forEach((update) => product[update] = req.body[update])
+    allowedUpdates.forEach((update) => cat[update] = req.body[update])
     try
     {
-        await product.save()
-        res.send(product)
+        await cat.save()
+        res.send(cat)
     }
     catch (e) {
          res.status(400).send(e)

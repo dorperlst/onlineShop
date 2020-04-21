@@ -68,7 +68,7 @@ function getProducts(){
                 productDiv.innerHTML += '<div> <label>Product Name : '+jsonData.product[data].name+'</label> </br>'
                 productDiv.innerHTML += ' <label>Description   : '+jsonData.product[data].description+'</label></br>'
                 productDiv.innerHTML += '<label>Price : '+jsonData.product[data].price+'</label></br>'
-                productDiv.innerHTML += '<a onclick = addToOrder("'+jsonData.product[data]._id+'") >Add</a></br>'+' </div></br></br>'
+                productDiv.innerHTML += '<a onclick = addToOrder("'+jsonData.product[data]._id+'","'+jsonData.product[data].price+'") >Add</a></br>'+' </div></br></br>'
 
              }  
         });
@@ -123,11 +123,13 @@ function getOrders(){
        });
 }
 
-function addToOrder(id){
+function addToOrder(id, price){
    
     var formdata = new FormData();
     formdata.append("product",id)
     formdata.append("count",4)
+    
+    formdata.append("orderPrice",price)
 
     fetch('/orders/',
         { method: 'post', body :formdata})
