@@ -3,6 +3,7 @@ require('./db/mongoose')
 const express   = require('express');
 const userRouter = require('./routers/user')
 const orderRouter = require('./routers/order')
+const categoryRouter = require('./routers/cat')
 
 const productRouter = require('./routers/product')
 const path = require('path')
@@ -25,6 +26,9 @@ hbs.registerPartials(partialsPath)
 app.use(userRouter)
 app.use(productRouter)
 app.use(orderRouter)
+app.use(categoryRouter)
+
+ 
 app.get('/login', (req, res) => {
     res.render('login', {
         title: 'login',

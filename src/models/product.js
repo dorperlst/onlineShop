@@ -19,7 +19,22 @@ const productSchema = new mongoose.Schema({
     images: [{
         type: String
     }]
-    
+    ,
+    attributes:[ {
+        type: String,
+        trim: true
+    }],
+    details:[ {
+        type: String,
+        trim: true
+    }],
+    category: {
+        
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cat',
+        required: false,
+        trim: true
+    }
     // owner: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     required: true,

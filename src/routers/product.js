@@ -62,6 +62,7 @@ router.delete('/products/:id', async (req, res) => {
 
 router.post('/products', upload.array('myFiles', 12),async  function (req, res, next) {
     const product = new Product(req.body)
+    console.log(req.body)
     product.images = req.files.map(x => x.filename)
     try
     {

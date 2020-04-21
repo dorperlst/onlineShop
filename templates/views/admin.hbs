@@ -16,13 +16,17 @@
 
             <div id="productsDiv" class="centered-form__box"></div>
 
+            <div id="categoriesDiv" class="centered-form__box"></div>
 
             <div class="centered-form__box">
                 <h1>Product</h1>
                 <a onclick = addProduct() >Add Product</a>
                 <form id= "form"  action="/"  method="post">
                     <label>Product Name</label>
-                    <input type="text" value="" id ="name" name="name" placeholder="Display name" required>
+                    <input type="text" value="" id="name" name="name" placeholder="Display Name" required>
+
+                    <select id="categories" name="category"></select>
+
                     <label>Description</label>
                     <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
                     <label>Price</label>
@@ -33,6 +37,9 @@
 
                     <input type="submit" value="Submit">  
                 </form>
+
+                                    <input type="button" onclick = 'addcat()' value="add cat">  
+
             </div>
         </div>
     </div>
