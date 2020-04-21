@@ -1,5 +1,6 @@
 var express = require('express');
 const Product = require('../models/product')
+const Shop = require('../models/shop')
 const router = new express.Router()
 var multer = require('multer'); 
 const authObj = require('../middleware/auth')
@@ -26,7 +27,7 @@ const upload = multer({
   }
 })
  
-router.get('/products/:id', async (req, res) => {
+router.get('/product/:id', async (req, res) => {
     const product = await Product.findById(req.params.id)
     try {
         res.send({ product })
@@ -35,10 +36,25 @@ router.get('/products/:id', async (req, res) => {
     }
 })
 
-router.get('/products', async (req, res) => {
-    const product = await Product.find()
+router.get('/products/:shop', async (req, res) => {
+    const shop = await Shop.findOne({ name: req.params.shop})
     try {
-        res.send({ product })
+        await shop.populate({
+            path: 'products',
+            populate: {
+                path: 'product',
+                model: 'Product'
+              } 
+        }).execPopulate()
+        res.send(req.user.orders)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send()
+    }
+
+    const products = await Product.find({})
+    try {
+        res.send({ products })
      } catch (e) {
         res.status(400).send(e)
     }

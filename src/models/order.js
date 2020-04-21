@@ -27,6 +27,11 @@ const orderSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Shop'
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

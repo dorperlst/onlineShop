@@ -13,7 +13,7 @@ getCats()
 
 function getProducts(){
     form.reset();
-    fetch('/products')
+    fetch('/products/yyyy')
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
