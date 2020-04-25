@@ -8,14 +8,13 @@ const router = new express.Router()
 var multer = require('multer'); 
 
 
-router.post('/orders', multer().none(), auth ,async function (req, res, next) {
-console.log (req.body)
-    var orders = await Order.find({ owner :  req.user._id})
-    var order = orders[0]
-
+router.post('/orders', multer().none(), auth , async function (req, res, next) {
+    var order = await Order.findOne({ owner :  req.user._id})
+ 
     if (!order) {
 
         order = new Order()
+        order.shop = req.body.shop
         order.owner= req.user._id
         order.products= []
     }

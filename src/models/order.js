@@ -16,7 +16,7 @@ const orderProductSchema = new mongoose.Schema({
     , orderPrice:
     {
         type: Number,
-        required: true
+        required: false
     }
  
 } )
@@ -28,9 +28,9 @@ const orderSchema = new mongoose.Schema({
         default: false
     },
     shop: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Shop'
+        type: String,
+        required: true
+        
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,

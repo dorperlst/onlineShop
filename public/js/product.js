@@ -2,6 +2,7 @@
 
  var ordersDiv = document.getElementById("ordersDiv");    
 
+ var shopName = 'yyyy'
  
 // function activityWatcher(){
 
@@ -53,8 +54,10 @@
 
 getProducts()
 getOrders()
+
+
 function getProducts(){
-     fetch('/products/yyyy')
+     fetch('/products/' + shopName)
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -63,13 +66,15 @@ function getProducts(){
         .then((jsonData) => {   
             productDiv.innerHTML = ''
            
-            for(var data in jsonData.product)
+            for(var data in jsonData.products)
             {
-                productDiv.innerHTML += '<div> <label>Product Name : '+jsonData.product[data].name+'</label> </br>'
-                productDiv.innerHTML += ' <label>Description   : '+jsonData.product[data].description+'</label></br>'
-                productDiv.innerHTML += '<label>Price : '+jsonData.product[data].price+'</label></br>'
-                productDiv.innerHTML += '<a onclick = addToOrder("'+jsonData.product[data]._id+'","'+jsonData.product[data].price+'") >Add</a></br>'+' </div></br></br>'
+                productDiv.innerHTML += '<div> <label>Product Name : ' + jsonData.products[data].name + '</label> </br>'
+                productDiv.innerHTML += ' <label>Description : ' + jsonData.products[data].description + '</label></br>'
+                productDiv.innerHTML += '<label>Price : ' + jsonData.products[data].price + '</label></br>'
+                productDiv.innerHTML += '<label>tree : ' + jsonData.products[data].tree+ '</label></br>'
+                productDiv.innerHTML += '<label>category : ' + jsonData.products[data].category+ '</label></br>'
 
+                productDiv.innerHTML += '<a onclick = addToOrder("' + jsonData.products[data]._id + '",+' + jsonData.products[data].price + ') >Add To Order</a></br></br></br></br>'
              }  
         });
 }
@@ -126,9 +131,10 @@ function getOrders(){
 function addToOrder(id, price){
    
     var formdata = new FormData();
-    formdata.append("product",id)
-    formdata.append("count",4)
-    
+    formdata.append("product", id)
+    formdata.append("count", 4)
+    formdata.append("shop", shopName)
+
     formdata.append("orderPrice",price)
 
     fetch('/orders/',

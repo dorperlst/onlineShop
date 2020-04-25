@@ -32,7 +32,11 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
+    }, tree:[{
+        type: String,
+        required: true,
+        trim: true
+    }],
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

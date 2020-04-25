@@ -22,17 +22,16 @@ function getProducts(){
         .then((jsonData) => {   
             productDiv.innerHTML = ''
            
-            for(var data in jsonData.product)
+            for(var data in jsonData.products)
             {
-                productDiv.innerHTML += '<div> <label>Product Name : '+jsonData.product[data].name+'</label> </br>'
-                productDiv.innerHTML += ' <label>Description   : '+jsonData.product[data].description+'</label></br>'
-                productDiv.innerHTML += '<label>Price : '+jsonData.product[data].price+'</label></br>'
+                productDiv.innerHTML += '<div> <label>Product Name : ' + jsonData.products[data].name + '</label> </br>'
+                productDiv.innerHTML += ' <label>Description : ' + jsonData.products[data].description + '</label></br>'
+                productDiv.innerHTML += '<label>Price : ' + jsonData.products[data].price + '</label></br>'
+                productDiv.innerHTML += '<label>tree : ' + jsonData.products[data].tree+ '</label></br>'
+                productDiv.innerHTML += '<label>category : ' + jsonData.products[data].category+ '</label></br>'
 
-
-                
-                productDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.product[data]._id+'") >Delete</a></br>'
-
-                productDiv.innerHTML += '<a onclick = editProduct("'+jsonData.product[data]._id+'") >Edit</a></br>'+' </div></br></br>'
+                productDiv.innerHTML += '<a onclick = deleteProduct("' + jsonData.products[data]._id + '") >Delete</a></br>'
+                productDiv.innerHTML += '<a onclick = editProduct("' + jsonData.products[data]._id + '") >Edit</a></br>'+' </div></br></br>'
             }  
         });
 }
@@ -78,7 +77,7 @@ function addProduct(id){
 
 function editProduct(id){
     form.reset();
-    fetch('/products/'+id+'/')
+    fetch('/product/'+id+'/')
     .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -86,9 +85,10 @@ function editProduct(id){
     })
     .then((jsonData) => {
         form.elements['name'].value = jsonData.product.name
-        form.elements['price'].value = jsonData.product.price
+        form.elements['tree'].value = jsonData.product.price
         form.elements['description'].value = jsonData.product.description
         form.elements['id'].value = jsonData.product._id
+        categories.value =  jsonData.product.category
     });
 }
 
@@ -112,8 +112,8 @@ function addcat(id){
     formdata.append('description', form.elements['description'].value)
     formdata.append('id','')
     var method = "post"
-    if(form.elements['id'].value!='')
-        method = "PATCH"
+    // if(form.elements['id'].value!='')
+    //     method = "PATCH"
     if( productFiles.files.length > 0)
         formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
 

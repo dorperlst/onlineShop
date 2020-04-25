@@ -29,7 +29,9 @@ const upload = multer({
 })
  
 router.get('/product/:id', async (req, res) => {
-    const product = await Product.findById(req.params.id)
+    const product = await Product.findOne({ _id: req.params.id}) 
+//console.log(req.params.id)
+
     try {
         res.send({ product })
      } catch (e) {
@@ -38,32 +40,11 @@ router.get('/product/:id', async (req, res) => {
 })
 
 router.get('/products/:shop', async (req, res) => {
-    const shop = await Shop.findOne({ name: req.params.shop})
-    if(!shop)
-    { 
-        res.send()
-        return
-    }
-    //console.log(shop)  
-    try {
-        // await shop.populate({
-        //     path: 'products',
-        //     populate: {
-        //         path: 'product',
-        //         model: 'Product'
-        //       } 
-        // }).execPopulate()
-      //  res.send(req.user.orders)
-    } catch (e) {
-        console.log(e)
-        res.status(500).send()
-    }
-
-    const products = await Product.find({})
+    const products = await Product.find({ tree: { "$in" : [req.params.shop]} }).sort({ "name": 1 })
     try {
         res.send({ products })
      } catch (e) {
-        res.status(400).send(e)
+        res.status(500).send(e)
     }
 })
  
@@ -83,18 +64,15 @@ router.delete('/products/:id', async (req, res) => {
 
 
 
-router.post('/products', admin, multer().array() ,async  function (req, res, next) {
+router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
     const cat = await Cat.findOne({ _id: req.body.category}) 
-    console.log ('------cat----'+cat)
- 
+  
     const product = new Product({
         ...req.body,
         owner: req.shop._id
     })
-   
-
-    product.category = cat.name
-    console.log('--------------------------------------'+cat.name)
+    product.tree = cat.tree.concat([req.body.name])
+   // product.category = cat.name
     product.images = req.files.map(x => x.filename)
     try
     {
@@ -108,6 +86,7 @@ router.post('/products', admin, multer().array() ,async  function (req, res, nex
 })
 
 router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
+    
     images= req.files.map(x => x.filename)
 
     const product = await Product.findById(req.body.id)
@@ -116,6 +95,16 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
 
     const allowedUpdates = ['name', 'description', 'price']
     allowedUpdates.forEach((update) => product[update] = req.body[update])
+    console.log('----------------------------'+product.category)
+    if( product.category != req.body.category)
+    {
+        console.log('----------------------------'+req.body.category)
+
+        const cat = await Cat.findOne({ _id: req.body.category}) 
+        product.tree = cat.tree.concat([req.body.name])
+        product.category = req.body.category
+    }
+
     try
     {
         await product.save()
