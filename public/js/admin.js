@@ -2,14 +2,10 @@ const form = document.getElementById("form");
 var productDiv = document.getElementById("productsDiv");    
 var productFiles = document.getElementById("productFiles");    
 var categories = document.getElementById("categories");    
-
-
 var categoriesDiv = document.getElementById("categoriesDiv");    
 
- 
- getProducts()
+getProducts()
 getCats()
-
 
 function getProducts(){
     form.reset();
@@ -46,6 +42,7 @@ function getCats(){
         .then((jsonData) => {   
             categoriesDiv.innerHTML = ''
             categories.options.l=0
+            categories.clear
             var opt = document.createElement('option');
             opt.value = 0;
             opt.innerHTML = '--none--'
@@ -112,8 +109,7 @@ function addcat(id){
     formdata.append('description', form.elements['description'].value)
     formdata.append('id','')
     var method = "post"
-    // if(form.elements['id'].value!='')
-    //     method = "PATCH"
+ 
     if( productFiles.files.length > 0)
         formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
 
