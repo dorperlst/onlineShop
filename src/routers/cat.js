@@ -37,7 +37,8 @@ router.get('/cats/:id', async (req, res) => {
 })
 
 router.get('/cats', async (req, res) => {
-    const cat = await Cat.find()
+
+     const cat = await Cat.find().sort({ "level": 1 })//{ tree: { "$in" : ["cat 0 1"]} }
     try {
         res.send({ cat })
      } catch (e) {
@@ -61,6 +62,16 @@ router.delete('/cats/:id', async (req, res) => {
 
 router.post('/cats', admin, upload.single('avatar'), async function (req, res, next) {
     const cat = new Cat(req.body)
+     if(!req.body.parent)
+        cat.tree = [req.body.name]
+    else
+    {
+        var parent = await Cat.findById(req.body.parent) ;
+        cat.tree = parent.tree.concat([req.body.name])
+    }
+    cat.level = cat.tree.length
+    cat.owner = req.shop._id
+    
     if(req.file != undefined)
         cat.image = req.file.filename
     try

@@ -27,7 +27,7 @@ const auth =async (req, res, next) => {
         req.user = user
         next()
     } catch (e) {
-        console.log('----suth-----------', req.session.token)
+        console.log('----usersuth-----------', req.session.token)
         res.status(401).send({ error: req.session.token})
     }
 }
@@ -54,7 +54,7 @@ const admin = async (req, res, next) => {
         req.shop = shop
         next()
     } catch (e) {
-        console.log('----suth-----------', req.session.token)
+        console.log('----adminsuth-----------',e)
         
         res.status(401).send({ error: req.session.token})
     }

@@ -1,5 +1,6 @@
 var express = require('express');
 const Product = require('../models/product')
+const Cat = require('../models/cat')
 const Shop = require('../models/shop')
 const router = new express.Router()
 var multer = require('multer'); 
@@ -38,15 +39,21 @@ router.get('/product/:id', async (req, res) => {
 
 router.get('/products/:shop', async (req, res) => {
     const shop = await Shop.findOne({ name: req.params.shop})
+    if(!shop)
+    { 
+        res.send()
+        return
+    }
+    //console.log(shop)  
     try {
-        await shop.populate({
-            path: 'products',
-            populate: {
-                path: 'product',
-                model: 'Product'
-              } 
-        }).execPopulate()
-        res.send(req.user.orders)
+        // await shop.populate({
+        //     path: 'products',
+        //     populate: {
+        //         path: 'product',
+        //         model: 'Product'
+        //       } 
+        // }).execPopulate()
+      //  res.send(req.user.orders)
     } catch (e) {
         console.log(e)
         res.status(500).send()
@@ -76,13 +83,18 @@ router.delete('/products/:id', async (req, res) => {
 
 
 
-router.post('/products', admin, upload.array('myFiles', 12) ,async  function (req, res, next) {
-     
+router.post('/products', admin, multer().array() ,async  function (req, res, next) {
+    const cat = await Cat.findOne({ _id: req.body.category}) 
+    console.log ('------cat----'+cat)
+ 
     const product = new Product({
         ...req.body,
         owner: req.shop._id
     })
+   
 
+    product.category = cat.name
+    console.log('--------------------------------------'+cat.name)
     product.images = req.files.map(x => x.filename)
     try
     {
@@ -91,7 +103,7 @@ router.post('/products', admin, upload.array('myFiles', 12) ,async  function (re
     }
     catch (e) {
         console.log (e)
-         res.status(400).send(e)
+        res.status(400).send(e)
     }
 })
 

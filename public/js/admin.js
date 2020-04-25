@@ -108,7 +108,7 @@ function addcat(id){
     var formdata = new FormData();
     formdata.append('name',form.elements['name'].value)
     if(categories.value != 0)
-        formdata.append('category', categories.value)
+        formdata.append('parent', categories.value)
     formdata.append('description', form.elements['description'].value)
     formdata.append('id','')
     var method = "post"
@@ -128,11 +128,11 @@ function addcat(id){
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData();
-    formdata.append('name',form.elements['name'].value)
-    formdata.append('category',categories.value)
-    formdata.append('price',form.elements['price'].value)
-    formdata.append('description',form.elements['description'].value)
-    formdata.append('id',form.elements['id'].value)
+    formdata.append('name', form.elements['name'].value)
+    formdata.append('category', categories.value)
+    formdata.append('price', form.elements['price'].value)
+    formdata.append('description', form.elements['description'].value)
+    formdata.append('id', form.elements['id'].value)
     var method = "post"
     if(form.elements['id'].value!='')
         method = "PATCH"

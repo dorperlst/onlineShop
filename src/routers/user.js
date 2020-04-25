@@ -45,7 +45,7 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
     try {
         await user.save()
-        sendWelcomeEmail(user.email, user.name)
+        // sendWelcomeEmail(user.email, user.name)
         redirectSession(req, res, user)
     } catch (e) {
         console.log(e)
@@ -69,10 +69,10 @@ async function redirectSession(req, res, user){
     sess.token = token
     sess.name = user.name
 
-    var hour = 3600000
+    var hour = 360000000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
-    res.redirect('/shop');
+    res.redirect('/admin');
 }
 
 router.post('/users/logout', auth, async (req, res) => {

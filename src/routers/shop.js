@@ -38,7 +38,7 @@ router.get('/shops', async (req, res) => {
 
 router.post('/shops', upload.array('myFiles', 12),async  function (req, res, next) {
 
-  console.log(req.body)
+//   console.log(req.body)
     const shop = new Shop(req.body)
     shop.images = req.files.map(x => x.filename)
 

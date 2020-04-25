@@ -9,7 +9,7 @@ function logout(){
 }
 
 function logoutAll(){
-   
+   alert('ff')
    fetch('users/logoutAll',
        { method: 'POST', body: {}})
    .then(function(res) {

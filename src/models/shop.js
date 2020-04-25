@@ -20,15 +20,16 @@ const shopSchema = new mongoose.Schema({
         required: true,
         
     }
+    
 }, {
     timestamps: true
 })
  
-shopSchema.virtual('products', {
-    ref: 'Product',
-    localField: '_id',
-    foreignField: 'owner'
-})
+// shopSchema.virtual('products', {
+//     ref: 'Product',
+//     localField: '_id',
+//     foreignField: 'owner'
+// })
 
  
 const Shop = mongoose.model('Shop', shopSchema)

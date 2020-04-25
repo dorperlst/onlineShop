@@ -11,29 +11,31 @@ const catSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-   
-    parentCategory: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        default: undefined,
-        trim: true
-    },
     image: {
         type: String
     },
-    category: {
+    parent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cat',
         required: false,
         default : undefined,
         trim: true
+    },
+
+    level: {
+        type: Number,
+        required: true,
+    },
+    tree:[{
+        type: String,
+        required: true,
+        trim: true
+    }],
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Shop'
     }
-   
-    // owner: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: true,
-    //     ref: 'User'
-    // }
 }, {
     timestamps: true
 })

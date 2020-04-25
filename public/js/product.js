@@ -54,7 +54,7 @@
 getProducts()
 getOrders()
 function getProducts(){
-     fetch('/products')
+     fetch('/products/yyyy')
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
