@@ -5,8 +5,9 @@ const userRouter = require('./routers/user')
 const orderRouter = require('./routers/order')
 const categoryRouter = require('./routers/cat')
 const shopRouter = require('./routers/shop')
-
+const paymentRouter = require('./routers/payment')
 const productRouter = require('./routers/product')
+
 const path = require('path')
 const hbs = require('hbs')
 const publicDirectoryPath = path.join(__dirname, '../public')
@@ -29,6 +30,7 @@ app.use(userRouter)
 app.use(productRouter)
 app.use(orderRouter)
 app.use(categoryRouter)
+app.use(paymentRouter)
 
  
 app.get('/login', (req, res) => {

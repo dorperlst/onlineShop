@@ -49,7 +49,7 @@ router.get('/cats', admin, async (req, res) => {
 router.delete('/cats/:id', async (req, res) => {
      
     try {
-        console.log('-----'+req.params.id)
+      //  console.log('-----'+req.params.id)
         const cat = await Cat.findById(req.params.id)
         await cat.remove()
       //  console.log('-----'+cat)

@@ -38,14 +38,14 @@ router.get('/users', async (req, res) => {
 })
 
 router.post('/users', upload.single('avatar'), async function (req, res, next) {
- console.log(req.body)
+ //console.log(req.body)
     const user = new User(req.body)
     if(req.file!= undefined)
         user.image = req.file.filename
 
     try {
         await user.save()
-        // sendWelcomeEmail(user.email, user.name)
+     //   sendWelcomeEmail(user.email, user.name)
         redirectSession(req, res, user)
     } catch (e) {
         console.log(e)

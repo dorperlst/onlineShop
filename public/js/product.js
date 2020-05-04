@@ -121,7 +121,7 @@ function getOrders(){
                 {
                     ordersDiv.innerHTML += '<div> <label>Product Name : '+ jsonData[ordind].products[prodind].product.name+'</label> </br>'
                     ordersDiv.innerHTML += '<div> <label>Product description : '+ jsonData[ordind].products[prodind].product.description+'</label> </br>'
-                    ordersDiv.innerHTML += '<div> <label>Product Name : '+ jsonData[ordind].products[ordind].product.price+'</label> </br>'
+                    ordersDiv.innerHTML += '<div> <label>Product price : '+ jsonData[ordind].products[ordind].product.price+'</label> </br>'
     
                 }  
         }
@@ -140,6 +140,7 @@ function addToOrder(id, price){
     fetch('/orders/',
         { method: 'post', body :formdata})
     .then(function(res) {   
+        getOrders()
         return res; 
     })
 

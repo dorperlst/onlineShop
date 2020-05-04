@@ -46,7 +46,7 @@ catSchema.pre('remove', async function (next) {
     for (i=0 ; i < cat.images.length; i++)
     {
         var filePath = 'public/uploads/'+cat.images[i]; 
-        console.log(filePath)
+      //  console.log(filePath)
  
         try
         {

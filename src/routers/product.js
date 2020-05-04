@@ -6,6 +6,7 @@ const router = new express.Router()
 var multer = require('multer'); 
 const authObj = require('../middleware/auth')
 const admin = authObj.admin
+
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, 'public/uploads');
@@ -30,8 +31,7 @@ const upload = multer({
  
 router.get('/product/:id', async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id}) 
-//console.log(req.params.id)
-
+ 
     try {
         res.send({ product })
      } catch (e) {
@@ -41,7 +41,7 @@ router.get('/product/:id', async (req, res) => {
 
 router.get('/products/:shop', async (req, res) => {
     const products = await Product.find({ tree: { "$in" : [req.params.shop]} }).sort({ "name": 1 })
-    try {
+     try {
         res.send({ products })
      } catch (e) {
         res.status(500).send(e)
@@ -51,7 +51,7 @@ router.get('/products/:shop', async (req, res) => {
 router.delete('/products/:id', async (req, res) => {
      
     try {
-        console.log('-----'+req.params.id)
+      //  console.log('-----'+req.params.id)
         const product = await Product.findById(req.params.id)
         await product.remove()
       //  console.log('-----'+product)
@@ -95,7 +95,7 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
 
     const allowedUpdates = ['name', 'description', 'price']
     allowedUpdates.forEach((update) => product[update] = req.body[update])
-    console.log('----------------------------'+product.category)
+   // console.log('----------------------------'+product.category)
     if( product.category != req.body.category)
     {
         console.log('----------------------------'+req.body.category)
