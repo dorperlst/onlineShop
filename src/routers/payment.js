@@ -2,8 +2,6 @@ const express= require('express');
 const router= new express.Router()
 const paypal= require('paypal-rest-sdk')
 
-console.log('- ----------------------'+ process.env.CLIENT_SECRET)
- 
 paypal.configure({
     'mode': 'sandbox', 
     'client_id': process.env.CLIENT_ID,

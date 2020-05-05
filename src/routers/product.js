@@ -39,11 +39,36 @@ router.get('/product/:id', async (req, res) => {
     }
 })
 
+ 
+
+// GET /orders?completed=true
+// GET /orders?limit=10&skip=20
+// GET /orders?sortBy=createdAt:desc
+
 router.get('/products/:shop', async (req, res) => {
-    const products = await Product.find({ tree: { "$in" : [req.params.shop]} }).sort({ "name": 1 })
-     try {
+   
+    var params = [ {tree: { "$in" : [req.params.shop]} }]
+    var sort = { "price": -1 }
+    var limit = !req.query.limit ? 5 : req.query.limit
+    var skip = !req.query.skip ? 0 : req.query.skip
+ 
+    if (req.query.category)  
+        params.push( { tree: { "$in" : [req.query.category]} } )
+    
+    if (req.query.name)  
+        params.push(  { name: req.query.name  } )
+     
+    const match = { $and: params } 
+ 
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
+    try {
+        const products = await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
         res.send({ products })
-     } catch (e) {
+    } catch (e) {
         res.status(500).send(e)
     }
 })
@@ -51,10 +76,8 @@ router.get('/products/:shop', async (req, res) => {
 router.delete('/products/:id', async (req, res) => {
      
     try {
-      //  console.log('-----'+req.params.id)
         const product = await Product.findById(req.params.id)
         await product.remove()
-      //  console.log('-----'+product)
         res.send(product)
     } catch (e) {
         console.log(e)
@@ -86,20 +109,17 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
 })
 
 router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
-    
+    const allowedUpdates = ['name', 'description', 'price']
+
     images= req.files.map(x => x.filename)
 
     const product = await Product.findById(req.body.id)
     if(images.length > 0)
         product.images = product.images.concat( images)
 
-    const allowedUpdates = ['name', 'description', 'price']
     allowedUpdates.forEach((update) => product[update] = req.body[update])
-   // console.log('----------------------------'+product.category)
     if( product.category != req.body.category)
     {
-        console.log('----------------------------'+req.body.category)
-
         const cat = await Cat.findOne({ _id: req.body.category}) 
         product.tree = cat.tree.concat([req.body.name])
         product.category = req.body.category
@@ -115,10 +135,6 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
     }
 })
   
-
- 
-
-
 module.exports = router
 
  

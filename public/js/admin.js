@@ -82,7 +82,7 @@ function editProduct(id){
     })
     .then((jsonData) => {
         form.elements['name'].value = jsonData.product.name
-        form.elements['tree'].value = jsonData.product.price
+        form.elements['price'].value = jsonData.product.price
         form.elements['description'].value = jsonData.product.description
         form.elements['id'].value = jsonData.product._id
         categories.value =  jsonData.product.category
