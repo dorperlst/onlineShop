@@ -44,7 +44,7 @@ router.get('/product/:id', async (req, res) => {
 // GET /products?completed=true
 // GET /products?limit=10&skip=20
 // GET /products?sortBy=createdAt:desc
-
+// GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 router.get('/products/:shop', async (req, res) => {
    
     var params = [ {tree: { "$in" : [req.params.shop]} }]
@@ -58,9 +58,10 @@ router.get('/products/:shop', async (req, res) => {
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
     if (req.query.attributes)  
-    {
-       console.log( JSON.parse(req.query.attributes));    
-
+    { 
+       var att = JSON.parse(req.query.attributes)
+       for(i=0;i<att.length;i++)
+             params.push( {  "attributes.name":att[i][0], "attributes.description": att[i][1] } )
     }
          
     const match = { $and: params } 
@@ -71,7 +72,7 @@ router.get('/products/:shop', async (req, res) => {
     }
 
     try {
-        const products = await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+        const products =await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))//await Product.find( { "attributes.name": "dsdsds", "attributes.description": "fsffssf" }) //
         res.send({ products })
     } catch (e) {
         res.status(500).send(e)
