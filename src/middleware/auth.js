@@ -54,8 +54,6 @@ const admin = async (req, res, next) => {
         req.shop = shop
         next()
     } catch (e) {
-        console.log('----adminsuth-----------',e)
-        
         res.status(401).send({ error: req.session.token})
     }
 }

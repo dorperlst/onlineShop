@@ -1,5 +1,7 @@
 var express = require('express');
 const Product = require('../models/product')
+const Attribute = require('../models/attribute')
+
 const Cat = require('../models/cat')
 const Shop = require('../models/shop')
 const router = new express.Router()
@@ -57,6 +59,7 @@ router.get('/products/:shop', async (req, res) => {
     
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
+
     if (req.query.attributes)  
     { 
        var att = JSON.parse(req.query.attributes)
@@ -95,7 +98,8 @@ router.delete('/products/:id', async (req, res) => {
 
 router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
     const cat = await Cat.findOne({ _id: req.body.category}) 
- 
+    attribute = new Attribute({ attributes: JSON.parse(req.body.attributes),
+    })
     const product = new Product({
         ...req.body,
         owner: req.shop._id,
@@ -105,6 +109,8 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
     })
     try
     {
+        await attribute.save()
+
         await product.save()
         res.send(product)
     }

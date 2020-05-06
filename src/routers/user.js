@@ -72,7 +72,7 @@ async function redirectSession(req, res, user){
     var hour = 360000000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
-    res.redirect('/admin');
+    res.redirect('/shop');
 }
 
 router.post('/users/logout', auth, async (req, res) => {
@@ -80,9 +80,9 @@ router.post('/users/logout', auth, async (req, res) => {
             req.user.tokens = req.user.tokens.filter((token) => {
                 return token.token !== req.session.token
             })
-            req.session.token=''
-            req.session.username = ''
-
+           
+            req.session.cookie.expires = new Date(Date.now())
+            req.session.cookie.maxAge = 0
             await req.user.save()
             res.redirect('/shop');
      } catch (e) {

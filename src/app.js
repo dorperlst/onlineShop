@@ -49,11 +49,12 @@ app.get('/admin', (req, res) => {
 
 app.get('/shop', (req, res) => {
     sess = req.session;
-    var userName = ''
-    if(sess!=undefined)
+    var userName = 'Guest'
+    if(sess.name != undefined)
         userName = sess.name
+ 
     res.render('products', {
-        title: 'products',
+        title: 'products2',
         name: 'online shop',
         username: userName
     })

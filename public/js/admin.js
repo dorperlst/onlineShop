@@ -4,8 +4,7 @@ var productFiles = document.getElementById("productFiles");
 var categories = document.getElementById("categories");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
 var attributes = document.getElementById("attributes");    
-var attributesDiv = document.getElementById("attributesDiv");    
-
+ 
 
 getProducts()
 getCats()
@@ -146,13 +145,12 @@ form.addEventListener('submit', (e) => {
     var attributes_array =[]
 
     for (var i = 0; i < attributes.children.length; i++ ) {
-    var obj = {}
+        var attribute = {}
 
-var name = attributes.children[ i ].innerHTML;
-        var lichildrens = attributes.children[ i ].getElementsByTagName("input");
-        obj.name = lichildrens[0].value
-        obj.description = lichildrens[1].value
-        attributes_array.push(obj)
+        var att = attributes.children[ i ].getElementsByTagName("input");
+        attribute.name = att[0].value
+        attribute.description = att[1].value
+        attributes_array.push(attribute)
         
     }
 
