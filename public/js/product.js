@@ -57,6 +57,7 @@ getOrders()
 
 
 function getProducts(){
+    
      fetch('/products/' + shopName)
         .then((res) => { 
         if(res.status == 200)

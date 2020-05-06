@@ -41,9 +41,9 @@ router.get('/product/:id', async (req, res) => {
 
  
 
-// GET /orders?completed=true
-// GET /orders?limit=10&skip=20
-// GET /orders?sortBy=createdAt:desc
+// GET /products?completed=true
+// GET /products?limit=10&skip=20
+// GET /products?sortBy=createdAt:desc
 
 router.get('/products/:shop', async (req, res) => {
    
@@ -57,7 +57,12 @@ router.get('/products/:shop', async (req, res) => {
     
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
-     
+    if (req.query.attributes)  
+    {
+       console.log( JSON.parse(req.query.attributes));    
+
+    }
+         
     const match = { $and: params } 
  
     if (req.query.sortBy) {
