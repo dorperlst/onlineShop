@@ -20,12 +20,16 @@ const productSchema = new mongoose.Schema({
     },
     images: [{
         type: String
-    }]
-    ,
-    attributes:[ {
-        type: String,
-        trim: true
     }],
+    attributes:[  {
+        name: {
+            type:String,
+            required: true,
+            trim: true },   
+        description: {
+            type:String,
+            required: true,
+            trim: true } }],
     details:[ {
         type: String,
         trim: true

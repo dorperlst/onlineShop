@@ -89,14 +89,14 @@ router.delete('/products/:id', async (req, res) => {
 
 router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
     const cat = await Cat.findOne({ _id: req.body.category}) 
-  
+ 
     const product = new Product({
         ...req.body,
-        owner: req.shop._id
+        owner: req.shop._id,
+        attributes: JSON.parse(req.body.attributes),
+        tree: cat.tree.concat([req.body.name]),
+        images : req.files.map(x => x.filename)
     })
-    product.tree = cat.tree.concat([req.body.name])
-   // product.category = cat.name
-    product.images = req.files.map(x => x.filename)
     try
     {
         await product.save()

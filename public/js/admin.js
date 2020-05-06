@@ -3,6 +3,9 @@ var productDiv = document.getElementById("productsDiv");
 var productFiles = document.getElementById("productFiles");    
 var categories = document.getElementById("categories");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
+var attributes = document.getElementById("attributes");    
+var attributesDiv = document.getElementById("attributesDiv");    
+
 
 getProducts()
 getCats()
@@ -101,7 +104,17 @@ function deleteProduct(id){
  
 }
 
-function addcat(id){
+ 
+
+function addAttributes(){
+    var li = document.createElement("li");
+    li.innerHTML  = '<div> <input type="text" value = "" name="attributename" placeholder="name" required> '
+    li.innerHTML  +=  '<input type="text" value = "" name="attributevalue" placeholder="value" required > </br></div>'
+    attributes.appendChild(li);
+ 
+}
+
+function addCat(id){
     var formdata = new FormData();
     formdata.append('name',form.elements['name'].value)
     if(categories.value != 0)
@@ -129,6 +142,22 @@ form.addEventListener('submit', (e) => {
     formdata.append('price', form.elements['price'].value)
     formdata.append('description', form.elements['description'].value)
     formdata.append('id', form.elements['id'].value)
+    
+    var attributes_array =[]
+
+    for (var i = 0; i < attributes.children.length; i++ ) {
+    var obj = {}
+
+var name = attributes.children[ i ].innerHTML;
+        var lichildrens = attributes.children[ i ].getElementsByTagName("input");
+        obj.name = lichildrens[0].value
+        obj.description = lichildrens[1].value
+        attributes_array.push(obj)
+        
+    }
+
+    formdata.append( 'attributes', JSON.stringify( attributes_array ) )
+
     var method = "post"
     if(form.elements['id'].value!='')
         method = "PATCH"

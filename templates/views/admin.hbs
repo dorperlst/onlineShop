@@ -31,6 +31,12 @@
                     <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
                     <label>Price</label>
                     <input type="text" value = "" id="price"  name="price" placeholder="price" required>
+                
+                    <div id = "attributesDiv">     
+                        <a onclick="addAttributes()"> addAttributes</a> 
+                        <ul id = "attributes"></ul>
+                    </div>
+                    
                     <input type="hidden" value = "" id="id"  name="id">
 
                     Select images: <input type="file" id="productFiles" name="myFiles" multiple>
@@ -38,7 +44,7 @@
                     <input type="submit" value="Submit">  
                 </form>
 
-                                    <input type="button" onclick = 'addcat()' value="add cat">  
+                <input type="button" onclick = 'addCat()' value="add cat">  
 
             </div>
         </div>
