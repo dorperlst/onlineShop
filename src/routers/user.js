@@ -53,7 +53,7 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
     }
 
 })
- 
+ // todo confermation mail
 router.post('/users/login', multer().none(), async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)

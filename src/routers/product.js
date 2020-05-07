@@ -31,9 +31,8 @@ const upload = multer({
   }
 })
  
-router.get('/product/:id', async (req, res) => {
+router.get('/product/:shop/:id', async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id}) 
- 
     try {
         res.send({ product })
      } catch (e) {

@@ -1,5 +1,7 @@
 const express = require('express')
 const OrderObj = require('../models/order')
+
+const Product = require('../models/product')
 const Order = OrderObj.Order
 const OrderProduct = OrderObj.OrderProduct
 const authObj = require('../middleware/auth')
@@ -9,18 +11,21 @@ var multer = require('multer');
 
 
 router.post('/orders', multer().none(), auth , async function (req, res, next) {
-    var order = await Order.findOne({ owner :  req.user._id})
+    var product = Product.findById(orderProduct)
+    if (!product)
+        res.status(400).send('product not found')
+ 
+    var order = await Order.findOne({ owner :  req.user._id, shop : req.body.shop})
  
     if (!order) {
-
         order = new Order()
         order.shop = req.body.shop
         order.owner= req.user._id
         order.products= []
     }
-  
+    
     const orderProduct =  new OrderProduct()
-    orderProduct.orderPrice = req.body.orderPrice
+    orderProduct.orderPrice = product.price
     orderProduct.count = req.body.count
     orderProduct.product = req.body.product
     order.products.push(orderProduct)

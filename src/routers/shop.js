@@ -16,7 +16,7 @@ var storage =   multer.diskStorage({
     }
   });
    
-  const upload = multer({
+const upload = multer({
     storage: storage ,
     limits: {
         fileSize: 10000000
@@ -27,7 +27,7 @@ var storage =   multer.diskStorage({
         }
         cb(undefined, true)
     }
-  })
+})
 
 
 router.get('/shops', async (req, res) => {
@@ -38,17 +38,16 @@ router.get('/shops', async (req, res) => {
 
 router.post('/shops', upload.array('myFiles', 12),async  function (req, res, next) {
 
-//   console.log(req.body)
     const shop = new Shop(req.body)
     shop.images = req.files.map(x => x.filename)
 
     try {
         await shop.save()
-       } catch (e) {
+    }
+    catch (e) {
         console.log(e)
         res.status(400).send(e)
     }
-    //redirectSession(req, res, shop)
 
 })
  

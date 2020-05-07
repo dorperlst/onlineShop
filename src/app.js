@@ -7,6 +7,8 @@ const categoryRouter = require('./routers/cat')
 const shopRouter = require('./routers/shop')
 const paymentRouter = require('./routers/payment')
 const productRouter = require('./routers/product')
+const authObj = require('./middleware/auth')
+const admin = authObj.admin
 
 const path = require('path')
 const hbs = require('hbs')
@@ -40,23 +42,34 @@ app.get('/login', (req, res) => {
     })
 })
 
-app.get('/admin', (req, res) => {
+app.get('/admin', admin, (req, res) => {
+    var userName = req.session.name  
     res.render('admin', {
         title: 'admin',
-        name: 'online shop'
+        name: 'online shop',
+        username: userName
     })
 })
 
 app.get('/shop', (req, res) => {
-    sess = req.session;
-    var userName = 'Guest'
-    if(sess.name != undefined)
-        userName = sess.name
- 
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+    
     res.render('products', {
-        title: 'products2',
+        title: 'products',
         name: 'online shop',
         username: userName
+    })
+})
+
+app.get('/product/:id', (req, res) => {
+ 
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+    
+    res.render('product', {
+        title: 'product',
+        name: 'online shop',
+        username: userName,
+        id: req.params.id
     })
 })
 
