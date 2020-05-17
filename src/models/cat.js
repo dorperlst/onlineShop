@@ -15,17 +15,18 @@ const catSchema = new mongoose.Schema({
         type: String
     },
     parent: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cat',
+        type: String,
         required: false,
         default : undefined,
-        trim: true
     },
-
     level: {
         type: Number,
         required: true,
     },
+    // subCategories:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //      ref: 'Cat'
+    // }],
     tree:[{
         type: String,
         required: true,

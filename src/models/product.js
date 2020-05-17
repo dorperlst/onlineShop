@@ -11,6 +11,11 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    isavailable: {
+        type: Boolean,
+        required: false,
+        default: true
+    },
     price: {
         type: Number,
         required: true
@@ -30,10 +35,24 @@ const productSchema = new mongoose.Schema({
             type:String,
             required: true,
             trim: true } }],
-    details:[ {
-        type: String,
-        trim: true
-    }],
+    details:[  {
+        name: {
+            type:String,
+            required: true,
+            trim: true },   
+        description: {
+            type:String,
+            required: true,
+            trim: true } }],
+    tags:[  {
+        name: {
+            type:String,
+            required: true,
+            trim: true },   
+        description: {
+            type:String,
+            required: true,
+            trim: true } }],
     category: {
         type: String,
         required: true,

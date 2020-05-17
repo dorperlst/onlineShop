@@ -51,17 +51,7 @@ app.get('/admin', admin, (req, res) => {
     })
 })
 
-app.get('/shop', (req, res) => {
-    var userName = req.session.name != undefined ? req.session.name : 'Guest'
-    
-    res.render('products', {
-        title: 'products',
-        name: 'online shop',
-        username: userName
-    })
-})
-
-app.get('/product/:id', (req, res) => {
+app.get('/:shop/view/:id', (req, res) => {
  
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
     
@@ -69,7 +59,18 @@ app.get('/product/:id', (req, res) => {
         title: 'product',
         name: 'online shop',
         username: userName,
-        id: req.params.id
+        productid: req.params.id
+
+    })
+})
+
+app.get('/:shop/view', (req, res) => {
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+    
+    res.render('products', {
+        title: 'products',
+        name: 'online shop',
+        username: userName
     })
 })
 

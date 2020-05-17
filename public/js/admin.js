@@ -5,13 +5,13 @@ var categories = document.getElementById("categories");
 var categoriesDiv = document.getElementById("categoriesDiv");    
 var attributes = document.getElementById("attributes");    
  
-
+var shopName='yyyy'
 getProducts()
 getCats()
 
 function getProducts(){
     form.reset();
-    fetch('/products/yyyy')
+    fetch('/products/'+shopName)
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -35,33 +35,38 @@ function getProducts(){
 }
  
 function getCats(){
-    fetch('/cats')
+    fetch(shopName+'/cats')
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
         return null
         })
         .then((jsonData) => {   
-            categoriesDiv.innerHTML = ''
-            categories.options.l=0
+            categoriesDiv.innerHTML = '</br></br></br>-----------------categories----------------'
+            categories.options.length=0
             categories.clear
+
+            if(!jsonData.cats)
+                return
             var opt = document.createElement('option');
             opt.value = 0;
             opt.innerHTML = '--none--'
             categories.appendChild(opt);
 
-            for(var data in jsonData.cat)
+            for(var data in jsonData.cats)
             {
-                categoriesDiv.innerHTML += '<div> <label>Category Name : '+jsonData.cat[data].name+'</label> </br>'
-                categoriesDiv.innerHTML += ' <label>Description   : '+jsonData.cat[data].description+'</label></br>'
-                categoriesDiv.innerHTML += '<label>Price : '+jsonData.cat[data].price+'</label></br>'
-                categoriesDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.cat[data]._id+'") >Delete</a></br>'
-                categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cat[data]._id+'") >Edit</a></br>'+' </div></br></br>'
+                categoriesDiv.innerHTML += '<div> <label>Category Name : '+jsonData.cats[data].name+'</label> </br>'
+                categoriesDiv.innerHTML += ' <label>Description   : '+jsonData.cats[data].description+'</label></br>'
+                categoriesDiv.innerHTML += '<label>level : '+jsonData.cats[data].level+'</label></br></br></br></br></br>'
+                categoriesDiv.innerHTML += '<label>parent : '+jsonData.cats[data].parent+'</label></br></br></br></br></br>'
+
+                // categoriesDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.cat[data]._id.id+'") >Delete</a></br>'
+                // categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cat[data]._id.id+'") >Edit</a></br>'+' </div></br></br></br></br></br></br>'
 
 
                 var opt = document.createElement('option');
-                opt.value = jsonData.cat[data]._id;
-                opt.innerHTML = jsonData.cat[data].name
+                opt.value = jsonData.cats[data]._id;
+                opt.innerHTML = jsonData.cats[data].name
                 categories.appendChild(opt);
 
 
@@ -102,8 +107,6 @@ function deleteProduct(id){
 
  
 }
-
- 
 
 function addAttributes(){
     var li = document.createElement("li");

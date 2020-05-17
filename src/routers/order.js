@@ -11,7 +11,8 @@ var multer = require('multer');
 
 
 router.post('/orders', multer().none(), auth , async function (req, res, next) {
-    var product = Product.findById(orderProduct)
+ 
+    var product = await Product.findById(req.body.product)
     if (!product)
         res.status(400).send('product not found')
  
@@ -25,12 +26,13 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
     }
     
     const orderProduct =  new OrderProduct()
-    orderProduct.orderPrice = product.price
+    orderProduct.price = product.price
     orderProduct.count = req.body.count
     orderProduct.product = req.body.product
     order.products.push(orderProduct)
     try {
         await order.save()
+       
         res.status(201).send(order)
     } catch (e) {
         console.log(e)

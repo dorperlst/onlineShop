@@ -56,8 +56,7 @@ getProducts()
  
 
 function getProducts(){
-    
-     fetch('/products/' + shopName)
+    fetch('/'+shopName+'/products' )
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -74,7 +73,7 @@ function getProducts(){
                 productDiv.innerHTML += '<label>tree : ' + jsonData.products[data].tree+ '</label></br>'
                 productDiv.innerHTML += '<label>category : ' + jsonData.products[data].category+ '</label></br>'
 
-                productDiv.innerHTML += '<a href = product/' + jsonData.products[data]._id + '  >Details...</a></br></br></br></br>'
+                productDiv.innerHTML += '<a href = view/' + jsonData.products[data]._id + '  >Details...</a></br></br></br></br>'
              }  
         });
 }

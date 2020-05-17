@@ -27,7 +27,7 @@ const upload = multer({
   }
 })
  
-router.get('/cats/:id', async (req, res) => {
+router.get('/:shop/cats/:id', async (req, res) => {
     const cat = await Cat.findById(req.params.id)
     try {
         res.send({ cat })
@@ -36,11 +36,30 @@ router.get('/cats/:id', async (req, res) => {
     }
 })
 
-router.get('/cats', admin, async (req, res) => {
 
-    const cat = await Cat.find().sort({ "level": 1 })//{ tree: { "$in" : ["cat 0 1"]} }
+
+router.get('/:shop/cats', async (req, res) => {
+  
+    var params = [ {tree: req.params.shop }]
+    var sort = {  }
+    var limit = !req.query.limit ? 5 : req.query.limit
+    var skip = !req.query.skip ? 0 : req.query.skip
+ 
+    if (req.query.category)  
+        params.push( { tree: req.query.category } )
+    
+    if (req.query.name)  
+        params.push(  { name: req.query.name  } )
+         
+    const  match= { $and: params } 
+ 
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
     try {
-        res.send({ cat })
+        const cats =await Cat.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+        res.send({ cats })
      } catch (e) {
         res.status(400).send(e)
     }
@@ -62,28 +81,33 @@ router.delete('/cats/:id', async (req, res) => {
 
 router.post('/cats', admin, upload.single('avatar'), async function (req, res, next) {
     const cat = new Cat(req.body)
+    cat.level = cat.tree.length
+    cat.owner = req.shop._id
+  
+    var parent = undefined
     if(!req.body.parent)
     {
-        cat.tree = [req.shop.name, req.body.name]
+        cat.tree = [req.shop.name, cat.name]
     }
     else
     {
         var parent = await Cat.findById(req.body.parent) ;
-        cat.tree = parent.tree.concat([req.body.name])
+        cat.tree = parent.tree.concat([cat.name])
+        cat.parent = parent.name
     }
-    cat.level = cat.tree.length
-    cat.owner = req.shop._id
-    
+   
     if(req.file != undefined)
         cat.image = req.file.filename
     try
     {
+       
         await cat.save()
+ 
         res.send(cat)
     }
     catch (e) {
         console.log(e)
-         res.status(400).send(e)
+        res.status(400).send(e)
     }
 })
 
@@ -99,17 +123,14 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     try
     {
         await cat.save()
-        res.send(cat)
+        res.send(cat2)
     }
     catch (e) {
          res.status(400).send(e)
     }
 })
   
-
  
-
-
 module.exports = router
 
  

@@ -26,6 +26,8 @@ function logout(){
     .then(function(res) {
         if (res.redirected)  
             window.location.href = res.url;
+        else    
+            window.location.href='/login'
     })
 }
 
@@ -33,8 +35,10 @@ function logoutAll(){
     fetch('users/logoutAll',
        { method: 'POST', body: {}})
    .then(function(res) {
-       if (res.redirected)  
+        if (res.redirected)  
            window.location.href = res.url;
+        else    
+            window.location.href='/login'
 
     })
 }

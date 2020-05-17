@@ -46,7 +46,7 @@ router.get('/product/:shop/:id', async (req, res) => {
 // GET /products?limit=10&skip=20
 // GET /products?sortBy=createdAt:desc
 // GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
-router.get('/products/:shop', async (req, res) => {
+router.get('/:shop/products', async (req, res) => {
    
     var params = [ {tree: { "$in" : [req.params.shop]} }]
     var sort = { "price": -1 }
@@ -96,6 +96,7 @@ router.delete('/products/:id', async (req, res) => {
 
 
 router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
+  //  console.log('pppppppppp'+req.body)
     const cat = await Cat.findOne({ _id: req.body.category}) 
     attribute = new Attribute({ attributes: JSON.parse(req.body.attributes),
     })

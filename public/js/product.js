@@ -3,12 +3,14 @@ var productDiv = document.getElementById("productDiv");
 var ordersDiv = document.getElementById("ordersDiv");    
 
 var shopName = 'yyyy'
-
+ 
+ 
 var product = {}
+getProduct()
 getOrders()
-function getProduct(id){
-   
-    fetch('/product/' + shopName +'/'+id)
+
+function getProduct(){
+     fetch('/product/' + shopName +'/'+ productid )
        .then((res) => { 
        if(res.status == 200)
            return res.json() 
@@ -27,9 +29,6 @@ function getProduct(id){
        });
 }
 
- 
-
-
 function getOrders(){
    fetch('/orders')
       .then((res) => { 
@@ -41,16 +40,19 @@ function getOrders(){
        ordersDiv.innerHTML = ''
           for(var ordind in jsonData)
           {
-               ordersDiv.innerHTML += '<div> <label>----order-----</label> </br>'
+               ordersDiv.innerHTML += '<div> <label>----order-----</label> </br></br></br>'
 
                for(var prodind in jsonData[ordind].products )
                {
                    ordersDiv.innerHTML += '<label>Product Name : '+ jsonData[ordind].products[prodind].product.name+'</label> </br>'
                    ordersDiv.innerHTML += '<label>price : '+ jsonData[ordind].products[prodind].product.price+'</label> </div> </br>'
-                   ordersDiv.innerHTML += '<label>Amount : '+ jsonData[ordind].products[prodind].count+'</label> </div> </br>'
+                   ordersDiv.innerHTML += '<label>Amount : '+ jsonData[ordind].products[prodind].count+'</label> </div> </br></br></br></br>'
 
                }  
            }
+
+           ordersDiv.innerHTML += '</br></br></br></br></br>'
+
       });
 }
 

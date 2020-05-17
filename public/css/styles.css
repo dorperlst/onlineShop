@@ -1,4 +1,4 @@
-body {
+/* body {
     color: #333333;
     font-family: arial;
     max-width: 650px;
@@ -8,7 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh
-}
+} */
 
 .main-content {
     flex-grow: 1;
@@ -41,10 +41,10 @@ header a {
     width: 250px;
 }
 
-/* input {
+input {
     border: 1px solid #cccccc;
     padding: 8px;
-} */
+}
 
 /* button {
     cursor: pointer;
@@ -87,14 +87,12 @@ body {
     float: left;
     text-align: right;
     padding: 5px 10px 0 0;
-    width: 140px;
+     
   }
   input[type=text] {
-    float: left;
-    width: 40px;
-    font: bold 20px Helvetica, sans-serif;
-    padding: 3px 0 0 0;
-    text-align: center;
+     font: bold 20px Helvetica, sans-serif;
+     float: left;
+     text-align: center;
   }
   form div {
     overflow: hidden;
