@@ -15,7 +15,7 @@
                 <a onclick = addProduct() >Add Product</a>
                 <form id= "form"  action="/"  method="post">
                     <label>Product Name</label>
-                    <input type="text" value="" id="name" name="name" placeholder="Display Name" required>
+                    <input type="text" value="" id="productname" name="productname" placeholder="Display Name" required>
 
                     <select id="categories" name="category"></select>
 
@@ -25,10 +25,17 @@
                     <input type="text" value = "" id="price"  name="price" placeholder="price" required>
                 
                     <div id = "attributesDiv">     
-                        <a onclick="addAttributes()"> addAttributes</a> 
+                        <a onclick="addAttributes()"> Add Attributes</a> 
                         <ul id = "attributes"></ul>
                     </div>
-                    
+                     <div id = "detailsDiv">     
+                        <a onclick="addDetails()"> Add Details</a> 
+                        <ul id = "details"></ul>
+                    </div>
+                     <div id = "tagsDiv">     
+                        <a onclick="addTags()"> Add Tags</a> 
+                        <ul id = "tags"></ul>
+                    </div>
                     <input type="hidden" value = "" id="id"  name="id">
 
                     Select images: <input type="file" id="productFiles" name="myFiles" multiple>

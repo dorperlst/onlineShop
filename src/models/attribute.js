@@ -8,7 +8,7 @@ const attributeSchema = new mongoose.Schema({
             type:String,
             required: true,
             trim: true },   
-        description: {
+        value: {
             type:String,
             required: true,
             trim: true } }],

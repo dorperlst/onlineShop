@@ -35,13 +35,13 @@ const admin = async (req, res, next) => {
         req.user = user
         const shop = await Shop.findOne({ admin : user._id })
         if (!shop)  
-            res.redirect('/shop');
+            res.redirect('/login');
 
         
         req.shop = shop
         next()
     } catch (e) {
-        res.redirect('/shop');
+        res.redirect('/login');
 
     }
 }

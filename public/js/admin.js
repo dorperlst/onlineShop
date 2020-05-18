@@ -3,15 +3,18 @@ var productDiv = document.getElementById("productsDiv");
 var productFiles = document.getElementById("productFiles");    
 var categories = document.getElementById("categories");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
-var attributes = document.getElementById("attributes");    
+var liattributes = document.getElementById("attributes");    
+var litags = document.getElementById("tags"); 
+var lidetails = document.getElementById("details"); 
+
  
 var shopName='yyyy'
 getProducts()
 getCats()
 
 function getProducts(){
-    form.reset();
-    fetch('/products/'+shopName)
+    //form.reset();
+    fetch('/'+shopName+'/products')
         .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -88,7 +91,7 @@ function editProduct(id){
         return null
     })
     .then((jsonData) => {
-        form.elements['name'].value = jsonData.product.name
+        form.elements['productname'].value = jsonData.product.name
         form.elements['price'].value = jsonData.product.price
         form.elements['description'].value = jsonData.product.description
         form.elements['id'].value = jsonData.product._id
@@ -107,18 +110,28 @@ function deleteProduct(id){
 
  
 }
-
 function addAttributes(){
+    liattributes.appendChild( createListItem());
+}
+function addDetails(){
+    lidetails.appendChild( createListItem());
+}
+function addTags(){
+    litags.appendChild( createListItem());
+}
+function createListItem(){
     var li = document.createElement("li");
-    li.innerHTML  = '<div> <input type="text" value = "" name="attributename" placeholder="name" required> '
-    li.innerHTML  +=  '<input type="text" value = "" name="attributevalue" placeholder="value" required > </br></div>'
-    attributes.appendChild(li);
+    li.innerHTML  = '<div> <input type="text" value = "" placeholder="name" required> '
+    li.innerHTML  +=  '<input type="text" value = ""  placeholder="value" required > </br></div>'
+    return li
+
+   
  
 }
 
 function addCat(id){
     var formdata = new FormData();
-    formdata.append('name',form.elements['name'].value)
+    formdata.append('name',form.elements['productname'].value)
     if(categories.value != 0)
         formdata.append('parent', categories.value)
     formdata.append('description', form.elements['description'].value)
@@ -139,7 +152,7 @@ function addCat(id){
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData();
-    formdata.append('name', form.elements['name'].value)
+    formdata.append('name', form.elements['productname'].value)
     formdata.append('category', categories.value)
     formdata.append('price', form.elements['price'].value)
     formdata.append('description', form.elements['description'].value)
@@ -147,17 +160,38 @@ form.addEventListener('submit', (e) => {
     
     var attributes_array =[]
 
-    for (var i = 0; i < attributes.children.length; i++ ) {
+    for (var i = 0; i < liattributes.children.length; i++ ) {
         var attribute = {}
 
         var att = attributes.children[ i ].getElementsByTagName("input");
         attribute.name = att[0].value
-        attribute.description = att[1].value
+        attribute.value = att[1].value
         attributes_array.push(attribute)
+        
+    }
+    var details_array =[]
+
+    for (var i = 0; i < lidetails.children.length; i++ ) {
+        var details= {}
+
+        var detailinput = lidetails.children[ i ].getElementsByTagName("input");
+        details.name = detailinput[0].value
+        details.value = detailinput[1].value
+        details_array.push(details)
+        
+    }
+    var tags_array =[]
+
+    for (var i = 0; i < litags.children.length; i++ ) {
+        var tags = {}
+        tags.name = litags.children[ i ].getElementsByTagName("input")[0].value
+        tags_array.push(tags)
         
     }
 
     formdata.append( 'attributes', JSON.stringify( attributes_array ) )
+    formdata.append( 'tags', JSON.stringify( tags_array ) )
+    formdata.append( 'details', JSON.stringify( details_array ) )
 
     var method = "post"
     if(form.elements['id'].value!='')

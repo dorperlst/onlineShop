@@ -48,22 +48,36 @@ router.get('/product/:shop/:id', async (req, res) => {
 // GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 router.get('/:shop/products', async (req, res) => {
    
-    var params = [ {tree: { "$in" : [req.params.shop]} }]
+    var params = [ {tree: req.params.shop }]
     var sort = { "price": -1 }
-    var limit = !req.query.limit ? 5 : req.query.limit
+    var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
  
     if (req.query.category)  
-        params.push( { tree: { "$in" : [req.query.category]} } )
-    
+        params.push( { tree: req.query.category } )
+    // if (req.query.tag)  
+    //     params.push( { tags: req.query.tag } )
+    // // if (req.query.tags)  
+    //     params.push( { tree: req.query.category } )
+
+  
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
-
+    if (req.query.pricefrom)  
+        params.push(  { price:{"$gte": req.query.pricefrom}  } )
+    if (req.query.priceto)  
+        params.push(  { price:{"$lte": req.query.priceto}  } )
+    if (req.query.tag)  
+    { 
+        var jsontag = JSON.parse(req.query.tag)
+        for(i=0;i<jsontag.length;i++)
+            params.push( {  "tags.name":jsontag[i][0] } )
+    }
     if (req.query.attributes)  
     { 
-       var att = JSON.parse(req.query.attributes)
-       for(i=0;i<att.length;i++)
-             params.push( {  "attributes.name":att[i][0], "attributes.description": att[i][1] } )
+        var att = JSON.parse(req.query.attributes)
+        for(i=0;i<att.length;i++)
+            params.push( {  "attributes.name":att[i][0], "attributes.value": att[i][1] } )
     }
          
     const match = { $and: params } 
@@ -93,28 +107,27 @@ router.delete('/products/:id', async (req, res) => {
     }
 })
 
-
-
 router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
-  //  console.log('pppppppppp'+req.body)
-    const cat = await Cat.findOne({ _id: req.body.category}) 
-    attribute = new Attribute({ attributes: JSON.parse(req.body.attributes),
-    })
+     const cat = await Cat.findOne({ _id: req.body.category}) 
+   // attribute = new Attribute({ attributes: JSON.parse(req.body.attributes)    })
     const product = new Product({
         ...req.body,
         owner: req.shop._id,
         attributes: JSON.parse(req.body.attributes),
+        tags: JSON.parse(req.body.tags),
+        details: JSON.parse(req.body.details),
         tree: cat.tree.concat([req.body.name]),
         images : req.files.map(x => x.filename)
     })
     try
     {
-        await attribute.save()
+       // await attribute.save()
 
         await product.save()
         res.send(product)
     }
     catch (e) {
+        
         console.log (e)
         res.status(400).send(e)
     }

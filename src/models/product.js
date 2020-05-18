@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema({
             type:String,
             required: true,
             trim: true },   
-        description: {
+        value: {
             type:String,
             required: true,
             trim: true } }],
@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
             type:String,
             required: true,
             trim: true },   
-        description: {
+        value: {
             type:String,
             required: true,
             trim: true } }],
@@ -48,11 +48,8 @@ const productSchema = new mongoose.Schema({
         name: {
             type:String,
             required: true,
-            trim: true },   
-        description: {
-            type:String,
-            required: true,
-            trim: true } }],
+            trim: true }     
+        }],
     category: {
         type: String,
         required: true,

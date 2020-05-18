@@ -59,6 +59,7 @@ app.get('/:shop/view/:id', (req, res) => {
         title: 'product',
         name: 'online shop',
         username: userName,
+        shopname: req.params.shop,
         productid: req.params.id
 
     })
@@ -69,6 +70,7 @@ app.get('/:shop/view', (req, res) => {
     
     res.render('products', {
         title: 'products',
+        shopname: req.params.shop,
         name: 'online shop',
         username: userName
     })
