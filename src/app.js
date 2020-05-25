@@ -37,16 +37,22 @@ app.use(paymentRouter)
  
 app.get('/login', (req, res) => {
     res.render('login', {
-        title: 'login',
-        name: 'online shop'
+        title: 'login'
+    })
+})
+
+app.get('/about', (req, res) => {
+    res.render('about', {
+        title: 'about'
     })
 })
 
 app.get('/admin', admin, (req, res) => {
     var userName = req.session.name  
+    if (userName == undefined)
+        window.location.href="/login"
     res.render('admin', {
         title: 'admin',
-        name: 'online shop',
         username: userName
     })
 })
@@ -67,11 +73,9 @@ app.get('/:shop/view/:id', (req, res) => {
 
 app.get('/:shop/view', (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
-    
     res.render('products', {
         title: 'products',
         shopname: req.params.shop,
-        name: 'online shop',
         username: userName
     })
 })

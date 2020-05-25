@@ -31,7 +31,7 @@ const upload = multer({
   }
 })
  
-router.get('/product/:shop/:id', async (req, res) => {
+router.get('/product/:id', async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id}) 
     try {
         res.send({ product })
@@ -55,12 +55,7 @@ router.get('/:shop/products', async (req, res) => {
  
     if (req.query.category)  
         params.push( { tree: req.query.category } )
-    // if (req.query.tag)  
-    //     params.push( { tags: req.query.tag } )
-    // // if (req.query.tags)  
-    //     params.push( { tree: req.query.category } )
-
-  
+   
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
     if (req.query.pricefrom)  
@@ -149,7 +144,10 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
         product.tree = cat.tree.concat([req.body.name])
         product.category = req.body.category
     }
-
+    product.attributes = JSON.parse(req.body.attributes)
+    product.details = JSON.parse(req.body.details)
+    product.tags = JSON.parse(req.body.tags)
+ 
     try
     {
         await product.save()

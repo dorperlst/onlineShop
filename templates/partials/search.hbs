@@ -1,19 +1,39 @@
  <search >
-   <div style="height: 30px;margin:10px;">
-        <div>
-            <label>-----------search------------</label>
-            <select id="search" name="search"></select>
-            <input type="text" name="searchValue" placeholder="Search">
-            <input type="button" onclick = 'search()' value="search">  
-        </div>
-    </div>
-    </br> </br>
-</search>
 
-<script src="/js/search.js"></script>
- <script type="text/javascript">
-     init("{{shopname}}")
-</script>
+
+  <nav class="zone green">
+    <ul class="main-nav">
+        <li><a href="">About</a></li>
+        <li><a href="">Products</a></li>
+         <li>
+            <a href="">  
+                <select id="search" name="search"></select>
+                <input type="text" name="searchValue" placeholder="Search">
+            </a>
+        </li>  
+    
+            
+           
+        <li  id ="liSign" class="push" ></li>
+
+        <li  id ="liUser" class="push"></li>
+    </ul>
+  </nav>
+  {{!-- <div class="container zone red">Cover!!!!</div> --}}
+
+
 
 
  
+ 
+
+ 
+
+<script src="/js/search.js"></script>
+ <script type="text/javascript">
+    init("{{shopname}}","{{username}}")
+ 
+</script>
+</search>
+
+

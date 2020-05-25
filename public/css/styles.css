@@ -1,117 +1,170 @@
-/* body {
-    color: #333333;
-    font-family: arial;
-    max-width: 650px;
-    margin: 0 auto;
-    padding: 0 16px;
+ 
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  /* font-weight: bold; */
+  /* text-align: center; */
+}
 
+.wrapper > * {
+  /* padding: 10px; */
+  /* flex: 1 100%; */
+}
+
+
+
+.rowwrapper {
+    height: inherit;
     display: flex;
-    flex-direction: column;
-    min-height: 100vh
-} */
+    flex-flow: row wrap;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .wrapper > * {
+    /* padding: 10px; */
+    /* flex: 1 100%; */
+  }
+  
+  
+  
 
-.main-content {
-    flex-grow: 1;
+.header {
+  background: tomato;
 }
 
-footer {
-    color: #888888;
-    border-top: 1px solid #eeeeee;
-    margin-top: 16px;
-    padding: 16px 0;
+.footer {
+  background: lightgreen;
+}
+.main2 {
+    text-align: left;
+    background: rgb(255, 102, 0);
+    flex: 5 0 0;
+    height: inherit;
+    /* overflow: scroll; */
+  }
+  
+.main {
+  text-align: left;
+  background: deepskyblue;
+  height: inherit
 }
 
-header {
-    margin-top: 16px;
-    margin-bottom: 48px;
+.aside-1 {
+    background: rgb(157, 255, 0);
+  }
+.aside-2{
+    background: rgb(0, 140, 255);
+  }
+.header {
+  background: gold;
+  FONT-WEIGHT: 150;
+  font-size:1em;
 }
 
-h1 {
-    font-size: 64px;
-    margin-bottom: 16px;
+.footer {
+  background: hotpink;
+}
+ 
+
+@media all   {
+  .aside {flex: 1 0 0;}
+  .aside2 {flex: 1 0 0;}
+  .header {order: 1;} 
+  .main    {order: 2;}
+  .footer  { order: 3; }
+  .aside-1  { order: 1; } 
+  .aside-2  { order: 3; } 
+  .main2   { order: 2; }
+
 }
 
-header a {
-    color: #888888;
-    margin-right: 16px;
+
+
+ 
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.zone {
+    FONT-WEIGHT: 50;
+    /* padding: 10 10 10 10; */
+    cursor:pointer;
+    color:#FFF;
+    /* border-radius:4px; */
+    /* border:1px solid #bbb; */
+    transition: all 0.3s linear;
+  }
+  
+  .zone:hover {
+    -webkit-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    -moz-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    -o-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+}
+
+
+/***********************************************************************
+ *  Nav Bar
+ **********************************************************************/
+ .main-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+@media only screen and (max-width: 600px) {
+    .main-nav {
+        font-size: 0.5em;
+        padding: 0;
+    }
+}
+
+.push {
+    margin-left: auto;
+}
+
+li {
+    padding: 10 20 10 20;
+}
+
+a {
+    color: #f5f5f6;
     text-decoration: none;
 }
 
-.portrait {
-    width: 250px;
+.container {
+  /*show heigh: auto*/
+  height: 50vh; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-input {
-    border: 1px solid #cccccc;
-    padding: 8px;
+/***********************************************************************
+*  Grid Panel
+**********************************************************************/
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 5px;
 }
 
-/* button {
-    cursor: pointer;
-    border: 1px solid #888888;
-    background: #888888;
-    color: white;
-    padding: 8px;
-} */
+.box {
+  background-color: #444;
+  padding: 30px;
+  /* margin: 20px; */
+}
 
+.box > img {
+  width: 100%;
+}
 
-
-
-/*
-	 CSS-Tricks Example
-	 by Chris Coyier
-	 http://css-tricks.com
-*/
-
-body {
-    background: #393939;
-    color: white;
-    font: 14px Helvetica, sans-serif;
-  }
-  
-  #page-wrap {
-    width: 500px;
-    margin: 100px auto;
-  }
-  
-  h1 {
-    font: 26px Georgia, Serif;
-    margin: 0 0 10px 0;
-  }
-  form {
-    margin: 50px 0 0 0;
-  }
-  label {
-    font: bold 20px Helvetica, sans-serif;
-    display: block;
-    float: left;
-    text-align: right;
-    padding: 5px 10px 0 0;
-     
-  }
-  input[type=text] {
-     font: bold 20px Helvetica, sans-serif;
-     float: left;
-     text-align: center;
-  }
-  form div {
-    overflow: hidden;
-    margin: 0 0 5px 0;
-  }
-  .button {
-    margin: 0 0 0 5px;
-    text-indent: -9999px;
-    cursor: pointer;
-    width: 29px;
-    height: 29px;
-    float: left;
-    text-align: center;
-    background: url(../images/buttons.png) no-repeat;
-  }
-  .dec {
-    background-position: 0 -29px;
-  }
-  
-  .buttons {
-    padding: 20px 0 0 140px;
-  }
+.product
+{
+  width: 100%;
+}

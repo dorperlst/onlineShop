@@ -64,16 +64,35 @@ function getProducts(){
         })
         .then((jsonData) => {   
             productDiv.innerHTML = ''
-           
-            for(var data in jsonData.products)
+            for(i=0;i< jsonData.products.length;i++)
             {
-                productDiv.innerHTML += '<div> <label>Product Name : ' + jsonData.products[data].name + '</label> </br>'
-                productDiv.innerHTML += ' <label>Description : ' + jsonData.products[data].description + '</label></br>'
-                productDiv.innerHTML += '<label>Price : ' + jsonData.products[data].price + '</label></br>'
-                productDiv.innerHTML += '<label>tree : ' + jsonData.products[data].tree+ '</label></br>'
-                productDiv.innerHTML += '<label>category : ' + jsonData.products[data].category+ '</label></br>'
+                var product = jsonData.products[i]
+                var innerhtml = ''
+    
+               //'<div class="container zone red">'
+                
+               //
+                //productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label>'
+                // productDiv.innerHTML += '<label>category : ' + product.category+ '</label>'
+                var img ='default.jpeg'
+                if(product.images.length > 0)
+                    img = product.images[0]
+    
+  
+               // innerhtml += '<div class ="item"> <img  class="image" src="../../uploads/'+img+'"></img> </div>' 
+                innerhtml += '<div class ="box zone "> <img  class="image" src="../../uploads/'+img+'">'
+                innerhtml += '<div class ="product"> <span>' + product.name + '</span> </div>'
 
-                productDiv.innerHTML += '<a href = view/' + jsonData.products[data]._id + '  >Details...</a></br></br></br></br>'
+                innerhtml += '<div class ="product"> <span>' + product.description + '</span> </div>'
+                
+                innerhtml += '<div class ="product"><span> ' + product.price + '$</span>  <a href = view/' + product._id + 
+                    ' >details...</a></div> </div>'
+
+                // innerhtml+=' '
+                // innerhtml += ' </div>'
+                productDiv.innerHTML += innerhtml
+
+
              }  
         });
 }

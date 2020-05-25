@@ -13,7 +13,11 @@ getProducts()
 getCats()
 
 function getProducts(){
-    //form.reset();
+    form.reset();
+    lidetails.innerHTML = '';
+    liattributes.innerHTML = '';
+
+    litags.innerHTML = '';
     fetch('/'+shopName+'/products')
         .then((res) => { 
         if(res.status == 200)
@@ -23,17 +27,21 @@ function getProducts(){
         .then((jsonData) => {   
             productDiv.innerHTML = ''
            
-            for(var data in jsonData.products)
+            for(var ind in jsonData.products)
             {
-                productDiv.innerHTML += '<div> <label>Product Name : ' + jsonData.products[data].name + '</label> </br>'
-                productDiv.innerHTML += ' <label>Description : ' + jsonData.products[data].description + '</label></br>'
-                productDiv.innerHTML += '<label>Price : ' + jsonData.products[data].price + '</label></br>'
-                productDiv.innerHTML += '<label>tree : ' + jsonData.products[data].tree+ '</label></br>'
-                productDiv.innerHTML += '<label>category : ' + jsonData.products[data].category+ '</label></br>'
+                var product = jsonData.products[ind]
+                productDiv.innerHTML += '<div> <label>Product Name : ' + product.name + '</label> </br>'
+                productDiv.innerHTML += ' <label>Description : ' + product.description + '</label></br>'
+                productDiv.innerHTML += '<label>Price : ' + product.price + '</label></br>'
+                productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label></br>'
+                productDiv.innerHTML += '<label>category : ' + product.category+ '</label></br>'
 
-                productDiv.innerHTML += '<a onclick = deleteProduct("' + jsonData.products[data]._id + '") >Delete</a></br>'
-                productDiv.innerHTML += '<a onclick = editProduct("' + jsonData.products[data]._id + '") >Edit</a></br>'+' </div></br></br>'
-            }  
+                productDiv.innerHTML += '<a onclick = deleteProduct("' + product._id + '") >Delete</a></br>'
+                productDiv.innerHTML += '<a onclick = editProduct("' + product._id + '") >Edit</a></br>'+' </div></br></br>'
+
+              
+
+            }
         });
 }
  
@@ -64,7 +72,7 @@ function getCats(){
                 categoriesDiv.innerHTML += '<label>parent : '+jsonData.cats[data].parent+'</label></br></br></br></br></br>'
 
                 // categoriesDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.cat[data]._id.id+'") >Delete</a></br>'
-                // categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cat[data]._id.id+'") >Edit</a></br>'+' </div></br></br></br></br></br></br>'
+                // categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cats[data]._id+'") >Edit</a></br>'+' </div></br></br></br></br></br></br>'
 
 
                 var opt = document.createElement('option');
@@ -91,11 +99,25 @@ function editProduct(id){
         return null
     })
     .then((jsonData) => {
-        form.elements['productname'].value = jsonData.product.name
-        form.elements['price'].value = jsonData.product.price
-        form.elements['description'].value = jsonData.product.description
-        form.elements['id'].value = jsonData.product._id
-        categories.value =  jsonData.product.category
+        const product = jsonData.product
+        form.elements['productname'].value = product.name
+        form.elements['price'].value = product.price
+        form.elements['description'].value = product.description
+        form.elements['id'].value = product._id
+        categories.value =  product.category
+        lidetails.innerHTML = '';
+        liattributes.innerHTML = '';
+
+        litags.innerHTML = '';
+
+        for(var ind in product.attributes)
+            addAttributes(product.attributes[ind].name,product.attributes[ind].value);
+     
+        for(var ind in product.details)
+            addDetails(product.details[ind].name, product.details[ind].value);
+        for(var ind in product.tags)
+            litags.appendChild( createListItem(product.tags[ind].name));
+        
     });
 }
 
@@ -110,25 +132,39 @@ function deleteProduct(id){
 
  
 }
-function addAttributes(){
-    liattributes.appendChild( createListItem());
-}
-function addDetails(){
-    lidetails.appendChild( createListItem());
-}
-function addTags(){
-    litags.appendChild( createListItem());
-}
-function createListItem(){
-    var li = document.createElement("li");
-    li.innerHTML  = '<div> <input type="text" value = "" placeholder="name" required> '
-    li.innerHTML  +=  '<input type="text" value = ""  placeholder="value" required > </br></div>'
-    return li
 
-   
+function addAttributes(name='', value=''){
+    
+    liattributes.appendChild( createListItem(name,value));
+}
+function addDetails(name = '', value = ''){
+    lidetails.appendChild( createListItem(name,value));
+}
+function addTags(name = ''){
+    litags.appendChild( createListItem(name));
+}
+
+function createListItem(name, value){
+    var li = document.createElement("li");
+    li.innerHTML  = '<div> <input type="text" value = "'+name+'" placeholder="name" required> '
+    if(value != undefined)
+        li.innerHTML  +=  '<input type="text" value = "'+value+'"  placeholder="value" required >'
+        
+
+    li.innerHTML += '<a href="#" onclick="removeli(parentNode)">remove</a>'
+
+    li.innerHTML  += ' </br></div>'
+    return li
  
 }
-
+function removeli(parentNode){
+     
+    parentNode.parentNode.removeChild(parentNode)
+    window.setTimeout(function () { 
+        document.getElementById('productname').focus(); 
+    }, 0);
+  
+}
 function addCat(id){
     var formdata = new FormData();
     formdata.append('name',form.elements['productname'].value)
