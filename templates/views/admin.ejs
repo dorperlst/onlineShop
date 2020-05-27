@@ -1,0 +1,57 @@
+{{>header}}
+
+<body>
+    <div class="main-content">
+        {{>header}}
+
+          <div class="centered-form">
+
+            <div id="productsDiv" class="centered-form__box"></div>
+
+            <div id="categoriesDiv" class="centered-form__box"></div>
+
+            <div class="centered-form__box">
+                <h1>Product</h1>
+                <a onclick = addProduct() >Add Product</a>
+                <form id= "form"  action="/"  method="post">
+                    <label>Product Name</label>
+                    <input type="text" value="" id="productname" name="productname" placeholder="Display Name" required>
+
+                    <select id="categories" name="category"></select>
+
+                    <label>Description</label>
+                    <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
+                    <label>Price</label>
+                    <input type="text" value = "" id="price"  name="price" placeholder="price" required>
+                
+                    <div id = "attributesDiv">     
+                        <a onclick="addAttributes()"> Add Attributes</a> 
+                        <ul id = "attributes"></ul>
+                    </div>
+                     <div id = "detailsDiv">     
+                        <a onclick="addDetails()"> Add Details</a> 
+                        <ul id = "details"></ul>
+                    </div>
+                     <div id = "tagsDiv">     
+                        <a onclick="addTags()"> Add Tags</a> 
+                        <ul id = "tags"></ul>
+                    </div>
+                    <input type="hidden" value = "" id="id"  name="id">
+
+                    Select images: <input type="file" id="productFiles" name="myFiles" multiple>
+
+                    <input type="submit" value="Submit">  
+                </form>
+
+                <input type="button" onclick = 'addCat()' value="add cat">  
+
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>

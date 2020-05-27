@@ -1,0 +1,62 @@
+ 
+<%- include('../partials/header.ejs') %>
+
+<body>
+ddd
+  <div class="wrapper">
+      <div class="main">
+        <div class="rowwrapper">
+          <div  class="main2">
+            <div>
+                <div id="productsDiv"  class="zone blue grid-wrapper"> 
+                  
+                  <% products.forEach(function(product) { %>
+
+
+                       <div class ="box zone "> 
+                       
+                        <% 
+                        
+                        if ( product.images[0]) { %>
+                          <img  class="image" src="../../uploads/<%= product.images[0] %>"></img> 
+                        <% }
+                        
+                        else  { %>
+                          <img  class="image" src="../../uploads/default.jpeg"></img> 
+                        <% }
+                        
+                        %>
+                          <p><%= product.name %></p>
+
+                      </div>
+
+
+
+                   <% }); %>
+                
+                </div>
+          </div>
+        </div>
+        <aside class="aside2 aside-1">      <%- include('../partials/categories.ejs') %>
+        </aside>
+       </div> 
+    </div>
+    <aside class="aside header">
+      
+      
+      <%- include('../partials/search.ejs') %>
+    
+    
+    </aside>
+    <aside class="aside footer">
+      <%- include('../partials/footer.ejs') %>
+
+      
+      
+    </aside>
+  </div>
+
+  <script src="/js/products.js"></script>
+ 
+</body>
+      
