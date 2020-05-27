@@ -1,9 +1,32 @@
 
-const categories = document.getElementById("search");    
+const categories = document.getElementById("categories");   
+
+function initSearch(shopName)
+{
+    document.getElementById("searchButton").addEventListener('click', (e) => {
+        e.preventDefault()
+        const tag = document.getElementById("tag").value.trim();   
+
+        var href = '/'+shopName+'/view'
+        var category =''
+        if(categories.value != 0)
+            href+="?category="+  categories.options[categories.selectedIndex].text
+
+        if( tag!= '')
+            href+="&&tag="+ tag
+    
+        window.location.href = href
+     })
+}
+
+
+
+
 var shopName=''
 
 function init(shop, username){
     shopName = shop
+    initSearch(shopName)
 
     if(username == undefined ||  username == "")
         username='Guest'
@@ -22,7 +45,7 @@ function init(shop, username){
     else  
     {
         liSign.innerHTML  = '<a onclick="logout()">Logout</a> '
-       // liSign.innerHTML  += '<li><a onclick="logoutAll()">Logout All</a></li>'
+        liSign.innerHTML  += '<a onclick="logoutAll()">Logout All</a>'
     }
  
     getCats()
@@ -52,6 +75,7 @@ function logoutAll(){
 
     })
 }
+
 function getCats(){
     fetch('/'+shopName+'/cats')
         .then((res) => { 

@@ -1,5 +1,7 @@
 var express = require('express');
 const Product = require('../models/product')
+const User = require('../models/user')
+
 const Attribute = require('../models/attribute')
 
 const Cat = require('../models/cat')
@@ -40,22 +42,53 @@ router.get('/product/:id', async (req, res) => {
     }
 })
 
- 
+router.get('/:shop/view',async (req, res) => {
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
+    try {
+        const products = await getProducts(req)
+        const categories = await Cat.find() 
+
+        res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, username: userName});
+        } 
+    catch (e) {
+        const obj={} 
+        res.render('products', { title: 'products', products: obj ,shopname: req.params.shop, username: userName});   
+     }
+})
+ 
 // GET /products?completed=true
 // GET /products?limit=10&skip=20
 // GET /products?sortBy=createdAt:desc
 // GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 router.get('/:shop/products', async (req, res) => {
-   
+  
+    try {
+        const products = await getProducts(req)
+        // console.log('uuuuuuuuuuuuuuuuuuuuuuuuuu'+products)
+
+        res.send({ products })
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e)
+    }
+})
+ 
+
+async function getProducts(req)
+{
     var params = [ {tree: req.params.shop }]
-    var sort = { "price": -1 }
+     var sort = { "price": -1 }
     var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
  
-    if (req.query.category)  
+    if (req.query.category &&  req.query.category!='All') 
+    {
         params.push( { tree: req.query.category } )
-   
+              
+
+    }
+ 
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
     if (req.query.pricefrom)  
@@ -81,15 +114,10 @@ router.get('/:shop/products', async (req, res) => {
         const parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
-
-    try {
-        const products =await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))//await Product.find( { "attributes.name": "dsdsds", "attributes.description": "fsffssf" }) //
-        res.send({ products })
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
- 
+ console.log(match)
+    var prod = Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+      return prod
+}
 router.delete('/products/:id', async (req, res) => {
      
     try {

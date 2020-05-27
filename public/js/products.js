@@ -2,8 +2,7 @@
 
  var ordersDiv = document.getElementById("ordersDiv");    
 
- var shopName = 'yyyy'
- 
+  
 // function activityWatcher(){
 
 //     //The number of seconds that have passed
@@ -52,49 +51,56 @@
 
 //activityWatcher();
 
-getProducts()
+//  getProducts()
  
+//  var t="{{sproducts}}"
+//  alert(t)
 
-function getProducts(){
-    fetch('/'+shopName+'/products' )
-        .then((res) => { 
-        if(res.status == 200)
-            return res.json() 
-        return null
-        })
-        .then((jsonData) => {   
-            productDiv.innerHTML = ''
-            for(i=0;i< jsonData.products.length;i++)
-            {
-                var product = jsonData.products[i]
-                var innerhtml = ''
+
+// console.log(rrr)
+function getProducts(shopName){
+
+ alert(shopName)
+
+    // fetch('/'+shopName+'/products' )
+    //     .then((res) => { 
+    //     if(res.status == 200)
+    //         return res.json() 
+    //     return null
+    //     })
+    //     .then((jsonData) => {   
+    //         productDiv.innerHTML = ''
+    //         for(i=0;i< jsonData.products.length;i++)
+    //         {
+    //             var product = jsonData.products[i]
+    //             var innerhtml = ''
     
-               //'<div class="container zone red">'
+    //            //'<div class="container zone red">'
                 
-               //
-                //productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label>'
-                // productDiv.innerHTML += '<label>category : ' + product.category+ '</label>'
-                var img ='default.jpeg'
-                if(product.images.length > 0)
-                    img = product.images[0]
+    //            //
+    //             //productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label>'
+    //             // productDiv.innerHTML += '<label>category : ' + product.category+ '</label>'
+    //             var img ='default.jpeg'
+    //             if(product.images.length > 0)
+    //                 img = product.images[0]
     
   
-               // innerhtml += '<div class ="item"> <img  class="image" src="../../uploads/'+img+'"></img> </div>' 
-                innerhtml += '<div class ="box zone "> <img  class="image" src="../../uploads/'+img+'">'
-                innerhtml += '<div class ="product"> <span>' + product.name + '</span> </div>'
+    //            // innerhtml += '<div class ="item"> <img  class="image" src="../../uploads/'+img+'"></img> </div>' 
+    //             innerhtml += '<div class ="box zone "> <img  class="image" src="../../uploads/'+img+'">'
+    //             innerhtml += '<div class ="product"> <span>' + product.name + '</span> </div>'
 
-                innerhtml += '<div class ="product"> <span>' + product.description + '</span> </div>'
+    //             innerhtml += '<div class ="product"> <span>' + product.description + '</span> </div>'
                 
-                innerhtml += '<div class ="product"><span> ' + product.price + '$</span>  <a href = view/' + product._id + 
-                    ' >details...</a></div> </div>'
+    //             innerhtml += '<div class ="product"><span> ' + product.price + '$</span>  <a href = view/' + product._id + 
+    //                 ' >details...</a></div> </div>'
 
-                // innerhtml+=' '
-                // innerhtml += ' </div>'
-                productDiv.innerHTML += innerhtml
+    //             // innerhtml+=' '
+    //             // innerhtml += ' </div>'
+    //             productDiv.innerHTML += innerhtml
 
 
-             }  
-        });
+    //          }  
+        // });
 }
 
  

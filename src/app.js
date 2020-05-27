@@ -9,7 +9,7 @@ const paymentRouter = require('./routers/payment')
 const productRouter = require('./routers/product')
 const authObj = require('./middleware/auth')
 const admin = authObj.admin
-
+const ejs = require('ejs')
 const path = require('path')
 const hbs = require('hbs')
 const publicDirectoryPath = path.join(__dirname, '../public')
@@ -20,7 +20,7 @@ const app = express();
 const session = require('express-session');
 app.use(session({secret: 'ssshhhhh'}));
 
-app.set('view engine', 'hbs')
+app.set('view engine', 'ejs')
 app.use(express.static(publicDirectoryPath))
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
@@ -42,8 +42,10 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/about', (req, res) => {
-    res.render('about', {
-        title: 'about'
+
+ 
+          res.render('about', {
+         title: 'about'
     })
 })
 
@@ -71,14 +73,7 @@ app.get('/:shop/view/:id', (req, res) => {
     })
 })
 
-app.get('/:shop/view', (req, res) => {
-    var userName = req.session.name != undefined ? req.session.name : 'Guest'
-    res.render('products', {
-        title: 'products',
-        shopname: req.params.shop,
-        username: userName
-    })
-})
+
 
 app.get('', (req, res) => {
     res.render('index', {
