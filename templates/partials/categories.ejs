@@ -1,8 +1,10 @@
 <div class ="zone "> 
 
-<ul >
+<ul id =ulcategories>
     <% categories.forEach(function(category) { %>
-        <li><%= category.name %></li>
+        <li onclick="getSubCategories('<%= shopname %>','<%= category.name %>')"><%= category.name %></li>
     <% }); %>
 </ul>
     </div>
+    <script src="/js/categories.js"></script>
+    

@@ -47,7 +47,10 @@ router.get('/:shop/cats', async (req, res) => {
  
     if (req.query.category)  
         params.push( { tree: req.query.category } )
-    
+
+    if (req.query.parent)  
+        params.push( { parent: req.query.parent } )
+   
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
          
@@ -58,9 +61,9 @@ router.get('/:shop/cats', async (req, res) => {
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
     try {
-        const cats =await Cat.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+        const cats = await Cat.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
         res.send({ cats })
-     } catch (e) {
+    } catch (e) {
         res.status(400).send(e)
     }
 })

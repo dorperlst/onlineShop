@@ -47,7 +47,7 @@ router.get('/:shop/view',async (req, res) => {
 
     try {
         const products = await getProducts(req)
-        const categories = await Cat.find() 
+        const categories = await Cat.findByParent(null) 
 
         res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, username: userName});
         } 

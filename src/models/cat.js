@@ -41,6 +41,17 @@ const catSchema = new mongoose.Schema({
     timestamps: true
 })
 
+
+catSchema.statics.findByParent = async (parentName) => {
+     try {
+        const cats =await Cat.find({parent:parentName})
+        return cats
+     } catch (e) {
+     return null    }
+}
+
+
+
 catSchema.pre('remove', async function (next) {
     const cat = this
     const fs = require('fs');
