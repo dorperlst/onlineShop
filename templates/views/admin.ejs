@@ -1,57 +1,116 @@
-{{>header}}
+ 
+ 
+<%- include('../partials/header.ejs') %>
 
 <body>
-    <div class="main-content">
-        {{>header}}
-
-          <div class="centered-form">
-
-            <div id="productsDiv" class="centered-form__box"></div>
-
-            <div id="categoriesDiv" class="centered-form__box"></div>
-
-            <div class="centered-form__box">
-                <h1>Product</h1>
-                <a onclick = addProduct() >Add Product</a>
-                <form id= "form"  action="/"  method="post">
-                    <label>Product Name</label>
-                    <input type="text" value="" id="productname" name="productname" placeholder="Display Name" required>
-
-                    <select id="categories" name="category"></select>
-
-                    <label>Description</label>
-                    <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
-                    <label>Price</label>
-                    <input type="text" value = "" id="price"  name="price" placeholder="price" required>
+  <div class="wrapper">
+      <div class="main">
+        <div class="rowwrapper">
+          <div  class="main2">
+            <!-- <div> -->
+              <div id="productsDiv" class="blue grid-wrapper"> 
                 
-                    <div id = "attributesDiv">     
-                        <a onclick="addAttributes()"> Add Attributes</a> 
-                        <ul id = "attributes"></ul>
-                    </div>
-                     <div id = "detailsDiv">     
-                        <a onclick="addDetails()"> Add Details</a> 
-                        <ul id = "details"></ul>
-                    </div>
-                     <div id = "tagsDiv">     
-                        <a onclick="addTags()"> Add Tags</a> 
-                        <ul id = "tags"></ul>
-                    </div>
-                    <input type="hidden" value = "" id="id"  name="id">
-
-                    Select images: <input type="file" id="productFiles" name="myFiles" multiple>
-
-                    <input type="submit" value="Submit">  
+                <% products.forEach(function(product) { %>
+                     <div class ="box zone "> 
+                        <%  if ( product.images[0]) { %> <img  class="" src="../../uploads/<%= product.images[0] %>"></img> <% }
+                            else  { %>  <img  class="" src="../../uploads/default.jpeg"></img> <% }  %>
+                        <p><%= product.name %></p>
+                        <p><%= product.description %></p>
+                        <p><%= product.price %> $</p>
+                        <a onclick="editProduct('<%= product._id %>')">Edit</a> 
+                        <a onclick="deleteProduct('<%= product._id %>')">Delete</a> 
+                      </div>
+                <% }); %>
+              </div>
+              <div id = "popup" style="display: none;" class="container">  
+                <form id="contact" action="" method="post">
+                  <h3>Colorlib Contact Form</h3>
+                  <fieldset>
+                    <select id="formcategories" name="category">
+                      <% categories.forEach(function(category) { %>
+                        <option value="<%= category._id %>"><%= category.name %></li>
+                      <% }); %>
+                    </select>
+                  </fieldset>
+                  <h4>Name</h4>
+                  
+                  <fieldset>
+                    <input placeholder="Your name" id="productname" name="productname" type="text" tabindex="1" required autofocus>
+                    <input  id="price" name="price" placeholder="Product Price" type="text" tabindex="2" required>
+    
+                  </fieldset>
+                  <h4>Product Price</h4>
+                  <fieldset>
+                  </fieldset>
+    
+                
+                  <h4>Product Description</h4>
+    
+                  <fieldset>
+                    <textarea id ="description" name="description" placeholder="Product Description...." tabindex="5" required></textarea>
+                  </fieldset>
+    
+                  <fieldset>
+                    <a onclick="addAttributes()"> Add Attributes</a> 
+                    <ul id = "attributes"></ul>
+                  </fieldset>
+    
+                  <fieldset>
+                    <a onclick="addDetails()"> Add Details</a> 
+                    <ul id = "details"></ul>
+                  </fieldset>
+    
+                  <fieldset>
+                    <a onclick="addTags()"> Add Tags</a> 
+                    <ul id = "tags"></ul>
+                  </fieldset>
+    
+                  <fieldset>
+                    <ul id = "images"></ul>
+                  </fieldset>
+                  
+                  <fieldset>
+                    Select images: <input type="file" onchange="loadImageFileAsURL()" id="productFiles" name="myFiles" multiple>
+                  </fieldset>
+                  
+                  <fieldset>
+                    <ul id = "images"></ul>
+                  </fieldset>
+    
+                  <fieldset>
+                    <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
+                  </fieldset>
+           
+                  
+                  <input type="hidden" value = "" id="id"  name="id">
+    
+                  
+    
+                  <!-- <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p> -->
                 </form>
+    
+    
+                <div id ="fileDiv"></div>
+                <input type="hidden" value ='<%= shopname %>' id=shopname>
 
-                <input type="button" onclick = 'addCat()' value="add cat">  
-
-            </div>
+              <!-- </div> -->
+          </div>
         </div>
+        <aside class="aside2 aside-1">  <%- include('../partials/categories.ejs') %>
+        </aside>
+       </div> 
     </div>
+    <aside class="aside header">
+      <%- include('../partials/search.ejs') %>
+    </aside>
+    <aside class="aside footer">
+      <%- include('../partials/footer.ejs') %>
+    </aside>
+  </div>
 
-    {{>footer}}
-
-    <script src="/js/admin.js"></script>
+  <script src="/js/admin.js"></script>
+ 
 </body>
-
-</html>
+     
+ 
+      

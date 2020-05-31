@@ -1,20 +1,102 @@
+ 
+<%- include('../partials/header.ejs') %>
 
-{{>header}}
 <body>
-    <div class="main-content">
-        <div class="centered-form">
-          <div id="ordersDiv" class="centered-form__box"></div>
-          <div id="productDiv" class="centered-form__box"></div>
-          <div id="productOrdersDiv" class="centered-form__box"></div>
+  <div class="wrapper">
+      <div class="main">
+        <div class="rowwrapper">
+          <div  class="main2">
+
+
+            <div class="main">
+              <div class="rowwrapper">
+                <div  class="main2">
+                  <div >
+      
+      
+      
+      
+                    
+      
+      
+                    
+                      <div id="productsDiv" > 
+                        
+                        <div class ="box zone "> 
+      
+                        
+                          <p><%= product.name %></p>
+                          <p><%= product.description %></p>
+                          <div>  
+                              <p><%= product.price %> $</p>
+                          </div>
+                         </div>
+                      </div>
+                </div>
+              </div>
+              <aside class="aside2 aside-1">    <ul id =images>
+                
+                <%  product.images.forEach(function(image) { %>
+                    <li> <div class ="box zone container"> <img  class=""  onmouseover="bigImg(this)" src="../../uploads/<%= image %>" ></div></li> 
+                <% }); %>
+              </ul>
+              </aside>
+             </div> 
+          </div>
+
+
+
+
+
+
+
+
+
+
+            <!-- <div >
+
+
+
+
+              
+
+
+              
+                <div id="productsDiv" class="flex-container"> 
+                  
+                  <div class ="flex-item zone "> 
+
+                    <ul id =images>
+                      <%  product.images.forEach(function(image) { %>
+                          <li><img  class="image"  onmouseover="bigImg(this)" src="../../uploads/<%= product.images[0] %>" ></li> 
+                      <% }); %>
+                    </ul>
+                    <p><%= product.name %></p>
+                    <p><%= product.description %></p>
+                    <div>  
+                        <p><%= product.price %> $</p>
+                    </div>
+                   </div>
+                </div>
+          </div> -->
+
+
+
+
         </div>
+        <aside class="aside2 aside-1">  <%- include('../partials/categories.ejs') %>
+        </aside>
+       </div> 
     </div>
-    {{>footer}}
+    <aside class="aside header">
+      <%- include('../partials/search.ejs') %>
+    </aside>
+    <aside class="aside footer">
+      <%- include('../partials/footer.ejs') %>
+    </aside>
+  </div>
 
-  
-    <script type="text/javascript">
-       const productid="{{productid}}"
-    </script>
-      <script src="/js/product.js"></script>
+  <script src="/js/products.js"></script>
+ 
 </body>
-
-</html>
+      

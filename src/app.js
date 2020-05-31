@@ -49,29 +49,9 @@ app.get('/about', (req, res) => {
     })
 })
 
-app.get('/admin', admin, (req, res) => {
-    var userName = req.session.name  
-    if (userName == undefined)
-        window.location.href="/login"
-    res.render('admin', {
-        title: 'admin',
-        username: userName
-    })
-})
 
-app.get('/:shop/view/:id', (req, res) => {
- 
-    var userName = req.session.name != undefined ? req.session.name : 'Guest'
-    
-    res.render('product', {
-        title: 'product',
-        name: 'online shop',
-        username: userName,
-        shopname: req.params.shop,
-        productid: req.params.id
 
-    })
-})
+
 
 
 

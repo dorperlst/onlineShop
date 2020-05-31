@@ -1,23 +1,31 @@
-const form = document.getElementById("form");
+
+// document.body.style.height = screen.height+'px'
+const form = document.getElementById("contact");
 var productDiv = document.getElementById("productsDiv");    
 var productFiles = document.getElementById("productFiles");    
-var categories = document.getElementById("categories");    
+var formcategories = document.getElementById("formcategories");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
-var liattributes = document.getElementById("attributes");    
-var litags = document.getElementById("tags"); 
-var lidetails = document.getElementById("details"); 
-
+var ulattributes = document.getElementById("attributes");    
+var ultags = document.getElementById("tags"); 
+var ulimages = document.getElementById("images"); 
+var uldetails = document.getElementById("details"); 
  
-var shopName='yyyy'
-getProducts()
-getCats()
+ 
 
 function getProducts(){
     form.reset();
-    lidetails.innerHTML = '';
-    liattributes.innerHTML = '';
+    uldetails.innerHTML = '';
+    ulattributes.innerHTML = '';
 
-    litags.innerHTML = '';
+    ulimages.innerHTML = '';
+
+    ultags.innerHTML = '';
+    fileDiv.innerHTML = '';
+
+
+
+    var shopName=document.getElementById("shopname").value;
+
     fetch('/'+shopName+'/products')
         .then((res) => { 
         if(res.status == 200)
@@ -30,17 +38,19 @@ function getProducts(){
             for(var ind in jsonData.products)
             {
                 var product = jsonData.products[ind]
-                productDiv.innerHTML += '<div> <label>Product Name : ' + product.name + '</label> </br>'
-                productDiv.innerHTML += ' <label>Description : ' + product.description + '</label></br>'
-                productDiv.innerHTML += '<label>Price : ' + product.price + '</label></br>'
-                productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label></br>'
-                productDiv.innerHTML += '<label>category : ' + product.category+ '</label></br>'
-
-                productDiv.innerHTML += '<a onclick = deleteProduct("' + product._id + '") >Delete</a></br>'
-                productDiv.innerHTML += '<a onclick = editProduct("' + product._id + '") >Edit</a></br>'+' </div></br></br>'
-
-              
-
+                var innerHTML ='<div class ="box zone "> '
+                if ( product.images[0]) 
+                    innerHTML+='<img  class="" src="../../uploads/'+ product.images[0]+'"></img> '
+                else  
+                    innerHTML+='<img  class="" src="../../uploads/default.jpeg"></img>'
+                
+                innerHTML+='  <p> '+product.name+'</p>'
+                innerHTML+='  <p> '+product.description+'</p>'
+                innerHTML+='  <p> '+product.price +'</p>'
+                innerHTML += '<a onclick = deleteProduct("' + product._id + '") >Delete</a>'
+                innerHTML += '<a onclick = editProduct("' + product._id + '") >Edit</a>'+' </div> '
+                productDiv.innerHTML += innerHTML
+                         
             }
         });
 }
@@ -53,32 +63,32 @@ function getCats(){
         return null
         })
         .then((jsonData) => {   
-            categoriesDiv.innerHTML = '</br></br></br>-----------------categories----------------'
-            categories.options.length=0
-            categories.clear
+            categoriesDiv.innerHTML = '-----------------categories----------------'
+            formcategories.options.length=0
+            formcategories.clear
 
             if(!jsonData.cats)
                 return
             var opt = document.createElement('option');
             opt.value = 0;
             opt.innerHTML = '--none--'
-            categories.appendChild(opt);
+            formcategories.appendChild(opt);
 
             for(var data in jsonData.cats)
             {
-                categoriesDiv.innerHTML += '<div> <label>Category Name : '+jsonData.cats[data].name+'</label> </br>'
-                categoriesDiv.innerHTML += ' <label>Description   : '+jsonData.cats[data].description+'</label></br>'
-                categoriesDiv.innerHTML += '<label>level : '+jsonData.cats[data].level+'</label></br></br></br></br></br>'
-                categoriesDiv.innerHTML += '<label>parent : '+jsonData.cats[data].parent+'</label></br></br></br></br></br>'
+                categoriesDiv.innerHTML += '<div> <label>Category Name : '+jsonData.cats[data].name+'</label> '
+                categoriesDiv.innerHTML += ' <label>Description   : '+jsonData.cats[data].description+'</label>'
+                categoriesDiv.innerHTML += '<label>level : '+jsonData.cats[data].level+'</label>'
+                categoriesDiv.innerHTML += '<label>parent : '+jsonData.cats[data].parent+'</label>'
 
-                // categoriesDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.cat[data]._id.id+'") >Delete</a></br>'
-                // categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cats[data]._id+'") >Edit</a></br>'+' </div></br></br></br></br></br></br>'
+                // categoriesDiv.innerHTML += '<a onclick = deleteProduct("'+jsonData.cat[data]._id.id+'") >Delete</a>'
+                // categoriesDiv.innerHTML += '<a onclick = editProduct("'+jsonData.cats[data]._id+'") >Edit</a>'+' </div>'
 
 
                 var opt = document.createElement('option');
                 opt.value = jsonData.cats[data]._id;
                 opt.innerHTML = jsonData.cats[data].name
-                categories.appendChild(opt);
+                formcategories.appendChild(opt);
 
 
             }  
@@ -91,6 +101,12 @@ function addProduct(id){
 }
 
 function editProduct(id){
+    var popup = document.getElementById("popup");    
+    
+    productDiv.style.display="none"
+
+    popup.style.display="block"
+    
     form.reset();
     fetch('/product/'+id+'/')
     .then((res) => { 
@@ -104,11 +120,11 @@ function editProduct(id){
         form.elements['price'].value = product.price
         form.elements['description'].value = product.description
         form.elements['id'].value = product._id
-        categories.value =  product.category
-        lidetails.innerHTML = '';
-        liattributes.innerHTML = '';
+        formcategories.value =  product.category
+        uldetails.innerHTML = '';
+        ulattributes.innerHTML = '';
 
-        litags.innerHTML = '';
+        ultags.innerHTML = '';
 
         for(var ind in product.attributes)
             addAttributes(product.attributes[ind].name,product.attributes[ind].value);
@@ -116,7 +132,10 @@ function editProduct(id){
         for(var ind in product.details)
             addDetails(product.details[ind].name, product.details[ind].value);
         for(var ind in product.tags)
-            litags.appendChild( createListItem(product.tags[ind].name));
+            ultags.appendChild( createListItem(product.tags[ind].name));
+        
+        for(var ind in product.images)
+            ulimages.appendChild( createListItem(product.images[ind]));
         
     });
 }
@@ -135,31 +154,30 @@ function deleteProduct(id){
 
 function addAttributes(name='', value=''){
     
-    liattributes.appendChild( createListItem(name,value));
+    ulattributes.appendChild( createListItem(name,value));
 }
 function addDetails(name = '', value = ''){
-    lidetails.appendChild( createListItem(name,value));
+    uldetails.appendChild( createListItem(name,value));
 }
 function addTags(name = ''){
-    litags.appendChild( createListItem(name));
+    ultags.appendChild( createListItem(name));
 }
 
 function createListItem(name, value){
     var li = document.createElement("li");
-    li.innerHTML  = '<div> <input type="text" value = "'+name+'" placeholder="name" required> '
+    var innerHTML  = '<div> <input type="text" value = "'+name+'" placeholder="name" required> '
     if(value != undefined)
-        li.innerHTML  +=  '<input type="text" value = "'+value+'"  placeholder="value" required >'
-        
+        innerHTML  +=  '<input type="text" value = "'+value+'"  placeholder="value" required >'
 
-    li.innerHTML += '<a href="#" onclick="removeli(parentNode)">remove</a>'
-
-    li.innerHTML  += ' </br></div>'
+    innerHTML += '<a href="#" onclick="removeli(parentNode)">remove</a>'
+    innerHTML  += ' </div>'
+    li.innerHTML= innerHTML
     return li
  
 }
 function removeli(parentNode){
      
-    parentNode.parentNode.removeChild(parentNode)
+    parentNode.parentNode.parentNode.removeChild(parentNode.parentNode)
     window.setTimeout(function () { 
         document.getElementById('productname').focus(); 
     }, 0);
@@ -168,8 +186,8 @@ function removeli(parentNode){
 function addCat(id){
     var formdata = new FormData();
     formdata.append('name',form.elements['productname'].value)
-    if(categories.value != 0)
-        formdata.append('parent', categories.value)
+    if(formcategories.value != 0)
+        formdata.append('parent', formcategories.value)
     formdata.append('description', form.elements['description'].value)
     formdata.append('id','')
     var method = "post"
@@ -189,14 +207,14 @@ form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData();
     formdata.append('name', form.elements['productname'].value)
-    formdata.append('category', categories.value)
+    formdata.append('category', formcategories.value)
     formdata.append('price', form.elements['price'].value)
     formdata.append('description', form.elements['description'].value)
     formdata.append('id', form.elements['id'].value)
     
     var attributes_array =[]
 
-    for (var i = 0; i < liattributes.children.length; i++ ) {
+    for (var i = 0; i < ulattributes.children.length; i++ ) {
         var attribute = {}
 
         var att = attributes.children[ i ].getElementsByTagName("input");
@@ -207,10 +225,10 @@ form.addEventListener('submit', (e) => {
     }
     var details_array =[]
 
-    for (var i = 0; i < lidetails.children.length; i++ ) {
+    for (var i = 0; i < uldetails.children.length; i++ ) {
         var details= {}
 
-        var detailinput = lidetails.children[ i ].getElementsByTagName("input");
+        var detailinput = uldetails.children[ i ].getElementsByTagName("input");
         details.name = detailinput[0].value
         details.value = detailinput[1].value
         details_array.push(details)
@@ -218,9 +236,9 @@ form.addEventListener('submit', (e) => {
     }
     var tags_array =[]
 
-    for (var i = 0; i < litags.children.length; i++ ) {
+    for (var i = 0; i < ultags.children.length; i++ ) {
         var tags = {}
-        tags.name = litags.children[ i ].getElementsByTagName("input")[0].value
+        tags.name = ultags.children[ i ].getElementsByTagName("input")[0].value
         tags_array.push(tags)
         
     }
@@ -232,6 +250,23 @@ form.addEventListener('submit', (e) => {
     var method = "post"
     if(form.elements['id'].value!='')
         method = "PATCH"
+
+
+        
+    var images_array =[]
+    for (i=0 ; i < ulimages.children.length; i++)
+    {
+        const imgName=ulimages.children[ i ].getElementsByTagName("input")[0].value
+        var img = {imgName}
+      
+        images_array.push(img)
+    }
+    //images_array.push(ulimages.children[ i ].getElementsByTagName("input")[0].value)
+    // if (images_array.length > 0)
+    //     formdata.append( 'images',  images_array  )
+    //     if (images_array.length > 0)
+        formdata.append( 'imagesjson', JSON.stringify(images_array ) )
+
     for (i=0 ; i < productFiles.files.length; i++)
         formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
 
@@ -242,3 +277,44 @@ form.addEventListener('submit', (e) => {
         return res; 
     })
 })
+function readURL(input) {
+    if (input.files && input.files[0]) {
+
+        console.log(input.files[0])
+
+        var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent) 
+            {
+                var imageLoaded = document.createElement("img");
+                imageLoaded.src = fileLoadedEvent.target.result;
+                document.getElementById("fileDiv").appendChild(imageLoaded);
+            };
+            fileReader.readAsDataURL(fileToLoad);
+
+
+    }
+}
+
+function loadImageFileAsURL()
+{
+    for (i =0; i < productFiles.files.length; i++)
+    {
+
+        var fileToLoad = productFiles.files[i];
+
+        if (fileToLoad.type.match("image.*"))
+        {
+            var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent) 
+            {
+                var imageLoaded = document.createElement("img");
+                imageLoaded.src = fileLoadedEvent.target.result;
+                document.getElementById("fileDiv").appendChild(imageLoaded);
+            };
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    }
+     
+        
+   
+}

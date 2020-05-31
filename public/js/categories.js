@@ -13,8 +13,7 @@ function getSubCategories(shopname, categoryname){
         for(var data in jsonData.cats)
         {
             ulcategories.innerHTML += "<li onclick=getSubCategories('"+ shopname +"','"+jsonData.cats[data].name+"')>"+jsonData.cats[data].name+"</li>"
-             
-         }  
+        }  
     });
    
 }

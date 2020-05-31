@@ -42,6 +42,32 @@ router.get('/product/:id', async (req, res) => {
     }
 })
 
+
+
+
+router.get('/admin', admin, async (req, res) => {
+    var userName = req.session.name  
+    if (userName == undefined)
+        window.location.href="/login"
+
+
+
+
+    try {
+        const products = await Product.find()
+        const categories = await Cat.find() 
+
+        res.render('admin', { title: 'admin', products: products, categories: categories, shopname: req.shop.name, username: userName});
+        } 
+    catch (e) {
+        const obj={} 
+        res.render('admin', { title: 'admin', products: obj ,shopname: req.shop.name, username: userName});   
+     }
+
+
+ 
+})
+
 router.get('/:shop/view',async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
@@ -57,6 +83,23 @@ router.get('/:shop/view',async (req, res) => {
      }
 })
  
+router.get('/:shop/view/:id', async (req, res) => {
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+
+    try {
+        const product = await Product.findById(req.params.id)
+        const categories = await Cat.findByParent(null) 
+        res.render('product', { title: 'product', product: product, categories: categories, shopname: req.params.shop, username: userName});
+        } 
+    catch (e) {
+        const obj={} 
+        res.render('product', { title: 'product', products: obj ,shopname: req.params.shop, username: userName});   
+     }
+ 
+})
+
+
+
 // GET /products?completed=true
 // GET /products?limit=10&skip=20
 // GET /products?sortBy=createdAt:desc
@@ -64,9 +107,9 @@ router.get('/:shop/view',async (req, res) => {
 router.get('/:shop/products', async (req, res) => {
   
     try {
+ 
         const products = await getProducts(req)
-        // console.log('uuuuuuuuuuuuuuuuuuuuuuuuuu'+products)
-
+ 
         res.send({ products })
     } catch (e) {
         console.log(e)
@@ -78,16 +121,12 @@ router.get('/:shop/products', async (req, res) => {
 async function getProducts(req)
 {
     var params = [ {tree: req.params.shop }]
-     var sort = { "price": -1 }
+    var sort = { "price": -1 }
     var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
  
     if (req.query.category &&  req.query.category!='All') 
-    {
         params.push( { tree: req.query.category } )
-              
-
-    }
  
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
@@ -109,13 +148,17 @@ async function getProducts(req)
     }
          
     const match = { $and: params } 
- 
     if (req.query.sortBy) {
         const parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
- console.log(match)
-    var prod = Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+
+    
+    var prod = await Product.find().sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+
+
+
+
       return prod
 }
 router.delete('/products/:id', async (req, res) => {
@@ -159,12 +202,26 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
 router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
     const allowedUpdates = ['name', 'description', 'price']
 
-    images= req.files.map(x => x.filename)
+    var newimages = req.files.map(x => x.filename)
+    // console.log('lllllll--   '+  req.body.images)
+    var images = JSON.parse( req.body.imagesjson)
+    console.log('imagesjson--   '+  images.length)
 
     const product = await Product.findById(req.body.id)
-    if(images.length > 0)
-        product.images = product.images.concat( images)
+    product.images = images.concat( newimages)
 
+    // if(newimages.length > 0)
+    // {
+      
+    //     console.log('---------------------'+ req.body.images)
+
+    // }
+    // else
+    // {
+    //     console.log( '----------6666-----------'+req.body.images)
+    //     product.images = req.body.images
+
+    // }
     allowedUpdates.forEach((update) => product[update] = req.body[update])
     if( product.category != req.body.category)
     {

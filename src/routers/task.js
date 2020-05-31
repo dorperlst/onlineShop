@@ -235,3 +235,201 @@
 //   background: -ms-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* IE10+ */
 //   background: linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* W3C */
 // }
+{/* <span><%= product.name %></span>
+<span><%= product.descrption %></span>
+<span><%= product.price %> $</span>
+<span><%= product.descrption %></span>
+
+<span>  <a href = view/<%= product.descrption %> >details...</a> </span> */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+// <%- include('../partials/header.ejs') %>
+
+// <body>
+//   <div class="wrapper">
+//       <div class="main">
+//         <div class="rowwrapper">
+//           <div  class="main2">
+//             <div>
+//                 <div id="productsDiv" class="blue grid-wrapper"> 
+                  
+//                   <% products.forEach(function(product) { %>
+//                        <div class ="box zone "> 
+//                         <% 
+//                         if ( product.images[0]) { %>
+//                           <img  class="image" src="../../uploads/<%= product.images[0] %>"></img> 
+//                         <% }
+//                         else  { %>
+//                           <img  class="image" src="../../uploads/default.jpeg"></img> 
+//                         <% }
+//                         %>
+//                           <p><%= product.name %></p>
+//                           <p><%= product.description %></p>
+//                           <div>  
+//                               <p><%= product.price %> $</p>
+//                                 <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
+//                           </div>
+//                        </div>
+//                    <% }); %>
+//                 </div>
+
+//                 <!-- <div id="categoriesDiv" class="centered-form__box">
+//                    <span> -----------------categories----------------</span>
+
+//                     <% categories.forEach(function(category) { %>
+//                         <div class ="box zone "> 
+//                          <% 
+//                          if ( category.image) { %>
+//                            <img  class="image" src="../../uploads/<%= category.image %>"></img> 
+//                          <% }
+//                          else  { %>
+//                            <img  class="image" src="../../uploads/default.jpeg"></img> 
+//                          <% }
+//                          %>
+//                            <p><%= category.name %></p>
+//                            <p><%= category.description %></p>
+                            
+//                         </div>
+//                     <% }); %>
+
+
+
+
+//                 </div> -->
+
+
+//                 <div class="centered-form__box">
+//                     <h1>Product</h1>
+//                     <a onclick = addProduct() >Add Product</a>
+//                     <form id= "form"  action="/"  method="post">
+//                         <label>Product Name</label>
+//                         <input type="text" value="" id="productname" name="productname" placeholder="Display Name" required>
+    
+//                         <select id="categories" name="category"></select>
+    
+//                         <label>Description</label>
+//                         <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
+//                         <label>Price</label>
+//                         <input type="text" value = "" id="price"  name="price" placeholder="price" required>
+                    
+//                         <div id = "attributesDiv">     
+//                             <a onclick="addAttributes()"> Add Attributes</a> 
+//                             <ul id = "attributes"></ul>
+//                         </div>
+//                          <div id = "detailsDiv">     
+//                             <a onclick="addDetails()"> Add Details</a> 
+//                             <ul id = "details"></ul>
+//                         </div>
+//                          <div id = "tagsDiv">     
+//                             <a onclick="addTags()"> Add Tags</a> 
+//                             <ul id = "tags"></ul>
+//                         </div>
+//                         <input type="hidden" value = "" id="id"  name="id">
+    
+//                         Select images: <input type="file" id="productFiles" name="myFiles" multiple>
+    
+//                         <input type="submit" value="Submit">  
+//                     </form>
+    
+//                     <input type="button" onclick = 'addCat()' value="add cat">  
+    
+//                 </div>
+
+//           </div>
+//         </div>
+//         <aside class="aside2 aside-1">  <%- include('../partials/categories.ejs') %>
+//         </aside>
+//        </div> 
+//     </div>
+//     <aside class="aside header">
+//       <%- include('../partials/search.ejs') %>
+//     </aside>
+//     <aside class="aside footer">
+//       <%- include('../partials/footer.ejs') %>
+//     </aside>
+//   </div>
+
+//   <script src="/js/admin.js"></script>
+ 
+// </body>
+      
+
+ 
+
+
+
+// {{>header}}
+
+// <body>
+//     <div class="main-content">
+//         {{>header}}
+
+//           <div class="centered-form">
+
+//             <div id="productsDiv" class="centered-form__box"></div>
+
+//             <div id="categoriesDiv" class="centered-form__box"></div>
+
+//             <div class="centered-form__box">
+//                 <h1>Product</h1>
+//                 <a onclick = addProduct() >Add Product</a>
+//                 <form id= "form"  action="/"  method="post">
+//                     <label>Product Name</label>
+//                     <input type="text" value="" id="productname" name="productname" placeholder="Display Name" required>
+
+//                     <select id="categories" name="category"></select>
+
+//                     <label>Description</label>
+//                     <textarea id ="description"    placeholder="description" name="description"    cols="40" rows="5" required></textarea>
+//                     <label>Price</label>
+//                     <input type="text" value = "" id="price"  name="price" placeholder="price" required>
+                
+//                     <div id = "attributesDiv">     
+//                         <a onclick="addAttributes()"> Add Attributes</a> 
+//                         <ul id = "attributes"></ul>
+//                     </div>
+//                      <div id = "detailsDiv">     
+//                         <a onclick="addDetails()"> Add Details</a> 
+//                         <ul id = "details"></ul>
+//                     </div>
+//                      <div id = "tagsDiv">     
+//                         <a onclick="addTags()"> Add Tags</a> 
+//                         <ul id = "tags"></ul>
+//                     </div>
+//                     <input type="hidden" value = "" id="id"  name="id">
+
+//                     Select images: <input type="file" id="productFiles" name="myFiles" multiple>
+
+//                     <input type="submit" value="Submit">  
+//                 </form>
+
+//                 <input type="button" onclick = 'addCat()' value="add cat">  
+
+//             </div>
+//         </div>
+//     </div>
+
+//     {{>footer}}
+
+//     <script src="/js/admin.js"></script>
+// </body>
+
+// </html>
