@@ -49,10 +49,6 @@ router.get('/admin', admin, async (req, res) => {
     var userName = req.session.name  
     if (userName == undefined)
         window.location.href="/login"
-
-
-
-
     try {
         const products = await Product.find()
         const categories = await Cat.find() 
@@ -124,10 +120,9 @@ async function getProducts(req)
     var sort = { "price": -1 }
     var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
- 
     if (req.query.category &&  req.query.category!='All') 
         params.push( { tree: req.query.category } )
- 
+
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
     if (req.query.pricefrom)  
@@ -154,7 +149,7 @@ async function getProducts(req)
     }
 
     
-    var prod = await Product.find().sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+    var prod = await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
 
 
 
@@ -203,25 +198,11 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
     const allowedUpdates = ['name', 'description', 'price']
 
     var newimages = req.files.map(x => x.filename)
-    // console.log('lllllll--   '+  req.body.images)
     var images = JSON.parse( req.body.imagesjson)
     console.log('imagesjson--   '+  images.length)
 
     const product = await Product.findById(req.body.id)
     product.images = images.concat( newimages)
-
-    // if(newimages.length > 0)
-    // {
-      
-    //     console.log('---------------------'+ req.body.images)
-
-    // }
-    // else
-    // {
-    //     console.log( '----------6666-----------'+req.body.images)
-    //     product.images = req.body.images
-
-    // }
     allowedUpdates.forEach((update) => product[update] = req.body[update])
     if( product.category != req.body.category)
     {

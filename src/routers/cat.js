@@ -115,18 +115,69 @@ router.post('/cats', admin, upload.single('avatar'), async function (req, res, n
 })
 
 router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, res, next) {
-    images= req.files.map(x => x.filename)
+    console.log('ddd')
+    images = req.files.map(x => x.filename)
 
     const cat = await Cat.findById(req.body.id)
     if(images.length > 0)
-        cat.images = cat.images.concat( images)
+        cat.image =  images[0]
 
-    const allowedUpdates = ['name', 'description', 'price']
+    const allowedUpdates = ['name', 'description']
     allowedUpdates.forEach((update) => cat[update] = req.body[update])
+    var parentName = req.body.category
+
+    if(cat.parent != parentName)
+    { 
+        var parentree= []
+
+        if(parentName)
+        {
+            var curParrent = await Cat.findOne({name : parentName})
+            parentree=curParrent.tree
+        }
+        else
+        parentree=["yyyy"]
+       
+       var catname = cat.name
+       var nestedCategories = await Cat.find( { tree: { $all: catname } } )
+       
+       nestedCategories. forEach(function (nestedcat){
+            
+        var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
+        console.log('foundIndex----'+ nestedcat.tree)
+        var tt= nestedcat.tree.slice(foundIndex,nestedcat.tree.length)
+        nestedcat.tree = parentree.concat( tt)
+        nestedcat.save()
+        console.log(nestedcat.tree)
+    
+      })
+      cat.parent = parentName
+
+     
+       
+       
+    }
+
+      
+
+    //    for(i =0;i<nestedCategories;i++)
+    //    {
+          
+    //         var foundIndex = nestedCategories[i].tree.foundIndex((x=> x.parent == cat.name))
+    //         console.log('foundIndex----'+ foundIndex)
+    //         nestedCategories[i].tree =parent.tree.concat( nestedCategories[i].tree.slice(foundIndex))
+    //          nestedCategories[i].save()
+    //         console.log(nestedCategories[i].tree)
+
+    //    }
+    // }
+
+
+
     try
     {
         await cat.save()
-        res.send(cat2)
+        res.send(cat)
     }
     catch (e) {
          res.status(400).send(e)

@@ -7,8 +7,7 @@
       <div class="main">
         <div class="rowwrapper">
           <div  class="main2">
-            <!-- <div> -->
-              <div id="productsDiv" class="blue grid-wrapper"> 
+              <div id="productsDiv" class="grid-wrapper"> 
                 
                 <% products.forEach(function(product) { %>
                      <div class ="box zone "> 
@@ -23,44 +22,44 @@
                 <% }); %>
               </div>
               <div id = "popup" style="display: none;" class="container">  
+             
                 <form id="contact" action="" method="post">
-                  <h3>Colorlib Contact Form</h3>
+                  <h3>Update</h3>
+                 
                   <fieldset>
+                    <span>  Name</span>
+                    <input placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
+                  </fieldset>
+                  <fieldset class="product">
+                    <span>  Price</span>
+                    <input  id="price" name="price" placeholder="Price" type="text" tabindex="2" >
+                  </fieldset>
+                 
+                  <fieldset>
+                    <span>  Category</span>
                     <select id="formcategories" name="category">
                       <% categories.forEach(function(category) { %>
-                        <option value="<%= category._id %>"><%= category.name %></li>
+                        <option value="<%= category._id %>"><%= category.name %></option>
                       <% }); %>
                     </select>
                   </fieldset>
-                  <h4>Name</h4>
-                  
                   <fieldset>
-                    <input placeholder="Your name" id="productname" name="productname" type="text" tabindex="1" required autofocus>
-                    <input  id="price" name="price" placeholder="Product Price" type="text" tabindex="2" required>
-    
-                  </fieldset>
-                  <h4>Product Price</h4>
-                  <fieldset>
-                  </fieldset>
-    
-                
-                  <h4>Product Description</h4>
-    
-                  <fieldset>
+                    <div>
+                    <span>  Description</span>
                     <textarea id ="description" name="description" placeholder="Product Description...." tabindex="5" required></textarea>
+                  </div>
                   </fieldset>
-    
-                  <fieldset>
+                  <fieldset class="product">
                     <a onclick="addAttributes()"> Add Attributes</a> 
                     <ul id = "attributes"></ul>
                   </fieldset>
     
-                  <fieldset>
+                  <fieldset class="product">
                     <a onclick="addDetails()"> Add Details</a> 
                     <ul id = "details"></ul>
                   </fieldset>
     
-                  <fieldset>
+                  <fieldset class="product">
                     <a onclick="addTags()"> Add Tags</a> 
                     <ul id = "tags"></ul>
                   </fieldset>
@@ -70,11 +69,12 @@
                   </fieldset>
                   
                   <fieldset>
+                     <ul id = "images"></ul>
                     Select images: <input type="file" onchange="loadImageFileAsURL()" id="productFiles" name="myFiles" multiple>
                   </fieldset>
                   
                   <fieldset>
-                    <ul id = "images"></ul>
+                   <a onclick="closePopUp()" >Cancel</a>
                   </fieldset>
     
                   <fieldset>
