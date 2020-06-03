@@ -116,12 +116,22 @@ router.get('/:shop/products', async (req, res) => {
 
 async function getProducts(req)
 {
-    var params = [ {tree: req.params.shop }]
+    var params = [ {shop: req.params.shop }]
     var sort = { "price": -1 }
     var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
     if (req.query.category &&  req.query.category!='All') 
-        params.push( { tree: req.query.category } )
+    {
+        var catname=req.query.category
+        var cats=  await Cat.find( { tree: { $all: catname } },{_id:0,name:1}).select({_id:0,name:1}); //,
+        
+        
+        var categories=[]
+        cats.forEach((cat) => categories.push(cat.name))
+
+        params.push( { category: { $in: categories } } )
+    }
+     
 
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
@@ -170,46 +180,37 @@ router.delete('/products/:id', async (req, res) => {
 
 router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
      const cat = await Cat.findOne({ _id: req.body.category}) 
-   // attribute = new Attribute({ attributes: JSON.parse(req.body.attributes)    })
-    const product = new Product({
+     const product = new Product({
         ...req.body,
-        owner: req.shop._id,
+        shop: req.shop.name,
         attributes: JSON.parse(req.body.attributes),
         tags: JSON.parse(req.body.tags),
         details: JSON.parse(req.body.details),
-        tree: cat.tree.concat([req.body.name]),
         images : req.files.map(x => x.filename)
     })
+    product.category = cat.name
     try
     {
        // await attribute.save()
-
         await product.save()
         res.send(product)
     }
     catch (e) {
-        
         console.log (e)
         res.status(400).send(e)
     }
 })
 
 router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
-    const allowedUpdates = ['name', 'description', 'price']
+    const allowedUpdates = ['name', 'description', 'price','category']
 
     var newimages = req.files.map(x => x.filename)
     var images = JSON.parse( req.body.imagesjson)
-    console.log('imagesjson--   '+  images.length)
-
+ 
     const product = await Product.findById(req.body.id)
-    product.images = images.concat( newimages)
+    
     allowedUpdates.forEach((update) => product[update] = req.body[update])
-    if( product.category != req.body.category)
-    {
-        const cat = await Cat.findOne({ _id: req.body.category}) 
-        product.tree = cat.tree.concat([req.body.name])
-        product.category = req.body.category
-    }
+    product.images = images.concat( newimages)
     product.attributes = JSON.parse(req.body.attributes)
     product.details = JSON.parse(req.body.details)
     product.tags = JSON.parse(req.body.tags)

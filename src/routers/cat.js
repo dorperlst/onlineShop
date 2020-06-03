@@ -1,5 +1,7 @@
 var express = require('express');
 const Cat = require('../models/cat')
+const Product = require('../models/product')
+
 const router = new express.Router()
 var multer = require('multer'); 
 const authObj = require('../middleware/auth')
@@ -42,7 +44,7 @@ router.get('/:shop/cats', async (req, res) => {
   
     var params = [ {tree: req.params.shop }]
     var sort = {  }
-    var limit = !req.query.limit ? 5 : req.query.limit
+    var limit = !req.query.limit ? 50 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
  
     if (req.query.category)  
@@ -84,17 +86,13 @@ router.delete('/cats/:id', async (req, res) => {
 
 router.post('/cats', admin, upload.single('avatar'), async function (req, res, next) {
     const cat = new Cat(req.body)
-    cat.level = cat.tree.length
     cat.owner = req.shop._id
   
-    var parent = undefined
-    if(!req.body.parent)
-    {
+    if(req.body.category ==='0')
         cat.tree = [req.shop.name, cat.name]
-    }
     else
     {
-        var parent = await Cat.findById(req.body.parent) ;
+        var parent = await Cat.findById(req.body.category) ;
         cat.tree = parent.tree.concat([cat.name])
         cat.parent = parent.name
     }
@@ -103,9 +101,7 @@ router.post('/cats', admin, upload.single('avatar'), async function (req, res, n
         cat.image = req.file.filename
     try
     {
-       
         await cat.save()
- 
         res.send(cat)
     }
     catch (e) {
@@ -115,47 +111,55 @@ router.post('/cats', admin, upload.single('avatar'), async function (req, res, n
 })
 
 router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, res, next) {
-    console.log('ddd')
     images = req.files.map(x => x.filename)
 
     const cat = await Cat.findById(req.body.id)
     if(images.length > 0)
         cat.image =  images[0]
 
-    const allowedUpdates = ['name', 'description']
+    const allowedUpdates = [ 'description']
     allowedUpdates.forEach((update) => cat[update] = req.body[update])
-    var parentName = req.body.category
+    var parent = !req.body.category ? undefined : await Cat.findById(req.body.category)
+    var catName = req.body.name
 
-    if(cat.parent != parentName)
+    if(cat.name != catName)
+    {
+        var nestedCategories = await Cat.find( { tree: { $all: catname } } )
+
+        nestedCategories.forEach(function (nestedcat){
+            var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
+            nestedcat.tree[foundIndex] = catName
+            if(nestedcat.parent === cat.name)
+                nestedcat.parent = catName
+            nestedcat.save()
+        })
+        
+    }
+    if(cat.parent != parent.name)
     { 
         var parentree= []
 
-        if(parentName)
+        if(parent.name)
         {
-            var curParrent = await Cat.findOne({name : parentName})
-            parentree=curParrent.tree
+            parentree = curParrent.tree
         }
         else
-        parentree=["yyyy"]
+        {
+            var shop = cat.tree[0]
+            parentree.push (shop)
+        }
        
-       var catname = cat.name
-       var nestedCategories = await Cat.find( { tree: { $all: catname } } )
+        var  catname = cat.name
+        var nestedCategories = await Cat.find( { tree: { $all: catname } } )
        
-       nestedCategories. forEach(function (nestedcat){
-            
-        var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
-        console.log('foundIndex----'+ nestedcat.tree)
-        var tt= nestedcat.tree.slice(foundIndex,nestedcat.tree.length)
-        nestedcat.tree = parentree.concat( tt)
-        nestedcat.save()
-        console.log(nestedcat.tree)
-    
-      })
-      cat.parent = parentName
-
+        nestedCategories. forEach(function (nestedcat){
+            var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
+            var catTree= nestedcat.tree.slice(foundIndex,nestedcat.tree.length)
+            nestedcat.tree = parentree.concat( catTree)
+            nestedcat.save()
      
-       
-       
+        })
+        cat.parent = parent.name
     }
 
       

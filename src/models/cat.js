@@ -19,14 +19,6 @@ const catSchema = new mongoose.Schema({
         required: false,
         default : undefined,
     },
-    level: {
-        type: Number,
-        required: true,
-    },
-    // subCategories:[{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //      ref: 'Cat'
-    // }],
     tree:[{
         type: String,
         required: true,

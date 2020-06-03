@@ -22,7 +22,7 @@ function getProduct(){
             productDiv.innerHTML += '<div> <label>Product Name : ' + product.name + '</label> </br>'
             productDiv.innerHTML += ' <label>Description : ' + product.description + '</label></br>'
             productDiv.innerHTML += '<label>Price : ' + product.price + '</label></br>'
-            productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label></br>'
+            // productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label></br>'
             productDiv.innerHTML += '<label>category : ' + product.category+ '</label></br>'
 
             productDiv.innerHTML += '<a onclick = orderProduct() >Add </a></br></br></br></br>'

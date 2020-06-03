@@ -15,7 +15,6 @@ function closePopUp(){
  
     resetForm()
     popup.style.display="none"
-
     productDiv.style.display="grid"
 
 }
@@ -27,11 +26,8 @@ function resetForm(){
     ulimages.innerHTML = '';
     ultags.innerHTML = '';
     fileDiv.innerHTML = '';
-    if(formcategories.length>0 && formcategories[0].value == 0)
+    if(formcategories.length >0 && formcategories[0].value == 0)
         formcategories.remove(0)
-
-
-
     
 }
 
@@ -71,10 +67,16 @@ function getProducts(currentCategory){
  
  
 
-function addProduct(id){
+function addProduct(){
     formAction = "products"
     resetForm()
-  
+    var productElements=document.getElementsByClassName("product")
+    // for(i=0;i< productElements.length;i++)
+    //     productElements[i].style.display="block"
+    productDiv.style.display="none"
+    popup.style.display="grid"
+    form.elements['id'].value =''
+
 }
 
 function editProduct(id){
@@ -185,37 +187,45 @@ function removeli(parentNode){
     }, 0);
   
 }
-function addCat(id){
-    var formdata = new FormData();
-    formdata.append('name',form.elements['formname'].value)
-    if(formcategories.value != 0)
-        formdata.append('parent', formcategories[formcategories.selectedIndex].innerText)
-    formdata.append('description', form.elements['description'].value)
-    formdata.append('id','')
-    var method = "post"
- 
-    if( productFiles.files.length > 0)
-        formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
+function addCategory(id){
+    resetForm()
+    formAction = "cats"
+    productDiv.style.display="none"
+    popup.style.display="grid"
+    form.elements['id'].value =''
+    formcategories.innerHTML = '<option value=0>none</option>'+ formcategories.innerHTML
 
-    fetch('/cats',
-        { method: method, body: formdata})
-    .then(function(res) {   
-        // getCats()
-        return res; 
-    })
+    var productElements=document.getElementsByClassName("product")
+    for(i=0;i< productElements.length;i++)
+        productElements[i].style.display="none"
+
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
+    var method ="post"
+    
     var formdata = new FormData();
+    if(form.elements['id'].value != '')
+    {
+        formdata.append('id', form.elements['id'].value)
+        method= "PATCH"
+    }
+
     formdata.append('name', form.elements['formname'].value)
     formdata.append('description', form.elements['description'].value)
-    formdata.append('id', form.elements['id'].value)
-    var method = form.elements['id'].value === '' ? "post" :  "PATCH"
- 
-    if(formAction === 'products'){
-        formdata.append('category', formcategories.value)
+    formdata.append('category', formcategories[formcategories.selectedIndex].value)
+    var images_array =[]
+    for (i=0 ; i < ulimages.children.length; i++)
+    {
+        const imgName=ulimages.children[ i ].getElementsByTagName("input")[0].value
+        var img = {imgName}
+        images_array.push(img)
+    }
+    formdata.append( 'imagesjson', JSON.stringify(images_array ) )
 
+    if(formAction === 'products'){
+ 
         formdata.append('price', form.elements['price'].value)
         var attributes_array =[]
 
@@ -251,27 +261,22 @@ form.addEventListener('submit', (e) => {
         formdata.append( 'attributes', JSON.stringify( attributes_array ) )
         formdata.append( 'tags', JSON.stringify( tags_array ) )
         formdata.append( 'details', JSON.stringify( details_array ) )
-    }
-    else if(formcategories.value != 0)
-         formdata.append('category', formcategories[formcategories.selectedIndex].innerText)
 
-    //    formdata.append('category', formcategories.sel.innerText)
-
- 
-
-    var images_array =[]
-    for (i=0 ; i < ulimages.children.length; i++)
-    {
-        const imgName=ulimages.children[ i ].getElementsByTagName("input")[0].value
-        var img = {imgName}
-        images_array.push(img)
-    }
-  
-    formdata.append( 'imagesjson', JSON.stringify(images_array ) )
-
-    for (i=0 ; i < productFiles.files.length; i++)
+        for (i=0 ; i < productFiles.files.length; i++)
         formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
 
+    }
+    else
+    {
+        if(productFiles.files.length>0)
+            formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
+
+    }
+
+
+    
+
+    
     fetch('/' + formAction,
         { method: method, body: formdata})
     .then(function(res) {   
@@ -342,10 +347,19 @@ function subCategories(shopname, categoryname, id){
         return null
     })
     .then((jsonData) => {   
+        formcategories.innerHTML=''
+
         for(var data in jsonData.cats)
         {
-            ulcategories.innerHTML += "<li onclick=getSubCategories('"+ shopname +"','"+jsonData.cats[data].name +"','"+jsonData.cats[data]._id +"','"+jsonData.cats[data].parent   +"')>"+jsonData.cats[data].name+"</li>"
-        }  
+            var opt = document.createElement('option');
+            opt.value = jsonData.cats[data]._id;
+            opt.innerHTML = jsonData.cats[data].name
+            formcategories.appendChild(opt);
+
+            var name = jsonData.cats[data].name
+            var liinnerHTML =`<li onclick="getSubCategories('yyyy','${name}')" >${name}</li> `
+            ulcategories.innerHTML += liinnerHTML
+         }  
     });
    
     getProducts(categoryname)

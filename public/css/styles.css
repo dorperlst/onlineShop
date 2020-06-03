@@ -148,7 +148,7 @@ a {
 
 .product
 {
-  width: 100%;
+  /* width: 100%; */
 }
 
 
@@ -226,7 +226,7 @@ fieldset {
 
 #contact input[type="text"],
  #contact textarea {
-  /* width: 100%; */
+  width: 100%;
   border: 1px solid #ccc;
   /* background: #FFF; */
   margin: 0 0 5px;

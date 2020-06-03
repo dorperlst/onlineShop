@@ -1,8 +1,11 @@
 <div class ="zone "> 
-
+<ul>
+    <li><a onclick="addCategory()">New Category</a></li>
+</ul>
 <ul id =ulcategories>
     <% categories.forEach(function(category) { %> 
-        <li onclick="getSubCategories('<%= shopname %>','<%= category.name %>','<%= category.id %>','<%= category.description %>')"><%= category.name %></li>
+
+        <li onclick=getSubCategories("<%= shopname %>","<%= category.name %>")><%= category.name %></li>
     <% }); %>
 </ul>
     </div>
