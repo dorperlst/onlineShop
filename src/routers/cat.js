@@ -82,18 +82,19 @@ router.delete('/cats/:id',admin, async (req, res) => {
 
         //var parent = await Cat.find( { parent: cat.parent} )
 
-        var nestedCategories = await Cat.find( { tree: { $all: catname } } )
+        var nestedCategories = await Cat.find( { tree: { $all: cat.name } } )
         nestedCategories.forEach(function (nestedcat){
-            var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
-            nestedcat.tree.remove(foundIndex) 
-            if(nestedcat.parent === cat.name)
-                nestedcat.parent = cat.parent
-            Product.find({category:catName}).forEach(function (product){
-
-                product.category=catName
-                product.save()
-            })
+            var foundIndex = nestedcat.tree.findIndex((x=> x == cat.name))
+            nestedcat.tree.splice(foundIndex, 1);
+            nestedcat.markModified("tree");
             nestedcat.save()
+        })
+
+        var products = await Product.find({category:catName})
+        products.forEach(function (product){
+
+            product.category=cat.parent
+            product.save()
         })
         await cat.remove()
       //  console.log('-----'+cat)
@@ -145,16 +146,13 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     var nestedCategories = await Cat.find( { tree: { $in: catname } } )
     if(cat.name != catName)
     {
-        
-
         nestedCategories.forEach( async function (nestedcat){
             var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
             nestedcat.tree[foundIndex] = catName
             if(nestedcat.parent === catname)
                 nestedcat.parent = catName
             nestedcat.markModified("tree");
-
-            var t =await nestedcat.save()
+            nestedcat.save()
         })
         cat.name=catName
         
@@ -179,6 +177,7 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
             var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
             var catTree= nestedcat.tree.slice(foundIndex,nestedcat.tree.length)
             nestedcat.tree = parentree.concat( catTree)
+            nestedcat.markModified("tree");
             nestedcat.save()
      
         })

@@ -7,3 +7,4 @@ test.env
 public/uploads/
 public/users/
 public/img/
+.vscode/launch.json

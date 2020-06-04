@@ -118,7 +118,8 @@ function editProduct(id){
 }
 
 function deleteCategory(id){
-    fetch('/cats/'+id)
+    fetch('/cats/'+id,
+        { method: "delete"})
     .then((res) => { 
         if(res.status == 200)
             return res.json() 
@@ -344,6 +345,8 @@ function subCategories(shopname, categoryname, id){
         url +='?parent='+ categoryname
         innerHTML += '<li><a onclick = backCategory("'+shopname+'")>..Back</a> <h3>'+categoryname+' </h3><a onclick= editCategory("'+ id +'")>Edit</a>  <a onclick= deleteCategory("'+id +'")>Delete</a></li></li>'
     }
+    else 
+        formcategories.innerHTML=''
     ulcategories.innerHTML = innerHTML
   
     fetch( url )
@@ -353,14 +356,18 @@ function subCategories(shopname, categoryname, id){
         return null
     })
     .then((jsonData) => {   
-        //formcategories.innerHTML=''
+        //
 
         for(var data in jsonData.cats)
         {
-            // var opt = document.createElement('option');
-            // opt.value = jsonData.cats[data]._id;
-            // opt.innerHTML = jsonData.cats[data].name
-            // formcategories.appendChild(opt);
+            if(!categoryname)
+            { 
+               var opt = document.createElement('option');
+                opt.value = jsonData.cats[data]._id;
+                opt.innerHTML = jsonData.cats[data].name
+                formcategories.appendChild(opt); 
+            }
+            
 
             var name = jsonData.cats[data].name
             var liinnerHTML =`<li onclick="getSubCategories('${shopname}','${name}','${jsonData.cats[data]._id}')" >${name}</li> `

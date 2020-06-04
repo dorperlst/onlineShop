@@ -47,11 +47,10 @@ catSchema.statics.findByParent = async (parentName) => {
 catSchema.pre('remove', async function (next) {
     const cat = this
     const fs = require('fs');
-    for (i=0 ; i < cat.images.length; i++)
-    {
-        var filePath = 'public/uploads/'+cat.images[i]; 
+   if(cat.image)
+   {
+        var filePath = 'public/uploads/'+cat.image; 
       //  console.log(filePath)
- 
         try
         {
              
