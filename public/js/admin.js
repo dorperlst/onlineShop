@@ -117,6 +117,19 @@ function editProduct(id){
     });
 }
 
+function deleteCategory(id){
+    fetch('/cats/'+id)
+    .then((res) => { 
+        if(res.status == 200)
+            return res.json() 
+        return null
+    })
+    .then((jsonData) => {
+        tree = []
+        subCategories(shopname.value, null, null)
+    });
+}
+
 function editCategory(id){
     formAction = "cats"
     productDiv.style.display="none"
@@ -127,6 +140,7 @@ function editCategory(id){
         productElements[i].style.display="none"
         
     formcategories.innerHTML = '<option value=0>none</option>'+ formcategories.innerHTML
+
     fetch('/'+shopName+'/cats/'+id)
     .then((res) => { 
         if(res.status == 200)
@@ -143,9 +157,6 @@ function editCategory(id){
          
     });
 }
-
-
-
 
 function deleteProduct(id){
     var formdata = new FormData();
@@ -272,11 +283,6 @@ form.addEventListener('submit', (e) => {
             formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
 
     }
-
-
-    
-
-    
     fetch('/' + formAction,
         { method: method, body: formdata})
     .then(function(res) {   
@@ -347,18 +353,19 @@ function subCategories(shopname, categoryname, id){
         return null
     })
     .then((jsonData) => {   
-        formcategories.innerHTML=''
+        //formcategories.innerHTML=''
 
         for(var data in jsonData.cats)
         {
-            var opt = document.createElement('option');
-            opt.value = jsonData.cats[data]._id;
-            opt.innerHTML = jsonData.cats[data].name
-            formcategories.appendChild(opt);
+            // var opt = document.createElement('option');
+            // opt.value = jsonData.cats[data]._id;
+            // opt.innerHTML = jsonData.cats[data].name
+            // formcategories.appendChild(opt);
 
             var name = jsonData.cats[data].name
-            var liinnerHTML =`<li onclick="getSubCategories('yyyy','${name}')" >${name}</li> `
+            var liinnerHTML =`<li onclick="getSubCategories('${shopname}','${name}','${jsonData.cats[data]._id}')" >${name}</li> `
             ulcategories.innerHTML += liinnerHTML
+
          }  
     });
    
