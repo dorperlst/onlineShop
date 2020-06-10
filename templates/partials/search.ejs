@@ -6,23 +6,37 @@
         <li><a href="">About</a></li>
         <li><a href="">Products</a></li>
          <li>
-            
-                <select id="categories"></select>
-                <input type="text" id="tag" placeholder="Search by tag...">
-                <a id="searchButton">search</a>
+          <select id="categories">
+          <option value="0">--all--</option>
+          <% categories.forEach(function(cat) { %>
+            <option value="<%= cat._id %>"><%= cat.name %></option>
+          <% }); %>
+          </select>
+          <input type="text" id="tag" placeholder="Search by tag...">
+          <a id="searchButton">search</a>
           
         </li>  
            
-        <li  id ="liSign" class="push" ></li>
-        <li  id ="liUser" class="push"></li>
-    </ul>
+        <li class="push" >
+ 
+          <label>Hello  <%= username %> </label>
+          <%  if ( username == "Guest") { %>
+            <a href="/login">Login</a>
+          <% }
+          else  { %>
+            <a onclick="logout()">Logout</a>
+            <a onclick="logoutAll()">Logout All</a>
+          <% } %>
+
+        </li>
+     </ul>
   </nav>
- 
+  <script type="text/javascript">
+    var shopName="<%= shopname %>"
+    var username="<%= username %>"
+   </script>
 <script src="/js/search.js"></script>
- <script type="text/javascript">
- 
-    init('<%= shopname %>', '<%= username %>' )
-</script>
+
 </search>
 
 

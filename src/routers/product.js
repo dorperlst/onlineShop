@@ -51,7 +51,7 @@ router.get('/admin', admin, async (req, res) => {
         window.location.href="/login"
     try {
         const products = await Product.find()
-        const categories = await Cat.find() 
+        const categories = await  Cat.findByParent(null) 
 
         res.render('admin', { title: 'admin', products: products, categories: categories, shopname: req.shop.name, username: userName});
         } 
@@ -139,11 +139,17 @@ async function getProducts(req)
         params.push(  { price:{"$gte": req.query.pricefrom}  } )
     if (req.query.priceto)  
         params.push(  { price:{"$lte": req.query.priceto}  } )
+    // if (req.query.tag)  
+    // { 
+    //     var jsontag = JSON.parse(req.query.tag)
+    //     for(i=0;i<jsontag.length;i++)
+    //         params.push( {  "tags.name":jsontag[i][0] } )
+    // }
     if (req.query.tag)  
     { 
-        var jsontag = JSON.parse(req.query.tag)
-        for(i=0;i<jsontag.length;i++)
-            params.push( {  "tags.name":jsontag[i][0] } )
+        // var jsontag = JSON.parse(req.query.tag)
+        // for(i=0;i<jsontag.length;i++)
+            params.push( {  "tags":req.query.tag } )
     }
     if (req.query.attributes)  
     { 
@@ -184,6 +190,7 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
         ...req.body,
         shop: req.shop.name,
         attributes: JSON.parse(req.body.attributes),
+        imgattributes: JSON.parse(req.body.imgattributes),
         tags: JSON.parse(req.body.tags),
         details: JSON.parse(req.body.details),
         images : req.files.map(x => x.filename)
@@ -202,15 +209,24 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
 })
 
 router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
-    const allowedUpdates = ['name', 'description', 'price','category']
+    const allowedUpdates = ['name', 'description', 'price']
 
     var newimages = req.files.map(x => x.filename)
-    var images = JSON.parse( req.body.imagesjson)
+    var images = JSON.parse( req.body.images)
  
     const product = await Product.findById(req.body.id)
     
     allowedUpdates.forEach((update) => product[update] = req.body[update])
-    product.images = images.concat( newimages)
+    var cat = await Cat.findById(req.body.category)
+    product.category= cat.name
+    var concatimages = newimages
+    // images.forEach((img) => concatimages.push(img.imgName))
+    product.images = images.concat(newimages)
+  
+
+    
+    product.imgattributes = JSON.parse(req.body.imgattributes)
+
     product.attributes = JSON.parse(req.body.attributes)
     product.details = JSON.parse(req.body.details)
     product.tags = JSON.parse(req.body.tags)

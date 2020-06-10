@@ -54,7 +54,10 @@
                     <a onclick="addAttributes()"> Add Attributes</a> 
                     <ul id = "attributes"></ul>
                   </fieldset>
-    
+                  <fieldset class="product">
+                    <a onclick="addImgAttributes()"> Add Attributes</a> 
+                    <ul id = "imgAttributes"></ul>
+                  </fieldset>
                   <fieldset class="product">
                     <a onclick="addDetails()"> Add Details</a> 
                     <ul id = "details"></ul>
@@ -89,15 +92,23 @@
     
                   <!-- <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p> -->
                 </form>
-    
-    
+                <div id ="imagesDiv" style="display: none;" class="zone  grid-wrapper">
+     
+                </div>
+               
+
                 <div id ="fileDiv"></div>
                 <input type="hidden" value ='<%= shopname %>' id=shopname>
 
               <!-- </div> -->
           </div>
         </div>
-        <aside class="aside2 aside-1">  <%- include('../partials/categories.ejs') %>
+        
+        <aside class="aside2 aside-1">  
+          <ul>
+            <li><a onclick="addCategory()">New Category</a></li>
+        </ul>
+          <%- include('../partials/categories.ejs') %>
         </aside>
        </div> 
     </div>
@@ -108,7 +119,11 @@
       <%- include('../partials/footer.ejs') %>
     </aside>
   </div>
+ 
+ 
 
+
+ 
   <script src="/js/admin.js"></script>
  
 </body>

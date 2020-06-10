@@ -15,6 +15,7 @@
      getSubCategories(shopname, null)
  
  }
+ 
  function getSubCategories(shopname, categoryname){
     var ulcategories = document.getElementById("ulcategories");  
     var innerHTML=  ''  
@@ -71,8 +72,10 @@ function getProducts(categoryname){
                 innerHTML+='  <p> '+product.name+'</p>'
                 innerHTML+='  <p> '+product.description+'</p>'
                 innerHTML+='  <p> '+product.price +'</p>'
-                innerHTML += '<a onclick = deleteProduct("' + product._id + '") >Delete</a>'
-                innerHTML += '<a onclick = editProduct("' + product._id + '") >Edit</a>'+' </div> '
+                innerHTML += ' <a href=/'+shopName+'/view/' + product._id + ' >details... </a>'
+               
+                
+                
                 productDiv.innerHTML += innerHTML
                          
             }

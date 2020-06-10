@@ -24,31 +24,50 @@ const productSchema = new mongoose.Schema({
         type: Number 
     },
     images: [{
-        type: String
+        type: String,
+        required: true,
+        trim: true
     }],
     attributes:[  {
         name: {
             type:String,
             required: true,
             trim: true },   
-        value: {
+        values: [{
             type:String,
             required: true,
-            trim: true } }],
-    details:[  {
+            trim: true }] }],
+    
+    imgattributes:[  {
         name: {
             type:String,
             required: true,
             trim: true },   
-        value: {
+        values: [{
+            value: {
+                type:String,
+                required: true,
+                trim: true },
+            img: {
+                type:String,
+                required: true,
+                trim: true }
+        
+        }
+            
+            
+            ] }],
+
+    details: [{
+        type: String,
+        required: true,
+        trim: true
+    }],     
+   
+    tags:[{
             type:String,
             required: true,
-            trim: true } }],
-    tags:[  {
-        name: {
-            type:String,
-            required: true,
-            trim: true }     
+            trim: true 
         }],
     category: {
         type: String,

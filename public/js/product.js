@@ -2,32 +2,18 @@ var productDiv = document.getElementById("productDiv");
 
 var ordersDiv = document.getElementById("ordersDiv");    
 
-var shopName = 'yyyy'
- 
- 
-var product = {}
-getProduct()
-getOrders()
+var bigImg = document.getElementById("bigImg");    
 
-function getProduct(){
-     fetch('/product/' + shopName +'/'+ productid )
-       .then((res) => { 
-       if(res.status == 200)
-           return res.json() 
-       return null
-       })
-       .then((jsonData) => {   
-            product = jsonData.product
-            productDiv.innerHTML = ''
-            productDiv.innerHTML += '<div> <label>Product Name : ' + product.name + '</label> </br>'
-            productDiv.innerHTML += ' <label>Description : ' + product.description + '</label></br>'
-            productDiv.innerHTML += '<label>Price : ' + product.price + '</label></br>'
-            // productDiv.innerHTML += '<label>tree : ' + product.tree+ '</label></br>'
-            productDiv.innerHTML += '<label>category : ' + product.category+ '</label></br>'
+ 
 
-            productDiv.innerHTML += '<a onclick = orderProduct() >Add </a></br></br></br></br>'
-       });
+ 
+
+
+function bigimg(img){
+    
+    bigImg.src=img.src;
 }
+ 
 
 function getOrders(){
    fetch('/orders')
@@ -66,23 +52,23 @@ function addCount(delta){
       
 }
 
-function orderProduct(){
-    productOrdersDiv.innerHTML = '<div> <label>Name : '+ product.name+'</label> </br>'
-    productOrdersDiv.innerHTML += '<label>Price : '+ product.price+'</label> </br>'
+function orderProduct(name, id, price ){
+    productOrdersDiv.innerHTML = '<div> <label>Name : '+ name+'</label> </br>'
+    productOrdersDiv.innerHTML += '<label>Price : '+ price+'</label> </br>'
  
     productOrdersDiv.innerHTML += '<input type="button" onclick = "addCount(1)" value="+"></br> ' 
     productOrdersDiv.innerHTML += '<label id="count">1</label> </div> </br>'
 
     productOrdersDiv.innerHTML += '<input type="button" onclick = "addCount(-1)" value="-"></br> ' 
-    productOrdersDiv.innerHTML += '<input type="button" onclick = "addToOrder()" value="Add To Order"></br> ' 
+    productOrdersDiv.innerHTML += '<input type="button" onclick = addToOrder("'+id+'") value="Add To Order"></br> ' 
 
 
 }
 
-function addToOrder(){
+function addToOrder(id){
    var counter = document.getElementById('count')
    var formdata = new FormData();
-   formdata.append("product", product._id)
+   formdata.append("product", id)
    formdata.append("count", parseInt(counter.innerHTML))
    formdata.append("shop", shopName)
 

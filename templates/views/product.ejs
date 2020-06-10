@@ -6,39 +6,69 @@
       <div class="main">
         <div class="rowwrapper">
           <div  class="main2">
-
-
+ 
             <div class="main">
               <div class="rowwrapper">
-                <div  class="main2">
-                  <div >
-      
-      
-      
-      
-                    
-      
-      
-                    
-                      <div id="productsDiv" > 
-                        
-                        <div class ="box zone "> 
-      
-                        
-                          <p><%= product.name %></p>
-                          <p><%= product.description %></p>
-                          <div>  
-                              <p><%= product.price %> $</p>
-                          </div>
-                         </div>
-                      </div>
-                </div>
-              </div>
+              <aside class="aside2 aside-1">  
+
+<div>
+
+  
+    <div class="rowwrapper">
+    <div class="main2">  
+      <div class ="box zone container"> <img id="bigImg"  src="../../uploads/<%= product.images[0] %>" ></div>
+    </div>
+    <aside class="aside2 aside-1 smallimg">  
+      <ul>
+        <%  product.images.forEach(function(image) { %>
+          <li> <div class ="box zone container"> <img  class=""  onmouseover="bigimg(this)" src="../../uploads/<%= image %>" ></div></li> 
+        <% }); %>
+      </ul>
+    </aside>
+   </div> 
+ 
+
+
+
+</div>
+
+
+
+
+
+
+              
+              </aside>
               <aside class="aside2 aside-1">    <ul id =images>
-                
-                <%  product.images.forEach(function(image) { %>
-                    <li> <div class ="box zone container"> <img  class=""  onmouseover="bigImg(this)" src="../../uploads/<%= image %>" ></div></li> 
-                <% }); %>
+                <div id="productsDiv" > 
+                  <div class ="box zone "> 
+                    <p><%= product.name %></p>
+                    <p><%= product.description %></p>
+                    <h4>price <%= product.price %> $</h4>
+                    <% product.attributes.forEach(function(attribute) { %>
+                      <h4><%= attribute.name %> </h4>   
+                      <select>
+                        <%  attribute.values.forEach(function(value) { %>
+                          <option value="<%= value %>"><%= value %></option>
+                        <% }); %>
+                      </select>
+                    <% }); %>        
+                    
+                    <div class="details">
+                      <ul>
+                        <%  product.details.forEach(function(detail) { %>
+                          <li><%= detail %></li>
+                        <% }); %>
+                        </ul>
+                    </div>
+                    <a onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" >Add </a>
+
+                  </div>
+                  <div id ="productOrdersDiv"></div>
+                  <div id ="ordersDiv"></div>
+
+                  
+                </div>
               </ul>
               </aside>
              </div> 
@@ -97,7 +127,7 @@
   </div>
     <script src="/js/categories.js"></script>
 
-  <script src="/js/products.js"></script>
+  <script src="/js/product.js"></script>
  
 </body>
       
