@@ -1,6 +1,5 @@
 
 const categories = document.getElementById("categories");   
-
  
 document.getElementById("searchButton").addEventListener('click', (e) => {
     e.preventDefault()
@@ -20,8 +19,6 @@ document.getElementById("searchButton").addEventListener('click', (e) => {
 
     window.location.href = href
 })
-
- 
 
 function logout(){
     

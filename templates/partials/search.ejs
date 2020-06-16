@@ -7,10 +7,10 @@
         <li><a href="">Products</a></li>
          <li>
           <select id="categories">
-          <option value="0">--all--</option>
-          <% categories.forEach(function(cat) { %>
-            <option value="<%= cat._id %>"><%= cat.name %></option>
-          <% }); %>
+            <option value="0">--all--</option>
+            <% categories.forEach(function(cat) { %>
+              <option value="<%= cat._id %>"><%= cat.name %></option>
+            <% }); %>
           </select>
           <input type="text" id="tag" placeholder="Search by tag...">
           <a id="searchButton">search</a>

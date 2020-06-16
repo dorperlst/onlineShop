@@ -25,6 +25,12 @@
         url +='?parent='+ categoryname
         innerHTML += '<li><a onclick = backCategory("'+shopname+'")>..Back</a> <h3>'+categoryname+' </h3></li>'
     }
+  
+    else 
+    {
+       url +='?categories=true'
+    }
+
     ulcategories.innerHTML = innerHTML
   
     fetch( url )

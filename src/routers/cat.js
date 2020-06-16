@@ -50,7 +50,7 @@ router.get('/:shop/cats', async (req, res) => {
     if (req.query.category)  
         params.push( { tree: req.query.category } )
 
-    if (req.query.parent)  
+    if (req.query.parent|| req.query.categories == 'true')  
         params.push( { parent: req.query.parent } )
    
     if (req.query.name)  
@@ -64,6 +64,10 @@ router.get('/:shop/cats', async (req, res) => {
     }
     try {
         const cats = await Cat.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+
+       // const cats22 = await Cat.find(params).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
+
+        // const cats = await Cat.find({parent:null, tree: req.params.shop})
         res.send({ cats })
     } catch (e) {
         res.status(400).send(e)
@@ -73,31 +77,27 @@ router.get('/:shop/cats', async (req, res) => {
 router.delete('/cats/:id',admin, async (req, res) => {
      
     try {
-      //  console.log('-----'+req.params.id)
         const cat = await Cat.findById(req.params.id)
         var catName = cat.name
         if(!cat.parent)
             res.status(403).send("Can not Remove Main Category")
-
-
-        //var parent = await Cat.find( { parent: cat.parent} )
 
         var nestedCategories = await Cat.find( { tree: { $all: cat.name } } )
         nestedCategories.forEach(function (nestedcat){
             var foundIndex = nestedcat.tree.findIndex((x=> x == cat.name))
             nestedcat.tree.splice(foundIndex, 1);
             nestedcat.markModified("tree");
+            if(nestedcat.parent === cat.name)
+                nestedcat.parent = cat.parent
             nestedcat.save()
         })
 
         var products = await Product.find({category:catName})
         products.forEach(function (product){
-
             product.category=cat.parent
             product.save()
         })
         await cat.remove()
-      //  console.log('-----'+cat)
         res.send(cat)
     } catch (e) {
         console.log(e)
@@ -163,7 +163,7 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
 
         if(parent.name)
         {
-            parentree = curParrent.tree
+            parentree = parent.tree
         }
         else
         {

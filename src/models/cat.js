@@ -36,7 +36,7 @@ const catSchema = new mongoose.Schema({
 
 catSchema.statics.findByParent = async (parentName) => {
      try {
-        const cats =await Cat.find({parent:parentName})
+        const cats = await Cat.find({parent:parentName})
         return cats
      } catch (e) {
      return null    }
