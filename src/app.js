@@ -41,10 +41,10 @@ app.get('/login', (req, res) => {
     })
 })
 
-app.get('/about', (req, res) => {
+app.get('/help', (req, res) => {
 
  
-          res.render('about', {
+          res.render('help', {
          title: 'about'
     })
 })
