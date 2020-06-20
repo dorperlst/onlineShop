@@ -1,15 +1,269 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+
+ 
+
+   <head>
+    
+    <!DOCTYPE html>
+    
+    <html>
+    
+  
+        
+        <link rel="stylesheet" href="/css/test.css">
+        <link rel="icon" href="/img/weather.png">
+    
+    </head>
   <body>
-  <h1><%= title %></h1>
-  <p>Welcome to <%= title %></p>
-  <%- include('../partials/search.ejs') %>
-  <% products.forEach(function(product) { %>
-  	<p><%= product.name %></p>
-  <% }); %>
+    <div class="wrapper">
+      <header class="header">
+      
+      
+      <div class="wrapper">
+       <article class=" zone main">
+        <div id="navheader">
+          <h1 id="logo"><a href="#">Retina</a></h1>
+          <ul class="menu">
+            <li class="field search push" > 
+               <select >
+              <option value="/">--All--</option>
+              <option value="/">2016</option>
+              <option value="/">jacket</option>
+              <option value="/">Jackets</option>
+              <option value="/">layers</option>
+              <option value="/">Obermeyer</option>
+              <option value="/">Roxy</option>
+              <option value="/">womens</option>
+             </select>    
+             <input type="text" id="tag"  class="field" placeholder="keywords here ..." title="keywords here ...">
+            </li>
+            <li>
+              <input type="button"  id="searchButton" type="submit" class="search-btn" value="">
+
+            </li>
+
+          </ul>  
+
+        </div>
+        
+    <nav >
+      <!-- id="menu_tab" -->
+    
+        <ul class="menu">
+          <li><a href="#" class="nav"> Home </a></li>
+          <li><a href="#" class="nav">Products</a></li>
+           
+          <li><a href="#" class="nav">My account</a></li>
+           <li><a href="#" class="nav">Sign Up</a></li>
+           <li><a href="#" class="nav">Shipping </a></li>
+           <li><a href="contact.html" class="nav">Contact Us</a></li>
+
+
+            <li class="push"><a  class="nav icon-lock" href="javascript:void(0)">
+               
+              Hello Guest </a></li>
+ 
+
+            
+        </ul>
+     
+      
+         
+    </nav>
+<!-- 
+    <nav >
+        <ul class="navigation">
+          <li class="navmap"> Navigation: </li>
+        <li><a href="#" class="navmap"> Home</a></li>
+        <li><a href="#" class="navmap">Garden Tools</a></li>
+
+        </ul>
+     
+    </nav> -->
+   
+      </article>
+      
+      <!-- <aside class="aside aside-2"> 
+
+        <a  class="nav icon-lock" href="javascript:void(0)">
+               
+          Hello Guest </a>
+
+
+
+      </aside> -->
+     </div>
+      
+      
+      
+      
+      
+      </header>
+
+
+      <article class="main">
+
+        <nav >
+          <ul class="navigation">
+            <li class="navmap"> Navigation: </li>
+          <li><a href="#" class="navmap"> Home</a></li>
+          <li><a href="#" class="navmap">Garden Tools</a></li>
+  
+          </ul>
+       
+      </nav>
+        <section class="grid-wrapper">
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/71dfufYSVmL._AC_UL320_-1591700113412.jpg">
+            </div>
+          
+            <div class="product-info">
+                 <label>Women Top </label>
+                 <label>93.45$</label>
+            </div>
+          </div>
+
+        
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/91AhrdXA1VL._AC_UL320_-1592248386563.jpg">
+            </div>
+            <div class="product-info">
+              <label>Summer Cover </label>
+              <label>29.2$</label>
+            </div>
+          </div>
+           
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/61f4M55hWiL._AC_UL320_-1591700113410.jpg">
+            </div>
+            <div class="product-info">
+              <label>Winter Jacket </label>
+              <label>53.2$</label>
+
+            </div>
+          </div>
+          
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/61Xz4E+Kp0L._AC_UL320_-1591625687517.jpg">
+            </div>
+            <div class="product-info">
+              <label>Women Shirt </label>
+              <label>23.32$</label>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/61Xz4E+Kp0L._AC_UL320_-1591625687517.jpg">
+            </div>
+            <div class="product-info">
+              <label>Women Shirt </label>
+              <label>23.32$</label>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/61Xz4E+Kp0L._AC_UL320_-1591625687517.jpg">
+            </div>
+            <div class="product-info">
+              <label>Women Shirt </label>
+              <label>23.32$</label>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">
+              <img src="../../uploads/61Xz4E+Kp0L._AC_UL320_-1591625687517.jpg">
+            </div>
+            <div class="product-info">
+              <label>Women Shirt </label>
+              <label>23.32$</label>
+            </div>
+          </div>
+           
+        </section>  
+            </article>
+
+
+
+      <aside class="aside aside-1">
+        
+
+        <div class="left_content">
+          <div class="title_box">Categories</div>
+          <ul class="left_menu">
+            <li class="odd"><a href="#">Power Tools</a></li>
+            <li class="even"><a href="#">Air Tools</a></li>
+            <li class="odd"><a href="#">Hand Tools</a></li>
+            <li class="even"><a href="#">Accessories</a></li>
+            <li class="odd"><a href="#">Workwear</a></li>
+            <li class="even"><a href="#">Spare Parts</a></li>
+            <li class="odd"><a href="#">Power Tools</a></li>
+            <li class="even"><a href="#">Air Tools</a></li>
+            <li class="odd"><a href="#">Hand Tools</a></li>
+            <li class="even"><a href="#">Accessories</a></li>
+            <li class="odd"><a href="#">Workwear</a></li>
+            <li class="even"><a href="#">Spare Parts</a></li>
+          </ul>
+          <div class="title_box">Special Products</div>
+        
+          <!-- <div class="title_box">Newsletter</div> -->
+          <!-- <div class="border_box">
+            <input type="text" name="newsletter" class="newsletter_input" value="your email">
+            <a href="#" class="join">subscribe</a> </div>
+          <div class="banner_adds"> <a href="#"><img src="../../images/bann2.jpg" alt="" border="0"></a> </div> -->
+        </div>
+
+
+
+
+
+
+
+
+      </aside>
+      <aside class="aside aside-2">
+        
+
+        <div class="title_box">Login</div>
+             
+        <label>Email</label>
+        <input type="text" name="email" id="email"  class="field" placeholder="email.." title="email...">
+
+        <label>Name</label>
+        <input type="text" name="password" id="password"  class="field" placeholder="name.." title="name...">
+        <input type="button" value="Submit">  
+
+        <hr>
+        <div class="title_box">           
+        <a class="icon-cart">Your Cart</a> </div>
+
+        <div>
+          <label>Items</label>
+
+          <label>3</label>
+          <label>Total</label>
+
+        <label>330$</label>
+        </div>
+
+        <a  id="searchButton" type="submit"  value="">Search</a>
+
+
+        <div class="title_box">Manufacturers</div>
+        <ul class="left_menu">
+          <li class="odd"><a href="#">Bosch</a></li>
+          <li class="even"><a href="#">Samsung</a></li>
+          <li class="odd"><a href="#">Makita</a></li>
+          <li class="even"><a href="#">LG</a></li>
+          <li class="odd"><a href="#">Fujitsu Siemens</a></li>
+          <li class="even"><a href="#">Motorola</a></li>
+          <li class="odd"><a href="#">Phillips</a></li>
+          <li class="even"><a href="#">Beko</a></li>
+        </ul>
+      </aside>
+      <footer class="footer">Footer</footer>
+    </div>
   </body>
 </html>
