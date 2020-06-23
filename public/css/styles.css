@@ -166,6 +166,7 @@ ul {
   font-size: 1.2em;
   }
 li {
+    justify-content: center;
     display: grid;
     flex-flow: column;
     /* text-align: left; */
@@ -839,6 +840,7 @@ display: block;
 }
 
 .close {
+  z-index: 4;
   position:absolute;
   top:0;
   right:0;
