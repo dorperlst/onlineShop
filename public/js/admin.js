@@ -148,7 +148,7 @@ function formProductDisplay(action){
     resetForm()
     var productDisplay = action=="products"? "block" :"none"
     document.getElementsByClassName("product")[0].style.display = productDisplay
-    popup.style.display = "grid"
+    popup.style.display = "block"
     productsWrapper.style.display = "none"
 }
 
@@ -209,26 +209,6 @@ function createAttListItem(parent, name){
     const nameVal = name ? name :''
     parent.parentElement.appendChild( createListItem(nameVal));
 }
-
-
-
-{/* <div class="flex-container"> 
-                    <ul class="flex-item nested" id="imgAttributes"><li class="flex-item">
-                    <div class="flex-container nested"><input type="text" value="color" placeholder="name" required=""><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a> <a href="#" onclick="createImgAttListItem(parentNode)"><img src="../../images/add.png"></a>
-                    </div><ul class="flex-item nested"><li><div class="flex-container ">
-                    <input type="text" value="green" placeholder="value" required="">
-                    <input type="text" value="61Xz4E+Kp0L._AC_UL320_-1592920865646.jpg" placeholder="value" required="">
-                    <img src="../../uploads/61Xz4E+Kp0L._AC_UL320_-1592920865646.jpg"><a href="#" onclick="selectAttImg(this)">
-                    <img src="../../images/select.png"></a><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a>
-                     </div></li><li>
-                     <div class="flex-container "><input type="text" value="red" placeholder="value" required=""><input type="text" value="61f4M55hWiL._AC_UL320_-1592920865646.jpg" placeholder="value" required=""><img src="../../uploads/61f4M55hWiL._AC_UL320_-1592920865646.jpg"><a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></a><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a> </div></li> </ul></li></ul>
-                  </div> */}
-
-
-
-
-
-
 
 function addAttributes(isImg, name='', values){
     // var li = document.createElement("li");
@@ -320,14 +300,14 @@ function closeImages(){
 
 function showImages(){ 
      isAttImg= false
-    imagesDiv.style.display="flex"
+    imagesDiv.style.display="grid"
     form.style.display="none"
 }
 
 function createImgListItem(name, img){
 
     var innerHTML =  '<li><div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
-    innerHTML +=  '<input type="text" value = "'+img +'"  placeholder="value" required >'
+    innerHTML +=  '<input  disable="disable" type="text" value = "'+img +'"  placeholder="value" required >'
     innerHTML +=  '<img src = "../../uploads/'+img +'" >'
     innerHTML +=  '<a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>'
     innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
@@ -342,7 +322,7 @@ function createListItem(name, img){
     {
         innerHTML += "<img onclick=selectImage(this,'"+ img+"') src='../../uploads/"+img+"'></img> "
     }
-    innerHTML +="<div class='flex-container nested'>  <input type='text' value = '"+name+"' placeholder='name' required> "
+    innerHTML +="<div >  <input type='text' value = '"+name+"' placeholder='name' required> "
     
     innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
     innerHTML  += ' </div>'
