@@ -23,6 +23,11 @@ const productSchema = new mongoose.Schema({
     amount: {
         type: Number 
     },
+    mainimage: {
+        type: String,
+        trim: true
+    }
+    ,
     images: [{
         type: String,
         required: true,
@@ -53,10 +58,7 @@ const productSchema = new mongoose.Schema({
                 required: true,
                 trim: true }
         
-        }
-            
-            
-            ] }],
+        } ] }],
 
     details: [{
         type: String,

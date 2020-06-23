@@ -1,19 +1,48 @@
  
  
-<%- include('../partials/header.ejs') %>
 
+<header>
+    
+  <!DOCTYPE html>
+  
+  <html>
+  
+  <head>
+      
+      <link rel="stylesheet" href="/css/styles.css">
+      <link rel="icon" href="/img/weather.png">
+  
+  </head>
+   <title><%= title %></title> 
+   
+   
+   </header>
 <body>
+
+  
+
+
+
+
+
   <div class="wrapper">
     <div class="main">
       <div class="rowwrapper">
         <div  class="main2">
-          <a onclick = addProduct() >Add Product</a>
+          <div  id="productsWrapper" >
+
+          <div  class="flex-container add">
+            <span class="flex-item"> Products</span>
+            <a class="flex-item" onclick = addProduct() > <img  class ="actionImg" src="../../images/add.png"></a>
+
+          </div>
+          
           <div id="productsDiv" class="grid-wrapper"> 
             
             <% products.forEach(function(product) { %>
               <div class ="box zone "> 
-                <%  if ( product.images[0]) { %> <img  class="" src="../../uploads/<%= product.images[0] %>"></img> <% }
-                    else  { %>  <img  class="" src="../../uploads/default.jpeg"></img> <% }  %>
+                <%  if ( product.images[0]) { %> <img  class="" src="../../uploads/<%= product.images[0] %>"> <% }
+                    else  { %>  <img  class="" src="../../uploads/default.jpeg"> <% }  %>
                 <p><%= product.name %></p>
                 <p><%= product.description %></p>
                 <p><%= product.price %> $</p>
@@ -22,10 +51,13 @@
               </div>
             <% }); %>
           </div>
+          </div>
           <div id = "popup" style="display: none;">  
-            
+             <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
+
             <div class="grid-wrapper" style="display: none;" id ="imagesDiv">
-              <a onclick="closeImages()" >Cancel</a>
+          
+              <a class="close" onclick="closeImages()" ><img src="../../images/close.png"> </a>
 
               <ul id = "images"></ul>
             </div>
@@ -33,87 +65,83 @@
             
               <h3>Update</h3>
               
-              <fieldset>
-                <span>  Name</span>
-                <input placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
-              </fieldset>
-             
-              
-              <fieldset>
-                <span>  Category</span>
-                <select  name="categories">
+              <div class="flex-container">
+                <label class="flex-item">  Name</label>
+                <input class="flex-item" placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
+               
+              </div>
+            
+              <div class="flex-container">
+                 <label class="flex-item">  Category</label>
+                <select class="flex-item" name="categories">
                   <% categories.forEach(function(category) { %>
                     <option value="<%= category._id %>"><%= category.name %></option>
                   <% }); %>
                 </select>
-              </fieldset>
-              <fieldset>
-                <div>
-                <span>  Description</span>
-                <textarea id ="description" name="description" placeholder="Product Description...." tabindex="5" required></textarea>
               </div>
-              </fieldset>
-              <div class="product">
-                
-                <fieldset>
-                  <span>  Price</span>
-                  <input  id="price" name="price" placeholder="Price" type="text" tabindex="2" >
-                </fieldset>
-                <fieldset >
-                    <span> Attributes  </span> 
-                    <a onclick="addAttributes(false)"><img  class ="actionImg" src="../../images/add.png"></img></a> 
-                  
-                  <ul class="nested"  id = "attributes"></ul>
-                </fieldset>
-                <fieldset >
-                  <div class="box">
-                    <label> Images Attributes  </label> 
-                    <a onclick="addAttributes(true)"><img src="../../images/add.png"></img></a>
-                  </div>
-                  <ul id = "imgAttributes"></ul>
-                </fieldset>
-               
-                <fieldset >
-                  <div class="box">
-                    <label> Details </label> 
-                    <a onclick="addDetails()"> <img src="../../images/add.png"></img></a> 
-                  </div>
-                  <ul id = "details"></ul>
-                </fieldset>
-
-                <fieldset >
-                  <label> Tags </label> 
-                  <a onclick="addTags()"> <img src="../../images/add.png"></img></a> 
-                  <ul id = "tags"></ul>
-                </fieldset>
-            </div>
-            <fieldset>
-              <a onclick="showImages()"> Images... </a> 
-            </fieldset>
+              
             
-              <fieldset>
-                  <!-- <ul id = "images"></ul> -->
+              <div class="flex-container">
+                <label class="flex-item">  Description</label>
+                <textarea class="flex-item" id ="description" name="description" placeholder="Product Description...." tabindex="5" required></textarea>
+              </div>
+               <div class="product">
+                  <div class="flex-container">
+                    <label class="flex-item">  Price</label>
+                    <input class="flex-item"  id="price" name="price" placeholder="Price" type="text" tabindex="2" >
+                </div>
+                <div class="flex-container">
+                  <label class="flex-item">  Attributes  </label> 
+                  <a class="flex-item" onclick="addAttributes(true)"><img src="../../images/add.png"></a>
+                </div>
+                <div class="flex-container">
+                    <ul class=" nested"  id = "attributes"></ul>
+                 </div>
+                 <div class="flex-container">
+                    <label class="flex-item"> Images Attributes  </label> 
+                    <a class="flex-item" onclick="addAttributes(true)"><img src="../../images/add.png"></a>
+                  </div>
+                  <div class="flex-container"> 
+                    <ul class="flex-item nested" id = "imgAttributes"></ul>
+                  </div>
+
+                 
+                
+                  <div class="flex-container">
+                    <label class="flex-item"> Details </label> 
+                    <a  onclick="addDetails()"> <img src="../../images/add.png"></a> 
+                  </div>
+                    <div class="flex-container"> 
+                    <ul class="flex-item nested" id = "details"></ul>
+                  </div>
+
+                  <div class="flex-container">
+                    <label class="flex-item"> Tags </label> 
+                    <a  onclick="addTags()"> <img src="../../images/add.png"></a> 
+                  </div>
+                    <div class="flex-container"> 
+                    <ul class="flex-item" id = "tags"></ul>
+                  </div>
+                  
+            </div>
+            <div class="flex-container">
+              <a onclick="showImages()"> Images... </a> 
+            </div>
+            
+            <div class="flex-container">
+              <!-- <ul id = "images"></ul> -->
                 Select images: <input type="file" onchange="loadImageFileAsURL()" id="productFiles" name="myFiles" multiple>
-              </fieldset>
-              
-              <fieldset>
-                <a onclick="closePopUp()" >Cancel</a>
-              </fieldset>
+            </div>
+           
+            <div class="flex-container">
+              <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
 
-              <fieldset>
-                <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
-              </fieldset>
-        
-              
-              <input type="hidden" value = "" id="id"  name="id">
+            </div>
+            <input type="hidden" value = "" id="id"  name="id">
+          </form>
 
-              
-
-              <!-- <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p> -->
-            </form>
-
-            <div id ="fileDiv"></div>
-            <input type="hidden" value ='<%= shopname %>' id=shopname>
+          <div id ="fileDiv"></div>
+          <input type="hidden" value ='<%= shopname %>' id=shopname>
 
           </div>
         </div>

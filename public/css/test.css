@@ -3,7 +3,7 @@
     display: flex;
     flex-flow: row wrap;
     font-weight: bold;
-    text-align: center;
+    /* text-align: center; */
   }
   
   .wrapper > * {
@@ -40,9 +40,9 @@
   }
   
   @media all and (min-width: 800px) {
-    .main    {flex: 5;}
+    .main    {flex: 11;}
     .aside-1 { order: 1; } 
-    .main    {/* display: flex; */order: 2;}
+    .main    {/* display: flex; */order: 2;height: 100%;/* background: #fff; */}
     .aside-2 { order: 3; }
     .footer  { order: 4; }
   }
@@ -89,6 +89,7 @@
     font-size: 1.2em;
 }
 ul.menu {
+  min-width: 900px;
   list-style-type:none;
   /* float:left; */
   /* justify-content: center; */
@@ -245,6 +246,7 @@ fieldset .box {
 }
 
 body {
+    height: 100%;
     display: flex;
     justify-content: center;
     height: 100%;
@@ -689,16 +691,12 @@ label {
  
  .search >* {border: none}
  .search >select {
-   
-  width: 25%;
-
-  font: bold   "Helvetica Neue", sans-serif;
-  appearance: none;
+   width: 30%;
+   font: bold   "Helvetica Neue", sans-serif;
+   appearance: none;
    white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
 select:focus {
@@ -803,3 +801,7 @@ display: block;
 .navmap::before {height: 12px;content: " ";background: url(../../images/navsep.png) center no-repeat;padding-left: 15px;}
 
 .navigation::before {content: " ";background: url(../../images/navbullet.png) center no-repeat;padding-left: 20px;}
+
+form{
+  text-align: left;
+}

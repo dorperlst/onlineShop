@@ -18,8 +18,7 @@
 .main2 {
     text-align: left;
     flex: 5 0 0;
-    /* height: inherit; */
-    /* overflow: scroll; */
+ 
   }
   
 .main {
@@ -42,8 +41,8 @@
   .aside {flex: 1 0 0;}
   .aside2 {flex: 1 0 0;}
   .header {background: #fff;/* background: url(../../images/menu_bg.gif) repeat-x; */order: 1;} 
-  .main    {overflow: scroll;overflow-x: hidden;order: 2;}
-  .footer  { order: 3; }
+  .main    { order: 2;}
+  .footer  { order: 3; flex: 1 0 0}
   .aside-1  { order: 1; } 
   .aside-2  {order: 3;/* text-align: center; */} 
   .main2   { order: 2; }
@@ -66,7 +65,7 @@ body {
      
     transition: all 0.3s linear;
   }
-  
+  mainImg,
   .zone:hover {
     -webkit-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
     -moz-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
@@ -158,23 +157,21 @@ ul.menu {
     }
 }
 
-.push {
-    display: flex;
-    /* width: 100%; */
-    margin-left: auto;
-    /* justify-content: flex-end; */
-}
+
 ul {
-  /* display: flex; */
+  display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
   font-size: 1.2em;
   }
 li {
+    display: flex;
     /* text-align: left; */
-    /* max-height: 20px; */
-    padding: 10 20 10 0;
+    /* max-width: 20px; */
+    padding-left: 10;
+    padding-top: 0;
+    margin: 0;
 }
 
 a {
@@ -190,9 +187,11 @@ a {
 *  Grid Panel
 **********************************************************************/
 .grid-wrapper {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   /* grid-gap: 5px; */
+  /* flex-flow: column; */
+  position: relative;
 }
 fieldset .box {
   /* color: #FFF; */
@@ -201,6 +200,7 @@ fieldset .box {
 }
 
 .box {
+     width: 250px;
      /* color: #FFF; */
      /* border-radius:4px;
      border-right: 1px solid #bbb; */
@@ -213,15 +213,12 @@ fieldset .box {
   padding: 0px 0px 0px 15px;
   margin: 0;
 }
- .nested {
-  /* color: #FFF; */
-  padding: 0px 0px 0px 15px;
-}
+
 
 .box > img {
-  object-fit: contain;
-  width: 100%;
-  height: fit-content;
+  /* object-fit: contain; */
+  /* width: 100%; */
+  /* height: fit-content; */
 }
 
  
@@ -272,18 +269,20 @@ body {
 }
 
 #contact {
+  /* display: grid; */
   width: 100%;
+  flex-flow: column;
   background: #F9F9F9;
-  padding: 25px;
+  /* padding: 25px; */
   /* margin: 15px 0; */
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
 }
 
 #contact h3 {
   display: block;
   font-size: 30px;
   font-weight: 300;
-  margin-bottom: 10px;
+  margin: 0px;
 }
 
 #contact h4 {
@@ -302,13 +301,13 @@ fieldset li {
 }
 
 fieldset {
-  /* display: flex; */
+  display: table;
   border: medium none !important;
   margin: 0 0 10px;
   /* min-width: 100%; */
   /* padding: 0; */
-  flex-flow: row;
-  width: 100%;
+  flex-direction: column;
+  /* width: 100%; */
 }
 
 #contact input[type="text"],
@@ -317,18 +316,25 @@ fieldset {
   border: 1px solid #ccc;
   /* background: #FFF; */
   margin: 0 0 5px 5px;
-  padding: 7px;
+  /* padding: 7px; */
+  height: 24px;
 }
 
 #contact button,
  #contact img {
-  max-height: 35px;
+  max-height: 20px;
   /* border: 1px solid #ccc; */
   /* background: #FFF; */
   /* margin: 0 0px 0px; */
-  padding-top: 22px;
+  padding-left: 10px;
+}
+#contact label {
+  padding: 2 5 0 0;
 }
 
+
+
+  
 #contact input[type="text"]:hover,
  
 #contact textarea:hover {
@@ -339,8 +345,8 @@ fieldset {
 }
 
 #contact textarea {
-  height: 100px;
-  width: 100%;
+  /* height: 100px; */
+  /* width: 100%; */
   resize: none;
 }
 
@@ -443,7 +449,7 @@ label {
   color: #666;
   /* font-size: 10px; */
   font-weight: 500;
-  line-height: 2em;
+  /* line-height: 2em; */
   /* text-transform: uppercase; */
 }
 
@@ -787,3 +793,69 @@ display: block;
 .navmap::before {height: 12px;content: " ";background: url(../../images/navsep.png) center no-repeat;padding-left: 15px;}
 
 .navigation::before {content: " ";background: url(../../images/navbullet.png) center no-repeat;padding-left: 20px;}
+
+
+.flex-container {
+  /* We first create a flex layout context */
+  display: flex;
+  /* flex-flow: column; */
+  padding: 10 0 0 0;
+  margin-top: 6px;
+  list-style: none;
+}
+
+.flex-item {
+  /* display: flex; */
+  flex-flow: column;
+  /* background: tomato; */
+  /* padding: 5px; */
+  /* width: 200px; */
+  /* height: 150px; */
+  /* margin-top: 10px; */
+  /* line-height: 150px; */
+  /* color: white; */
+  /* font-weight: bold; */
+  /* font-size: 3em; */
+  /* text-align: center; */
+}
+
+.nested {
+  /* margin-top: 0; */
+  display: flex;
+  /* color: #FFF; */
+  padding: 0;
+  margin: 0px 0px 0px 15px;
+}
+.push {
+    z-index: 3;
+    position: relative;
+    display: flex;
+    width: 80%;
+    margin: 0;
+    padding: 0;
+    justify-content: flex-end;
+}
+
+.close {
+  position:absolute;
+  top:0;
+  right:0;
+}
+#popup{
+  margin: 15;
+  position: relative;
+}
+
+.add{justify-content: center;width: 100%;}
+
+.actionImg{
+  max-height: 20px;
+  /* border: 1px solid #ccc; */
+  /* background: #FFF; */
+  /* margin: 0 0px 0px; */
+  padding-left: 10px;
+
+}
+.nested>.flex-container{
+  margin:0;
+}

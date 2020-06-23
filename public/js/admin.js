@@ -1,7 +1,10 @@
 
 // document.body.style.height = screen.height+'px'
 const form = document.getElementById("contact");
-var productDiv = document.getElementById("productsDiv");    
+var productsDiv = document.getElementById("productsDiv");    
+var productsWrapper = document.getElementById("productsWrapper");    
+
+
 var productFiles = document.getElementById("productFiles");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
 var imagesDiv = document.getElementById("imagesDiv")
@@ -17,14 +20,16 @@ var ultags = document.getElementById("tags");
 var ulimages = document.getElementById("images"); 
 var uldetails = document.getElementById("details"); 
 var formAction='' 
+var mainImg = undefined
 
 function closePopUp(){
     resetForm()
     popup.style.display="none"
-    productDiv.style.display="grid"
+    productsWrapper.style.display="block"
 }
 
 function resetForm(){
+    mainImg=undefined
     form.reset();
     uldetails.innerHTML = '';
     ulAttributes.innerHTML = '';
@@ -50,7 +55,7 @@ function getProducts(category){
             return null
         })
         .then((jsonData) => {   
-            productDiv.innerHTML = ''
+            productsDiv.innerHTML = ''
            
             for(var ind in jsonData.products)
             {
@@ -66,7 +71,7 @@ function getProducts(category){
                 innerHTML+='<h4>'+product.price +'</h4>'
                 innerHTML += '<a onclick=editProduct("'+ product._id +'")>Edit </a>'
                 innerHTML += '<a onclick="deleteProduct("' + product._id + '")">Delete</a>'+' </div> '
-                productDiv.innerHTML += innerHTML
+                productsDiv.innerHTML += innerHTML
                          
             }
         });
@@ -102,6 +107,7 @@ function editProduct(id){
         form.elements['price'].value = product.price
         form.elements['description'].value = product.description
         form.elements['id'].value = product._id
+        mainImg = product.mainimage
         formcategories.selectedIndex =  [...formcategories.options].findIndex(option => option.text ===  product.category)  
         uldetails.innerHTML = '';
         ulAttributes.innerHTML = '';
@@ -127,7 +133,12 @@ function editProduct(id){
            addTags(product.tags[ind]);
 
         for(var ind in product.images)
-            ulimages.appendChild( createListItem(product.images[ind], product.images[ind]));
+        {
+            ulimages.appendChild(createListItem(product.images[ind], product.images[ind]));
+            if(product.images[ind]===mainImg)
+               ulimages.lastElementChild.className="mainImg";
+         
+        }
         
     });
 }
@@ -138,7 +149,7 @@ function formProductDisplay(action){
     var productDisplay = action=="products"? "block" :"none"
     document.getElementsByClassName("product")[0].style.display = productDisplay
     popup.style.display = "grid"
-    productDiv.style.display = "none"
+    productsWrapper.style.display = "none"
 }
 
 function deleteCategory(id){
@@ -191,7 +202,7 @@ function editCategory(id){
 function createImgAttListItem(parent, name,  img){
     const imgVal = img ? img : ''
     const nameVal = name ? name :''
-    parent.parentElement.appendChild( createListItem(nameVal, imgVal));
+    parent.parentElement.innerHTML+= createImgListItem(nameVal, imgVal);
 }
 
 function createAttListItem(parent, name){
@@ -199,52 +210,66 @@ function createAttListItem(parent, name){
     parent.parentElement.appendChild( createListItem(nameVal));
 }
 
-function addAttributes(isImg, name='', values){
-    var li = document.createElement("li");
-    var innerHTML  = '<div><input type="text" value = "'+name +'" placeholder="name" required> <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
-    if(isImg == true)
-        innerHTML +=  '<a href="#" onclick="createImgAttListItem(parentNode)"><img src="../../images/add.png"></img></a></li>'
-    else
-        innerHTML +=  '<a href="#" onclick="createAttListItem(parentNode)"><img src="../../images/add.png"></img></a></li>'
 
-    var attInnerHTML =  '<ul class="nested" > '
-     
-    if(values)
-    {
-        for(var ind in values){
-            attInnerHTML +=  '<li><div><input type="text" value = "'+values[ind].value +'"  placeholder="value" required >'
-            if(isImg == true)
-                attInnerHTML +=  '<input type="text" value = "'+values[ind].img +'"  placeholder="value" required >'
-            attInnerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
-        }
-     
-    }
-    innerHTML  += attInnerHTML+ '</ul></div>'
-    li.innerHTML= innerHTML
+
+{/* <div class="flex-container"> 
+                    <ul class="flex-item nested" id="imgAttributes"><li class="flex-item">
+                    <div class="flex-container nested"><input type="text" value="color" placeholder="name" required=""><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a> <a href="#" onclick="createImgAttListItem(parentNode)"><img src="../../images/add.png"></a>
+                    </div><ul class="flex-item nested"><li><div class="flex-container ">
+                    <input type="text" value="green" placeholder="value" required="">
+                    <input type="text" value="61Xz4E+Kp0L._AC_UL320_-1592920865646.jpg" placeholder="value" required="">
+                    <img src="../../uploads/61Xz4E+Kp0L._AC_UL320_-1592920865646.jpg"><a href="#" onclick="selectAttImg(this)">
+                    <img src="../../images/select.png"></a><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a>
+                     </div></li><li>
+                     <div class="flex-container "><input type="text" value="red" placeholder="value" required=""><input type="text" value="61f4M55hWiL._AC_UL320_-1592920865646.jpg" placeholder="value" required=""><img src="../../uploads/61f4M55hWiL._AC_UL320_-1592920865646.jpg"><a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></a><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a> </div></li> </ul></li></ul>
+                  </div> */}
+
+
+
+
+
+
+
+function addAttributes(isImg, name='', values){
+    // var li = document.createElement("li");
+    var innerHTML  = '<li class="flex-item"><div class="flex-container nested"><input type="text" value = "'+name +'" placeholder="name" required><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
     if(isImg == true)
-        ulImgAttributes.appendChild(li);
+        innerHTML +=  '<a href="#" onclick="createImgAttListItem(parentNode)"><img src="../../images/add.png"></img></a></div>'
     else
-        ulAttributes.appendChild(li);
+        innerHTML +=  '<a href="#" onclick="createAttListItem(parentNode)"><img src="../../images/add.png"></img></a></li></div>'
+
+    var attInnerHTML=''
+    if(isImg == true )
+    {
+        attInnerHTML ='<ul class="flex-item nested">'
+        if(!values || values.length ==0)
+        {
+            // attInnerHTML +=  '<div class="flex-container nested"> '
+            attInnerHTML+= createImgListItem("", "")  
+           
+        }
+        else
+        {
+         
+        for(var ind in values){
+            attInnerHTML+= createImgListItem(values[ind].value, values[ind].img);
+        }
+    }
+        attInnerHTML+=" </ul>"
+    }
+    else
+    {
+
+    }
+    innerHTML  += attInnerHTML+ '</li></div>'
+     
+    if(isImg == true)
+        ulImgAttributes.innerHTML+=innerHTML;
+    else
+        ulAttributes.innerHTML+=innerHTML;;
 }
 
-
-// function addImgAttributes(name='', values){
-//     var li = document.createElement("li");
-//     var innerHTML  = '<div><a href="#" onclick="removeli(parentNode)">remove</a> <input type="text" value = "'+name +'" placeholder="name" required> '
-//     var attInnerHTML =  '<ul><li><a href="#" onclick="createImgAttListItem(parentNode)">Add Value..</a></li>'
-
-//     if(values)
-//     {
-//         for(var ind in values){
-//             attInnerHTML +=  '<li><div><input type="text" value = "'+values[ind].value +'"  placeholder="value" required >'
-//             attInnerHTML +=  '<input type="text" value = "'+values[ind].img +'"  placeholder="value" required >'
-//             attInnerHTML += '<a href="#" onclick="removeli(parentNode)">remove</a></div></li>'
-//         }
-//     }
-//     innerHTML  += attInnerHTML+ '</ul></div>'
-//     li.innerHTML= innerHTML
-//     ulImgAttributes.appendChild(li);
-// }
+ 
 
 function addDetails(name = ''){
     uldetails.appendChild( createListItem(name));
@@ -255,32 +280,59 @@ function addTags(name = ''){
 }
 
 var currentAttributeDiv = undefined
+var isAttImg= false
+
 
 function selectAttImg(element){
     currentAttributeDiv = element.parentElement
     imagesDiv.style.display = "grid"
+    isAttImg= true
 }
 
 function selectImage(parent, img){
-    var input = currentAttributeDiv.getElementsByTagName("input")[1]
-    if(input.value.trim()!='')
-        ulimages.appendChild( createListItem( input.value.trim() ));
-
-    currentAttributeDiv.getElementsByTagName("img")[0].src = '../../uploads/'+ img
-    input.value = img
-    imagesDiv.style.display = "none"
-    removeli(parent)
-    currentAttributeDiv = undefined
+    if(isAttImg == true)
+    {
+        var input = currentAttributeDiv.getElementsByTagName("input")[1]
+        if(input.value.trim()!='')
+            ulimages.appendChild( createListItem( input.value.trim(),input.value.trim() ));
+    
+        currentAttributeDiv.getElementsByTagName("img")[0].src = '../../uploads/'+ img
+        if(mainImg==img)
+           mainImg=undefined
+        input.value = img
+        removeli(parent)
+        currentAttributeDiv = undefined
+        isAttImg= false
+        imagesDiv.style.display = "none"
+    }
+    else
+    {
+        mainImg = img;
+        parent.classList.add("mainImg");
+    }
 }
 
 function closeImages(){ 
+     isAttImg= false
     imagesDiv.style.display="none"
     form.style.display="block"
 }
 
 function showImages(){ 
-    imagesDiv.style.display="block"
+     isAttImg= false
+    imagesDiv.style.display="flex"
     form.style.display="none"
+}
+
+function createImgListItem(name, img){
+
+    var innerHTML =  '<li><div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
+    innerHTML +=  '<input type="text" value = "'+img +'"  placeholder="value" required >'
+    innerHTML +=  '<img src = "../../uploads/'+img +'" >'
+    innerHTML +=  '<a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>'
+    innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
+    innerHTML +='</div></li>'
+    return innerHTML
 }
 
 function createListItem(name, img){
@@ -288,11 +340,11 @@ function createListItem(name, img){
     var innerHTML  = ''
     if(img != undefined)
     {
-        innerHTML += "<img onclick=selectImage(parentNode,'"+ img+"') src='../../uploads/"+img+"'></img> "
+        innerHTML += "<img onclick=selectImage(this,'"+ img+"') src='../../uploads/"+img+"'></img> "
     }
-    innerHTML +="<div>  <input type='text' value = '"+name+"' placeholder='name' required> "
+    innerHTML +="<div class='flex-container nested'>  <input type='text' value = '"+name+"' placeholder='name' required> "
     
-    innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png" ></img> </a>'
+    innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
     innerHTML  += ' </div>'
     li.innerHTML= innerHTML
     return li
@@ -320,71 +372,18 @@ form.addEventListener('submit', (e) => {
     formdata.append('category', formcategories[formcategories.selectedIndex].value)
 
     if(formAction === 'products'){
+
+        if(!mainImg && ulimages.length>0)
+            mainImg = ulimages[0]
+        formdata.append('mainimage', mainImg)
         formdata.append('price', form.elements['price'].value)
         formdata.append( 'attributes', toAttJsonArray(ulAttributes, false) )
         formdata.append( 'imgattributes', toAttJsonArray(ulImgAttributes, true) )
-        // formdata.append( 'imgattributes', JSON.stringify(imgAttributesArray ) )
 
-        // var attributes_array =[]
-        // for (var i = 0; i < ulAttributes.children.length; i++ ) {
-        //     var attribute = {}
-        //     var inputs = ulAttributes.children[i].getElementsByTagName("input")
-        //     attribute.name = inputs[0].value;
-
-        //     var values_array =[]
-        //     for (var j = 1; j < inputs.length; j++ )  
-        //          values_array.push(inputs[j].value);
-            
-        //     attribute.values = values_array
-        //     attributes_array.push(attribute)
-            
-        // }
-
-        // var imgAttributesArray =[]
-        // for (i=0 ; i < ulImgAttributes.children.length; i++)
-        // {
-        //     var attribute = {}
-        //     var inputs = ulImgAttributes.children[ i ].getElementsByTagName("input")
-        //     attribute.name = inputs[0].value;       
-
-        //     var values =[]
-        //     for (var j = 1; j < inputs.length; j+=2 ) {
-        //          var obj ={ value: inputs[j].value ,img :inputs[j+1].value}
-        //         values.push(obj);
-        //     }
-           
-        //     attribute.values = values
-        //     imgAttributesArray.push(attribute)
-
-
- 
-        // }
-       
+        
         formdata.append( 'details', toJsonArray (uldetails) )
         formdata.append( 'images', toJsonArray( ulimages ) )
         formdata.append( 'tags', toJsonArray( ultags ) )
-
-        // var details_array =[]
-    
-        // for (var i = 0; i < uldetails.children.length; i++ ) {
-        //     var detailinput = uldetails.children[ i ].getElementsByTagName("input");
-        //     details_array.push( detailinput[0].value)
-        // }
-
-        // var images_array =[]
-        // for (i=0 ; i < ulimages.children.length; i++)
-        // {
-        //     var name = ulimages.children[ i ].getElementsByTagName("input")[0].value
-        //     images_array.push(name)
-        // }
-
-        // var tags_array =[]
-        // for (var i = 0; i < ultags.children.length; i++ ) {
-        //     var name = ultags.children[ i ].getElementsByTagName("input")[0].value
-        //     tags_array.push(name)
-        // }
-        // formdata.append( 'tags', JSON.stringify( tags_array ) )
-
         for (i=0 ; i < productFiles.files.length; i++)
             formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
 

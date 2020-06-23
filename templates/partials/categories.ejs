@@ -1,12 +1,14 @@
-<div class ="zone "> 
+<div class="title_box">Categories</div>
+ 
 
-<ul id =ulcategories>
+<ul class="left_menu" id =ulcategories>
+    <% var line='odd' %> 
     <% categories.forEach(function(category) { %> 
 
-        <li onclick="getSubCategories('<%= shopname %>','<%= category.name %>','<%= category._id %>')" ><%= category.name %></li>
-        
+        <li class="<%= category.name %>" onclick="getSubCategories('<%= shopname %>','<%= category.name %>','<%= category._id %>')" ><%= category.name %></li>
+        <%  line='even' %> 
+
      <% }); %>
 </ul>
-    </div>
-    <!-- <script src="/js/categories.js"></script> -->
-    
+   
+<div class="title_box">Special Products</div>

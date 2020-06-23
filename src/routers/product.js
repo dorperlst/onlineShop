@@ -1,15 +1,15 @@
 var express = require('express');
-const Product = require('../models/product')
-const User = require('../models/user')
+ const Product = require('../models/product')
+// const User = require('../models/user')
 
 const Attribute = require('../models/attribute')
 
 const Cat = require('../models/cat')
-const Shop = require('../models/shop')
+// const Shop = require('../models/shop')
 const router = new express.Router()
 var multer = require('multer'); 
-const authObj = require('../middleware/auth')
-const admin = authObj.admin
+const admin = require('../middleware/auth').admin
+ 
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -78,7 +78,7 @@ router.get('/admin', admin, async (req, res) => {
     if (userName == undefined)
         window.location.href="/login"
     try {
-        const products = await Product.find()
+        const products = await Product.find({shop: req.shop.name }).sort({ "parent": -1 })
         const categories = await  Cat.find() 
 
         res.render('admin', { title: 'admin', products: products, categories: categories, shopname: req.shop.name, username: userName});
@@ -87,9 +87,6 @@ router.get('/admin', admin, async (req, res) => {
         const obj={} 
         res.render('admin', { title: 'admin', products: obj ,shopname: req.shop.name, username: userName});   
      }
-
-
- 
 })
 
 router.get('/:shop/view',async (req, res) => {
@@ -145,21 +142,18 @@ router.get('/:shop/products', async (req, res) => {
 async function getProducts(req)
 {
     var params = [ {shop: req.params.shop }]
-    var sort = { "price": -1 }
+    var sort = { "parent": -1 }
     var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
     if (req.query.category &&  req.query.category!='All') 
     {
         var catname=req.query.category
         var cats=  await Cat.find( { tree: { $all: catname } },{_id:0,name:1}).select({_id:0,name:1}); //,
-        
-        
         var categories=[]
         cats.forEach((cat) => categories.push(cat.name))
 
         params.push( { category: { $in: categories } } )
     }
-     
 
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
@@ -167,16 +161,9 @@ async function getProducts(req)
         params.push(  { price:{"$gte": req.query.pricefrom}  } )
     if (req.query.priceto)  
         params.push(  { price:{"$lte": req.query.priceto}  } )
-    // if (req.query.tag)  
-    // { 
-    //     var jsontag = JSON.parse(req.query.tag)
-    //     for(i=0;i<jsontag.length;i++)
-    //         params.push( {  "tags.name":jsontag[i][0] } )
-    // }
+ 
     if (req.query.tag)  
     { 
-        // var jsontag = JSON.parse(req.query.tag)
-        // for(i=0;i<jsontag.length;i++)
             params.push( {  "tags":req.query.tag } )
     }
     if (req.query.attributes)  
@@ -191,15 +178,11 @@ async function getProducts(req)
         const parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
-
     
     var prod = await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
-
-
-
-
-      return prod
+    return prod
 }
+
 router.delete('/products/:id', async (req, res) => {
      
     try {
@@ -224,6 +207,7 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
         images : req.files.map(x => x.filename)
     })
     product.category = cat.name
+   
     try
     {
        // await attribute.save()
@@ -237,24 +221,16 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
 })
 
 router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
-    const allowedUpdates = ['name', 'description', 'price']
-
+    const allowedUpdates = ['name', 'description', 'price','mainimage']
     var newimages = req.files.map(x => x.filename)
     var images = JSON.parse( req.body.images)
- 
     const product = await Product.findById(req.body.id)
     
     allowedUpdates.forEach((update) => product[update] = req.body[update])
     var cat = await Cat.findById(req.body.category)
     product.category= cat.name
-    var concatimages = newimages
-    // images.forEach((img) => concatimages.push(img.imgName))
     product.images = images.concat(newimages)
-  
-
-    
     product.imgattributes = JSON.parse(req.body.imgattributes)
-
     product.attributes = JSON.parse(req.body.attributes)
     product.details = JSON.parse(req.body.details)
     product.tags = JSON.parse(req.body.tags)
