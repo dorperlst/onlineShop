@@ -166,7 +166,7 @@ ul {
   font-size: 1.2em;
   }
 li {
-    justify-content: center;
+    /* justify-content: center; */
     display: grid;
     flex-flow: column;
     /* text-align: left; */
@@ -863,3 +863,17 @@ display: block;
 .nested>.flex-container{
   margin:0;
 }
+
+.big-wrap{
+  position: relative;
+}
+ 
+  .big:hover {
+  z-index: 5;
+  /* background: url(../../uploads/61Xz4E+Kp0L._AC_UL320_-1592920865646.jpg) left no-repeat; */
+  width: 300px;
+  height: 300px;
+  position: absolute;
+ }
+ 
+ to-big{height: inherit};

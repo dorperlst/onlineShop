@@ -202,7 +202,8 @@ function editCategory(id){
 function createImgAttListItem(parent, name,  img){
     const imgVal = img ? img : ''
     const nameVal = name ? name :''
-    parent.parentElement.innerHTML+= createImgListItem(nameVal, imgVal);
+    
+    parent.parentElement.getElementsByTagName("ul")[0].innerHTML+= createImgListItem(nameVal, imgVal);
 }
 
 function createAttListItem(parent, name){
@@ -275,8 +276,9 @@ function selectImage(parent, img){
         var input = currentAttributeDiv.getElementsByTagName("input")[1]
         if(input.value.trim()!='')
             ulimages.appendChild( createListItem( input.value.trim(),input.value.trim() ));
-    
-        currentAttributeDiv.getElementsByTagName("img")[0].src = '../../uploads/'+ img
+        var curimg=currentAttributeDiv.getElementsByTagName("img")[0]
+        curimg.src = '../../uploads/'+ img
+        curimg.style="display:block"
         if(mainImg==img)
            mainImg=undefined
         input.value = img
@@ -307,14 +309,29 @@ function showImages(){
 function createImgListItem(name, img){
 
     var innerHTML =  '<li><div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
-    innerHTML +=  '<input  disable="disable" type="text" value = "'+img +'"  placeholder="value" required >'
-    innerHTML +=  '<img src = "../../uploads/'+img +'" >'
+    innerHTML +=  '<input  disabled="disabled" type="text" value = "'+img +'"  placeholder="value" required >'
+    innerHTML +=  "<div class=big-wrap><div class=big onmouseover=hover(this,'"+img +"')><img class=to-big"
+    if(!img || img=='')
+    {
+        innerHTML +=  ' style="display:none"'  
+    }
+    else
+
+    innerHTML +=  ' src = "../../uploads/'+img +'" > </div></div>'
+
+
+
+
     innerHTML +=  '<a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>'
     innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
     innerHTML +='</div></li>'
     return innerHTML
 }
-
+function hover(div,img)
+{
+    
+    div.style="  background: url(../../uploads/"+img+") left no-repeat;"
+}
 function createListItem(name, img){
     var li = document.createElement("li");
     var innerHTML  = ''
