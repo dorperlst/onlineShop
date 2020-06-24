@@ -20,7 +20,7 @@
 
         <nav >
           <ul class="navigation">
-            <li class="navmap"> Navigation: </li>
+            <li> Navigation: </li>
           <li><a href="#" class="navmap"> Home</a></li>
           <li><a href="#" class="navmap">Garden Tools</a></li>
   
@@ -32,12 +32,14 @@
                   
           <% products.forEach(function(product) { %>
             <div class="product-card">
-              <div class="product-image">             <% 
-             if ( product.images[0]) { %>
-               <img  class="" src="../../uploads/<%= product.images[0] %>"></img> 
-             <% }
+              <div class="product-image">   
+          <% 
+               if ( product.images[0]) { %>
+                <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
+ 
+              <% }
              else  { %>
-               <img  src="../../uploads/default.jpeg"></img> 
+               <img  src="../../uploads/default.png"></img> 
              <% }
              %>
             </div>

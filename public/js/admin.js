@@ -290,7 +290,7 @@ function selectImage(parent, img){
     else
     {
         mainImg = img;
-        parent.classList.add("mainImg");
+        parent.classList.add("selected");
     }
 }
 

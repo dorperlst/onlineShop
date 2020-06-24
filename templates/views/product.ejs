@@ -1,133 +1,156 @@
+
  
-<%- include('../partials/header.ejs') %>
 
-<body>
-  <div class="wrapper">
-      <div class="main">
-        <div class="rowwrapper">
-          <div  class="main2">
- 
-            <div class="main">
-              <div class="rowwrapper">
-              <aside class="aside2 aside-1">  
+   <head>
+    
+    <!DOCTYPE html>
+    
+    <html>
+        <link rel="stylesheet" href="/css/test.css">
+        <link rel="icon" href="/img/weather.png">
+    </head>
+     <body>
+    <div class="wrapper">
+      <%- include('../partials/header.ejs') %>
 
-<div>
 
+
+
+      <article class="main">
+
+        <nav >
+          <ul class="navigation">
+            <li> Navigation: </li>
+          <li><a href="#" class="navmap"> Home</a></li>
+          <li><a href="#" class="navmap">Garden Tools</a></li>
   
-    <div class="rowwrapper">
-    <div class="main2">  
-      <div class ="box zone container"> <img id="bigImg"  src="../../uploads/<%= product.images[0] %>" ></div>
-    </div>
-    <aside class="aside2 aside-1 smallimg">  
-      <ul>
-        <%  product.images.forEach(function(image) { %>
-          <li> <div class ="box zone container"> <img  class=""  onmouseover="bigimg(this)" src="../../uploads/<%= image %>" ></div></li> 
-        <% }); %>
-      </ul>
-    </aside>
-   </div> 
- 
+          </ul>
+       
+      </nav>
+
+
+      <div class="center_content">
+        <div class="center_title_bar"> <%= product.name %></div>
+        <div class="prod_box_big">
+          <div class="center_prod_box_big">
+            <div class="product_img_big"> <a href="javascript:popImage('images/big_pic.jpg','Some Title')" title="">
+            <% 
+            if (product.images && product.images.length > 0) { %>
+              <img src="../../uploads/<%= product.images[0] %>" alt="" border="0"></a>
+            <% }
+            else  { %>
+              <img  src="../../images/default.jpg"></img> 
+            <% }
+            %>
+            
+              <div class="thumbs">
+                <!-- <img src="../../uploads/<%= product.images[0] %>" alt="" border="0"> -->
+                <%  product.images.forEach(function(image) { %>
+                 
+                  <a href="#" title="header=[Thumb2] body=[&nbsp;] fade=[on]">  <img src="../../uploads/<%= image %>" alt="" border="0"></a> 
+
+                 <% }); %>
 
 
 
-</div>
-
-
-
-
-
-
-              
-              </aside>
-              <aside class="aside2 aside-1">    <ul id =images>
-                <div id="productsDiv" > 
-                  <div class ="box zone "> 
-                    <p><%= product.name %></p>
-                    <p><%= product.description %></p>
-                    <h4>price <%= product.price %> $</h4>
-                    <% product.attributes.forEach(function(attribute) { %>
-                      <h4><%= attribute.name %> </h4>   
-                      <select>
-                        <%  attribute.values.forEach(function(value) { %>
-                          <option value="<%= value %>"><%= value %></option>
-                        <% }); %>
-                      </select>
-                    <% }); %>        
                     
-                    <div class="details">
-                      <ul>
-                        <%  product.details.forEach(function(detail) { %>
-                          <li><%= detail %></li>
-                        <% }); %>
-                        </ul>
-                    </div>
-                    <a onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" >Add </a>
+               </div>
+            </div>
+            <div class="details_big_box">
+              <div class="product_title_big"><%= product.name %></div>
 
-                  </div>
-                  <div id ="productOrdersDiv"></div>
-                  <div id ="ordersDiv"></div>
-
-                  
-                </div>
-              </ul>
-              </aside>
-             </div> 
+              <div class="specifications"> Available: <span class="blue">In stock</span><br>
+                Warranties: <span class="blue">24 months</span><br>
+                Transport: <span class="blue"> delivery services company</span><br>
+                Include :<span class="blue"> TVA</span><br>
+                Description :<span class="blue"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </span><br>
+              </div>
+              <div class="prod_price_big"><span class="reduce">350$</span> <span class="price">270$</span></div>
+              <a href="#" class="prod_buy">add...</a>  </div>
+              <!-- <a href="#" class="prod_compare">compare</a> -->
           </div>
-
-
-
-
-
-
-
-
-
-
-            <!-- <div >
-
-
-
-
-              
-
-
-              
-                <div id="productsDiv" class="flex-container"> 
-                  
-                  <div class ="flex-item zone "> 
-
-                    <ul id =images>
-                      <%  product.images.forEach(function(image) { %>
-                          <li><img  class="image"  onmouseover="bigImg(this)" src="../../uploads/<%= product.images[0] %>" ></li> 
-                      <% }); %>
-                    </ul>
-                    <p><%= product.name %></p>
-                    <p><%= product.description %></p>
-                    <div>  
-                        <p><%= product.price %> $</p>
-                    </div>
-                   </div>
-                </div>
-          </div> -->
-
-
-
-
         </div>
-        <aside class="aside2 aside-1">  <%- include('../partials/categories.ejs') %>
-        </aside>
-       </div> 
-    </div>
-    <aside class="aside header">
-      <%- include('../partials/search.ejs') %>
-    </aside>
-    <aside class="aside footer">
-      <%- include('../partials/footer.ejs') %>
-    </aside>
-  </div>
-    <script src="/js/categories.js"></script>
+      </div>
 
-  <script src="/js/product.js"></script>
- 
-</body>
-      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- <section class="grid-wrapper">
+          <div class="center_title_bar"><%= product.name %></div>
+          <% 
+          if ( product.mmainimage) { %>
+            <img  class="" src="../../uploads/<%= product.mainimage %>"></img> 
+          <% }
+          else  { %>
+            <img  src="../../uploads/default.jpeg"></img> 
+          <% }
+          %>
+
+        </section>   -->
+            </article>
+
+
+
+      <aside class="aside aside-1">
+        <div class="left_content">
+          <%- include('../partials/categories.ejs') %>
+        </div>
+
+      </aside>
+      <aside class="aside aside-2">
+        <%- include('../partials/login.ejs') %>
+
+
+        <div class="title_box">           
+        <a class="icon-cart">Your Cart</a> </div>
+
+        <div>
+          <label>Items</label>
+
+          <label>3</label>
+          <label>Total</label>
+
+        <label>330$</label>
+        </div>
+
+        <a  id="searchButton" type="submit"  value="">Search</a>
+
+
+        <div class="title_box">Manufacturers</div>
+        <ul class="left_menu">
+          <li class="odd"><a href="#">Bosch</a></li>
+          <li class="even"><a href="#">Samsung</a></li>
+          <li class="odd"><a href="#">Makita</a></li>
+          <li class="even"><a href="#">LG</a></li>
+          <li class="odd"><a href="#">Fujitsu Siemens</a></li>
+          <li class="even"><a href="#">Motorola</a></li>
+          <li class="odd"><a href="#">Phillips</a></li>
+          <li class="even"><a href="#">Beko</a></li>
+        </ul>
+      </aside>
+      <footer class="footer">Footer</footer>
+    </div>
+  </body>
+</html>

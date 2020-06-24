@@ -231,3 +231,57 @@
       </aside>
       <footer class="footer">Footer</footer>
     </div>
+
+
+
+
+
+
+
+
+
+      <section class="grid-wrapper">
+
+                  
+             <div class="product-card">
+              <div class="product-image">             <% 
+             if ( product.mainimage) { %>
+               <img  class="" src="../../uploads/<%= product.mainimage] %>"></img> 
+             <% }
+             else  { %>
+               <img  src="../../uploads/default.jpeg"></img> 
+             <% }
+             %>
+            </div>
+          
+            <div class="product-info">
+                 <label><%= product.name %> </label>
+                 <label><%= product.description %> </label>
+
+                 <label><%= product.price %>$</label>
+                 <% product.attributes.forEach(function(attribute) { %>
+                  <h4><%= attribute.name %> </h4>   
+                  <select>
+                    <%  attribute.values.forEach(function(value) { %>
+                      <option value="<%= value %>"><%= value %></option>
+                    <% }); %>
+                  </select>
+                <% }); %>        
+                
+                <div class="details">
+                  <ul>
+                    <%  product.details.forEach(function(detail) { %>
+                      <li><%= detail %></li>
+                    <% }); %>
+                    </ul>
+                </div>
+                <a onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" >Add </a>
+            
+            </div>
+          </div>
+ 
+        <% }); %>
+            
+
+        
+        </section>  
