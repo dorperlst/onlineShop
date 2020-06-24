@@ -41,7 +41,7 @@
   .aside {flex: 1 0 0;}
   .aside2 {flex: 1 0 0;}
   .header {background: #fff;/* background: url(../../images/menu_bg.gif) repeat-x; */order: 1;} 
-  .main    { order: 2;}
+  .main    {display: flex;order: 2;}
   .footer  { order: 3; flex: 1 0 0}
   .aside-1  { order: 1; } 
   .aside-2  {order: 3;/* text-align: center; */} 
@@ -244,7 +244,7 @@ fieldset .box {
 body {
   /* font-family: "Roboto", Helvetica, Arial, sans-serif; */
   /* color: #777; */
-  /* display: flex; */
+  display: flex;
   /* text-align: -moz-center;; */
  }
 

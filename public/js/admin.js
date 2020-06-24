@@ -312,26 +312,19 @@ function createImgListItem(name, img){
     innerHTML +=  '<input  disabled="disabled" type="text" value = "'+img +'"  placeholder="value" required >'
     innerHTML +=  "<div class=big-wrap><div class=big onmouseover=hover(this,'"+img +"')><img class=to-big"
     if(!img || img=='')
-    {
         innerHTML +=  ' style="display:none"'  
-    }
-    else
-
+    
     innerHTML +=  ' src = "../../uploads/'+img +'" > </div></div>'
-
-
-
-
     innerHTML +=  '<a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>'
     innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
     innerHTML +='</div></li>'
     return innerHTML
 }
-function hover(div,img)
+function hover(div, img)
 {
-    
     div.style="  background: url(../../uploads/"+img+") left no-repeat;"
 }
+
 function createListItem(name, img){
     var li = document.createElement("li");
     var innerHTML  = ''
