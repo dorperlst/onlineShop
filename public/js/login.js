@@ -3,7 +3,7 @@ const form = document.getElementById("form");
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData(form);
- 
+    formdata.append(currentUrl, window.location.href)
     fetch('/users/login',//
         { method: 'POST', body: formdata})
     .then(function(res) {
@@ -18,6 +18,13 @@ form.addEventListener('submit', (e) => {
     })
 
 })
+
+
+
+
+
+
+
 
 
 function addshop(id){

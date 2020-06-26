@@ -1,21 +1,14 @@
 
-// document.body.style.height = screen.height+'px'
 const form = document.getElementById("contact");
 var productsDiv = document.getElementById("productsDiv");    
 var productsWrapper = document.getElementById("productsWrapper");    
-
-
 var productFiles = document.getElementById("productFiles");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
 var imagesDiv = document.getElementById("imagesDiv")
-
 const popup = document.getElementById("popup");    
-
 var formcategories = form.elements['categories'];    
- 
 var ulAttributes = document.getElementById("attributes");    
 var ulImgAttributes = document.getElementById("imgAttributes");    
-
 var ultags = document.getElementById("tags"); 
 var ulimages = document.getElementById("images"); 
 var uldetails = document.getElementById("details"); 

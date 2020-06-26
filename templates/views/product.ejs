@@ -34,21 +34,17 @@
         <div class="prod_box_big">
           <div class="center_prod_box_big">
             <div class="product_img_big"> <a href="javascript:popImage('images/big_pic.jpg','Some Title')" title="">
-            <% 
-            if (product.images && product.images.length > 0) { %>
+            <% if (product.images && product.images.length > 0) { %>
               <img src="../../uploads/<%= product.images[0] %>" alt="" border="0"></a>
             <% }
             else  { %>
               <img  src="../../images/default.jpg"></img> 
-            <% }
-            %>
+            <% } %>
             
               <div class="thumbs">
                 <!-- <img src="../../uploads/<%= product.images[0] %>" alt="" border="0"> -->
                 <%  product.images.forEach(function(image) { %>
-                 
                   <a href="#" title="header=[Thumb2] body=[&nbsp;] fade=[on]">  <img src="../../uploads/<%= image %>" alt="" border="0"></a> 
-
                  <% }); %>
 
 
@@ -59,16 +55,26 @@
             <div class="details_big_box">
               <div class="product_title_big"><%= product.name %></div>
 
-              <div class="specifications"> Available: <span class="blue">In stock</span><br>
-                Warranties: <span class="blue">24 months</span><br>
-                Transport: <span class="blue"> delivery services company</span><br>
-                Include :<span class="blue"> TVA</span><br>
-                Description :<span class="blue"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </span><br>
+              <div class="specifications">Available:
+              <% if (product.isavailable) { %>
+                <span class="blue">In stock</span>
+                <% }
+              else  { %>
+                <span class="blue">Out of stock</span>
+                <% } %>
+<br/>
+
+<!-- <span class="reduce">350$</span>  -->
+ 
+                Description :<span class="blue">  <%= product.description %>  </span><br>
               </div>
-              <div class="prod_price_big"><span class="reduce">350$</span> <span class="price">270$</span></div>
-              <a href="#" class="prod_buy">add...</a>  </div>
+              <div class="prod_price_big"><span class="price"> <%= product.price %>$</span></div>
+              <a  onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" href="#" class="prod_buy">add...</a>  </div>
               <!-- <a href="#" class="prod_compare">compare</a> -->
+              <div id ="productOrdersDiv"></div>
+
           </div>
+          <div id ="ordersDiv"></div>
         </div>
       </div>
 
@@ -152,5 +158,9 @@
       </aside>
       <footer class="footer">Footer</footer>
     </div>
+  </div>
+  <script src="/js/categories.js"></script>
+
+<script src="/js/product.js"></script>
   </body>
 </html>

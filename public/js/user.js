@@ -1,44 +1,59 @@
   
-        
-       
-       
-function init(username){
-    if(username == undefined ||  username == "")
-        return
 
-    var liUser = document.getElementById("liUser")
-    liUser.innerHTML  = '<p>Hello' + username +'</p>'
+// const form = document.getElementById("loginForm");
 
-    if(username == "Guest")
-        liUser.innerHTML  += ' <a href="/login">Login</a> '
-    else  
-    {
-        liUser.innerHTML  += '<a onclick="logout()">Logout</a>'
-        liUser.innerHTML  += '<a onclick="logoutAll()">Logout All</a>'
-    }
+// initUser()
+
+// form.addEventListener('submit', (e) => {
+//     e.preventDefault()
+//     var formdata = new FormData(form);
+//     formdata.append('currentUrl', window.location.href)
+
+//     fetch('/users/login',//
+//         { method: 'POST', body: formdata})
+//         .then((res) => { 
+//             if (res.redirected)  
+//                 window.location.href = res.url;
+//         }
+//     )
+// })
+
+// function initUser(){
+//     if(username == undefined ||  username == "")
+//         return
+
+//     var userlabel = document.getElementById("userlabel")
+//     userlabel.innerHTML  = 'Hello '+ username 
+
+//     // if(username == "Guest")
+//     // // userlabel.innerHTML  += ' <a href="/login">Login</a> '
+//     // else  
+//     // {
+//     //     // userlabel.innerHTML  += '<a onclick="logout()">Logout</a>'
+//     //     // userlabel.innerHTML  += '<a onclick="logoutAll()">Logout All</a>'
+//     // }
         
-}
+// }
 
 function logout(){
     
-    fetch('users/logout',
-        { method: 'POST', body: {}})
+    var formdata = new FormData();
+    formdata.append('currentUrl', window.location.href)
+    fetch('/users/logout',//
+        { method: 'POST', body: formdata})
     .then(function(res) {
-        if (res.redirected)  
+    //addshop("5e9f216829efa7242bd514c4")
+        window.location.href = res.url;
+    })
+    }
+    function logoutAll(){
+    
+        var formdata = new FormData();
+        formdata.append('currentUrl', window.location.href)
+        fetch('/users/logoutAll',//
+            { method: 'POST', body: formdata})
+        .then(function(res) {
+        //addshop("5e9f216829efa7242bd514c4")
             window.location.href = res.url;
-        else    
-            window.location.href='/login'
-    })
-}
-
-function logoutAll(){
-    fetch('users/logoutAll',
-       { method: 'POST', body: {}})
-   .then(function(res) {
-        if (res.redirected)  
-           window.location.href = res.url;
-        else    
-            window.location.href='/login'
-
-    })
-}
+        })
+    }

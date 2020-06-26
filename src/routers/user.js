@@ -57,13 +57,14 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 router.post('/users/login', multer().none(), async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        redirectSession(req, res, user)
+        
+        redirectSession(req, res, user,req.body.currentUrl)
     } catch (e) {
         res.status(400).send('Unable to login')
     }
 })
 
-async function redirectSession(req, res, user){
+async function redirectSession(req, res, user, href){
     const token = await user.generateAuthToken()   
     var sess = req.session;
     sess.token = token
@@ -72,35 +73,44 @@ async function redirectSession(req, res, user){
     var hour = 360000000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
-    res.redirect('/admin');
+    res.redirect(href);
 }
 
-router.post('/users/logout', auth, async (req, res) => {
-    try {
-            req.user.tokens = req.user.tokens.filter((token) => {
-                return token.token !== req.session.token
-            })
-           
-            req.session.cookie.expires = new Date(Date.now())
-            req.session.cookie.maxAge = 0
-            await req.user.save()
-            res.redirect('/yyyy/view');
-     } catch (e) {
-        res.status(500).send()
-    }
+router.post('/users/logout', multer().none(),  auth, async (req, res) => {
+  
+    req.user.tokens = req.user.tokens.filter((token) => {
+        return token.token !== req.session.token
+    })
+    logout(req, req.body.currentUrl, res)
+        
+            
+     
 })
 
-router.post('/users/logoutAll', auth, async (req, res) => {
-    try {
-        req.session.token=''
-        req.session.username = ''
+async function logout(req, href, res){
+    req.session.token=''
+    req.session.username = ''
 
-        req.user.tokens = []
+    req.session.cookie.expires = new Date(Date.now())
+    req.session.cookie.maxAge = 0
+    try{
         await req.user.save()
-        res.redirect('/yyyy/view');
-    } catch (e) {
+    res.redirect(href);
+
+    }
+    catch (e) {
         res.status(500).send()
     }
+}
+
+
+
+
+router.post('/users/logoutAll', multer().none(), auth, async (req, res) => {
+   
+    req.user.tokens = []
+    logout(req, req.body.currentUrl, res)
+     
 })
 
 router.get('/users/me', auth, async (req, res) => {

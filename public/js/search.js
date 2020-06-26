@@ -1,46 +1,46 @@
 
-const categories = document.getElementById("categories");   
+// const categories = document.getElementById("categories");   
  
-document.getElementById("searchButton").addEventListener('click', (e) => {
-    e.preventDefault()
-    const tag = document.getElementById("tag").value.trim();   
+// document.getElementById("searchButton").addEventListener('click', (e) => {
+//     e.preventDefault()
+//     const tag = document.getElementById("tag").value.trim();   
 
-    var href = '/'+shopName+'/view'
-    var category =''
-    var appendSign='?'
-    if(categories.value != 0)
-    {
-        href+="?category="+  categories.options[categories.selectedIndex].text
-        appendSign='&&'
-    }
+//     var href = '/'+shopName+'/view'
+//     var category =''
+//     var appendSign='?'
+//     if(categories.value != 0)
+//     {
+//         href+="?category="+  categories.options[categories.selectedIndex].text
+//         appendSign='&&'
+//     }
 
-    if( tag!= '')
-        href+=appendSign + "tag="+ tag
+//     if( tag!= '')
+//         href+=appendSign + "tag="+ tag
 
-    window.location.href = href
-})
+//     window.location.href = href
+// })
 
-function logout(){
+// function logout(){
     
-    fetch('users/logout',
-        { method: 'POST', body: {}})
-    .then(function(res) {
-        if (res.redirected)  
-            window.location.href = res.url;
-        else    
-            window.location.href='/login'
-    })
-}
+//     fetch('users/logout',
+//         { method: 'POST', body: {}})
+//     .then(function(res) {
+//         if (res.redirected)  
+//             window.location.href = res.url;
+//         else    
+//             window.location.href='/login'
+//     })
+// }
 
-function logoutAll(){
-    fetch('users/logoutAll',
-       { method: 'POST', body: {}})
-   .then(function(res) {
-        if (res.redirected)  
-           window.location.href = res.url;
-        else    
-            window.location.href='/login'
+// function logoutAll(){
+//     fetch('users/logoutAll',
+//        { method: 'POST', body: {}})
+//    .then(function(res) {
+//         if (res.redirected)  
+//            window.location.href = res.url;
+//         else    
+//             window.location.href='/login'
 
-    })
-}
+//     })
+// }
 

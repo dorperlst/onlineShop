@@ -1,11 +1,11 @@
 var express = require('express');
  const Product = require('../models/product')
-// const User = require('../models/user')
+ const Order = require('../models/order')
 
 const Attribute = require('../models/attribute')
 
 const Cat = require('../models/cat')
-// const Shop = require('../models/shop')
+const User = require('../models/user')
 const router = new express.Router()
 var multer = require('multer'); 
 const admin = require('../middleware/auth').admin
@@ -95,8 +95,29 @@ router.get('/:shop/view',async (req, res) => {
     try {
         const products = await getProducts(req)
         const categories = await Cat.findByParent(null) 
+        var order = null
+        var count=0
+        if(userName!='Guest')
+        {
+            const jwt = require('jsonwebtoken')
 
-        res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, username: userName});
+            const token = req.session.token;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+            var userOrders = await user.populate({
+                match: { completed: false }   ,
+                  path: 'orders',
+                  populate: {
+                      path: 'products.product',
+                      model: 'Product'} 
+              }).execPopulate()
+              if(user.orders.length>0)
+              {
+                    order=userOrders.orders[0]
+                    req.session.order = order
+              }
+         }
+        res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, username: userName,order:order});
         } 
     catch (e) {
         const obj={} 

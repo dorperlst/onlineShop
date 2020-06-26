@@ -12,43 +12,30 @@
      <body>
     <div class="wrapper">
       <%- include('../partials/header.ejs') %>
-
-
-
-
       <article class="main">
-
         <nav >
           <ul class="navigation">
             <li> Navigation: </li>
-          <li><a href="#" class="navmap"> Home</a></li>
-          <li><a href="#" class="navmap">Garden Tools</a></li>
-  
+            <li><a href="#" class="navmap"> Home</a></li>
+            <li><a href="#" class="navmap">Garden Tools</a></li>
           </ul>
-       
       </nav>
         <section class="grid-wrapper">
-
-                  
           <% products.forEach(function(product) { %>
             <div class="product-card">
               <div class="product-image">   
-          <% 
-               if ( product.images[0]) { %>
+          <% if ( product.images[0]) { %>
                 <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
  
-              <% }
-             else  { %>
-               <img  src="../../uploads/default.png"></img> 
-             <% }
-             %>
+          <% } else  { %>
+            <img  src="../../uploads/default.png"></img> 
+            <% }  %>
             </div>
           
             <div class="product-info">
                  <label><%= product.name %> </label>
                  <label><%= product.price %>$</label>
                  <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
-
             </div>
           </div>
  
@@ -66,22 +53,27 @@
 
       </aside>
       <aside class="aside aside-2">
+ 
+        <% if(username == 'Guest' ){%>
+
         <%- include('../partials/login.ejs') %>
 
-
+        <% } else {   %>
+ 
         <div class="title_box">           
         <a class="icon-cart">Your Cart</a> </div>
 
         <div>
+ 
           <label>Items</label>
 
-          <label>3</label>
+          <label><%= order.products.length %> </label>
           <label>Total</label>
 
         <label>330$</label>
         </div>
 
-        <a  id="searchButton" type="submit"  value="">Search</a>
+        <% } %>
 
 
         <div class="title_box">Manufacturers</div>

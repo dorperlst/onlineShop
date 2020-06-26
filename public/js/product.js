@@ -4,10 +4,6 @@ var ordersDiv = document.getElementById("ordersDiv");
 
 var bigImg = document.getElementById("bigImg");    
 
- 
-
- 
-
 
 function bigimg(img){
     

@@ -42,15 +42,12 @@ const orderSchema = new mongoose.Schema({
 })
 
 orderSchema.statics.userOrder = async (owner) => {
-   // console.log('---------------'+owner)
-    var orders = await Order.find({ owner })
+     var orders = await Order.find({ owner })
 
     if (!orders) {
         orders.push(new Order({owner:owner,products:[]}))
         
     }
-  //  console.log('-------ooooooooooooooo--------'+orders)
-
     return orders
 }
 const Order = mongoose.model('Order', orderSchema)

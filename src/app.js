@@ -42,8 +42,6 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/help', (req, res) => {
-
- 
           res.render('help', {
          title: 'about'
     })

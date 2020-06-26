@@ -24,13 +24,20 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
         order.owner= req.user._id
         order.products= []
     }
-    
-    const orderProduct =  new OrderProduct()
+    var user =req.user
+var userOrders=user.orders? user.orders: []
+
+const orderProduct =  new OrderProduct()
     orderProduct.price = product.price
     orderProduct.count = req.body.count
     orderProduct.product = req.body.product
     order.products.push(orderProduct)
+    if(!userOrders.includes(order._id))
+        userOrders.push(order._id)
+    user.orders=userOrders
     try {
+        await user.save()
+
         await order.save()
        
         res.status(201).send(order)
@@ -45,17 +52,17 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
 // GET /orders?limit=10&skip=20
 // GET /orders?sortBy=createdAt:desc
 router.get('/orders', auth, async (req, res) => {
-    const match = {}
-    const sort = {}
+    // const match = {}
+    // const sort = {}
 
-    if (req.query.completed) {
-        match.completed = req.query.completed === 'true'
-    }
+    // if (req.query.completed) {
+    //     match.completed = req.query.completed === 'true'
+    // }
 
-    if (req.query.sortBy) {
-        const parts = req.query.sortBy.split(':')
-        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
-    }
+    // if (req.query.sortBy) {
+    //     const parts = req.query.sortBy.split(':')
+    //     sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    // }
 
     try {
         await req.user.populate({

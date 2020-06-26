@@ -17,31 +17,42 @@
           </li>
           <li>
             <input type="button"  id="searchButton" type="submit" class="search-btn" value="">
-
           </li>
-
         </ul>  
-
       </div>
       <nav >
         <ul class="menu">
           <li><a href="#" class="nav"> Home </a></li>
           <li><a href="#" class="nav">Products</a></li>
-          
-          <li><a href="#" class="nav">My account</a></li>
-          <li><a href="#" class="nav">Sign Up</a></li>
-          <li><a href="#" class="nav">Shipping </a></li>
           <li><a href="contact.html" class="nav">Contact Us</a></li>
 
+          <% if ( username !='Guest'){ %>
+            <li><a href="#" class="nav login">My account</a></li>
+            <li><a onclick="logout()"   class="nav login">Logout </a></li>
+            <li><a a onclick="logoutAll()" href="#" class="nav login">Logout  All</a></li>
+         
+            <% } else  { %>
+              <li><a href="#" class="nav guest">Sign Up</a></li>
+            <% }  %>
+          <li class="push"><a  id="userlabel" class="nav icon-lock" href="javascript:void(0)"> Hello  <%= username %> </a></li>
 
-            <li class="push"><a  class="nav icon-lock" href="javascript:void(0)">
-              
-              Hello Guest </a></li>
-
-
-            
         </ul>
      </nav>
+     <nav >
+      <ul class="navigation">
+        <li> Navigation: </li>
+      <li><a href="#" class="navmap"> Home</a></li>
+      <li><a href="#" class="navmap">Garden Tools</a></li>
+
+      </ul>
+   
+  </nav>
     </article>
    </div>
+       <script src="/js/user.js"></script>
+
+   <script type="text/javascript">
+      var shopName="<%= shopname %>"
+      var username="<%= username %>"
+   </script>
    </header>
