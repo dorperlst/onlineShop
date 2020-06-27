@@ -1,9 +1,7 @@
 var express = require('express');
- const Product = require('../models/product')
- const Order = require('../models/order')
-
+const Product = require('../models/product')
+const Order = require('../models/order').Order
 const Attribute = require('../models/attribute')
-
 const Cat = require('../models/cat')
 const User = require('../models/user')
 const router = new express.Router()
@@ -44,34 +42,34 @@ router.get('/product/:id', async (req, res) => {
 
 
 
-function getSubCategories(shopname, categoryname){
-    var ulcategories = document.getElementById("ulcategories");  
-    var innerHTML=  ''  
-    var url = '/'+shopname+'/cats'
-    if(categoryname)
-    {
-        url +='?parent='+ categoryname
-        innerHTML += '<li><a onclick = backCategory("'+shopname+'")>..Back</a> <h3>'+categoryname+' </h3></li>'
-    }
-    ulcategories.innerHTML = innerHTML
+// function getSubCategories(shopname, categoryname){
+//     var ulcategories = document.getElementById("ulcategories");  
+//     var innerHTML=  ''  
+//     var url = '/'+shopname+'/cats'
+//     if(categoryname)
+//     {
+//         url +='?parent='+ categoryname
+//         innerHTML += '<li><a onclick = backCategory("'+shopname+'")>..Back</a> <h3>'+categoryname+' </h3></li>'
+//     }
+//     ulcategories.innerHTML = innerHTML
   
-    fetch( url )
-    .then((res) => { 
-    if(res.status == 200)
-        return res.json() 
-    return null
-    })
-    .then((jsonData) => {   
-        for(var data in jsonData.cats)
-        {
+//     fetch( url )
+//     .then((res) => { 
+//     if(res.status == 200)
+//         return res.json() 
+//     return null
+//     })
+//     .then((jsonData) => {   
+//         for(var data in jsonData.cats)
+//         {
 
-            var name = jsonData.cats[data].name
-            var liinnerHTML =`<li onclick="getSubCategories('${shopname}','${name}')" >${name}</li> `
-            ulcategories.innerHTML += liinnerHTML
-        } 
-        getProducts(categoryname) 
-    });
-}
+//             var name = jsonData.cats[data].name
+//             var liinnerHTML =`<li onclick="getSubCategories('${shopname}','${name}')" >${name}</li> `
+//             ulcategories.innerHTML += liinnerHTML
+//         } 
+//         getProducts(categoryname) 
+//     });
+// }
 
 router.get('/admin', admin, async (req, res) => {
     var userName = req.session.name  
@@ -91,12 +89,25 @@ router.get('/admin', admin, async (req, res) => {
 
 router.get('/:shop/view',async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
-
+    var tree=["Home"]
     try {
         const products = await getProducts(req)
+        
         const categories = await Cat.findByParent(null) 
+
+
+
+        if (req.query.category &&  req.query.category != 'All') 
+        {
+            const curCateory  = await Cat.findOne({ name :req.query.category }) 
+            tree=tree.concat(curCateory.tree)
+        }
+
+
+
         var order = null
-        var count=0
+        
+        var orderStat= null
         if(userName!='Guest')
         {
             const jwt = require('jsonwebtoken')
@@ -104,24 +115,65 @@ router.get('/:shop/view',async (req, res) => {
             const token = req.session.token;
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
             const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-            var userOrders = await user.populate({
-                match: { completed: false }   ,
-                  path: 'orders',
-                  populate: {
-                      path: 'products.product',
-                      model: 'Product'} 
-              }).execPopulate()
-              if(user.orders.length>0)
-              {
-                    order=userOrders.orders[0]
-                    req.session.order = order
-              }
+            var params = [ {shop: req.params.shop }]
+            params.push(  { completed: false  } )
+            const match = { $and: params } 
+
+            var stat = await Order.aggregate([
+                  { $match : match } ,
+                { "$unwind": "$products" }, 
+                { "$project": { 
+                    "number": 1,  
+                    "value": { "$multiply": [
+                        { "$ifNull": [ "$products.count", 0 ] }, 
+                        { "$ifNull": [ "$products.price", 0 ] } 
+                    ]},
+                    "items": { $sum: "$products.count" }
+                }}, 
+                { "$group": { 
+                    "_id": "$number", 
+                    "total": { "$sum": "$value" } ,
+                    "totalItems": { "$sum": "$items" }
+
+                }}
+            ])
+            orderStat=stat[0]
+     
+     
+     
+     
+
+
+
+
+            // var userOrders = await user.populate({
+            //     match: { completed: false }   ,
+            //       path: 'orders',
+            //       populate: {
+            //           path: 'products.product',
+            //           model: 'Product'} 
+            //   }).execPopulate()
+            //   if(user.orders.length>0)
+            //   {
+            //         order=userOrders.orders[0]
+            //         req.session.order = order
+            //         // userOrders.orders[0].products.aggregate([
+            //         //     {
+                             
+        
+            //         //       $project: {
+            //         //         prodcount: { $sum: "$count"},
+                            
+            //         //       }
+            //         //     }
+            //         //  ])
+            //   }
          }
-        res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, username: userName,order:order});
+        res.render('products', { title: 'products',tree:tree, products: products, categories: categories, shopname: req.params.shop, username: userName,order:order,orderStat:orderStat});
         } 
     catch (e) {
         const obj={} 
-        res.render('products', { title: 'products', products: obj ,shopname: req.params.shop, username: userName});   
+        res.render('products', { title: 'products', products: [] , categories: [],shopname: req.params.shop, username: userName});   
      }
 })
  
@@ -166,9 +218,9 @@ async function getProducts(req)
     var sort = { "parent": -1 }
     var limit = !req.query.limit ? 15 : req.query.limit
     var skip = !req.query.skip ? 0 : req.query.skip
-    if (req.query.category &&  req.query.category!='All') 
+    if (req.query.category &&  req.query.category != 'All') 
     {
-        var catname=req.query.category
+        var catname= req.query.category
         var cats=  await Cat.find( { tree: { $all: catname } },{_id:0,name:1}).select({_id:0,name:1}); //,
         var categories=[]
         cats.forEach((cat) => categories.push(cat.name))

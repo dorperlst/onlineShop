@@ -5,10 +5,10 @@
     <% var line='odd' %> 
     <% categories.forEach(function(category) { %> 
 
-        <li class="<%= category.name %>" onclick="getSubCategories('<%= shopname %>','<%= category.name %>','<%= category._id %>')" ><%= category.name %></li>
+        <li class="<%= line %>"  ><a onclick="getSubCategories('<%= category.name %>','<%= category.parent %>')"><%= category.name %></a></li>
         <%  line='even' %> 
 
      <% }); %>
 </ul>
    
-<div class="title_box">Special Products</div>
+<script src="/js/categories.js"></script>

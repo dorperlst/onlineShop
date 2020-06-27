@@ -14,13 +14,14 @@
       <%- include('../partials/header.ejs') %>
       <article class="main">
         <nav >
-          <ul class="navigation">
+           <ul class="navigation">
+            
             <li> Navigation: </li>
             <li><a href="#" class="navmap"> Home</a></li>
             <li><a href="#" class="navmap">Garden Tools</a></li>
           </ul>
       </nav>
-        <section class="grid-wrapper">
+        <section id="secProducts" class="grid-wrapper">
           <% products.forEach(function(product) { %>
             <div class="product-card">
               <div class="product-image">   
@@ -64,13 +65,14 @@
         <a class="icon-cart">Your Cart</a> </div>
 
         <div>
- 
+          
+ home
           <label>Items</label>
 
-          <label><%= order.products.length %> </label>
+          <label><%= orderStat.totalItems %></label>
           <label>Total</label>
 
-        <label>330$</label>
+        <label><%= orderStat.total %>$</label>
         </div>
 
         <% } %>
