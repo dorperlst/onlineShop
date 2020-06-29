@@ -5,10 +5,9 @@
     <% var line='odd' %> 
     <% categories.forEach(function(category) { %> 
 
-        <li class="<%= line %>"  ><a onclick="getSubCategories('<%= category.name %>','<%= category.parent %>')"><%= category.name %></a></li>
+        <li class="<%= line %>"  ><a onclick="getSubCategories('<%= category.name %>','<%= category.parent %>','<%= category._id %>')"><%= category.name %></a></li>
         <%  line='even' %> 
 
      <% }); %>
 </ul>
    
-<script src="/js/categories.js"></script>

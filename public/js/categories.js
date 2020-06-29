@@ -1,14 +1,4 @@
 
- var tree = []
- 
-
-// function subCategories(categoryname)
-// {
-//     tree.push({name:categoryname})
-//     getSubCategories( categoryname)
-
-// }
-
  function getSubCategories( categoryname, parentName){
     var parent= parentName === undefined ? "" : parentName
     var ulcategories = document.getElementById("ulcategories");  
@@ -18,7 +8,7 @@
     {
         url +='?parent='+ categoryname
       //  innerHTML += '<li><a onclick = backCategory()>..Back</a> <h3>'+categoryname+' </h3></li>'
-        innerHTML += '<li class="even"><div class="back"><input onclick = getSubCategories('+parent+') type="button"  class="back-btn" ><h3>'+categoryname+' </h3> </div> </li>'
+        innerHTML += '<li class="even"><div class="back"><input onclick = getSubCategories("'+parent+'") type="button"  class="back-btn" ><h3>'+categoryname+' </h3> </div> </li>'
 
         
     }
@@ -51,21 +41,6 @@
         getProducts(categoryname) 
     });
 }
-
-// function backCategory(){
-//     tree.pop()
-//     var name ='',id=''
-//     if(tree.length >0)
-//     {
-//         var prevCategory = tree.pop()
-//         getSubCategories( prevCategory.name)
-
-//     }
-//     else
-//     getSubCategories( null)
-
-// }
-
 
 function getProducts(categoryname){
    var secProducts = document.getElementById("secProducts");    
@@ -103,31 +78,3 @@ function getProducts(categoryname){
            }
        });
 }
-
-
-
-
-
-// function getSubCategories(shopName, categoryname){
-//     var ulcategories = document.getElementById("ulcategories");    
-
-//     fetch('/'+shopName+'/cats?parent='+categoryname)
-//     .then((res) => { 
-//     if(res.status == 200)
-//         return res.json() 
-//     return null
-//     })
-//     .then((jsonData) => {   
-//         ulcategories.innerHTML = '';
-//         for(var data in jsonData.cats)
-//         {
-
-//             var name = jsonData.cats[data].name
-//             var liinnerHTML =`<li onclick="getSubCategories('${name}','${name}')" >${name}</li> `
-//             ulcategories.innerHTML += liinnerHTML
-
-
-//         }  
-//     });
-   
-// }

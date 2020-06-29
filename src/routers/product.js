@@ -75,101 +75,52 @@ router.get('/admin', admin, async (req, res) => {
     var userName = req.session.name  
     if (userName == undefined)
         window.location.href="/login"
+    var tree = [req.shop.name]
     try {
         const products = await Product.find({shop: req.shop.name }).sort({ "parent": -1 })
         const categories = await  Cat.find() 
 
-        res.render('admin', { title: 'admin', products: products, categories: categories, shopname: req.shop.name, username: userName});
+        res.render('admin', { title: 'admin', products: products, categories: categories, shopname: req.shop.name,tree:tree, username: userName});
         } 
     catch (e) {
-        const obj={} 
-        res.render('admin', { title: 'admin', products: obj ,shopname: req.shop.name, username: userName});   
+        
+        res.render('admin', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
+     }
+})
+router.get('/add', admin, async (req, res) => {
+    var userName = req.session.name  
+    if (userName == undefined)
+        window.location.href="/login"
+    var tree = [req.shop.name]
+    try {
+        const products = await Product.find({shop: req.shop.name }).sort({ "parent": -1 })
+        const categories = await  Cat.find() 
+
+        res.render('add', { title: 'admin', products: products, categories: categories, shopname: req.shop.name,tree:tree, username: userName});
+        } 
+    catch (e) {
+        
+        res.render('add', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
      }
 })
 
 router.get('/:shop/view',async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
-    var tree=["Home"]
+    var tree=[req.params.shop]
     try {
-        const products = await getProducts(req)
-        
-        const categories = await Cat.findByParent(null) 
+            const products = await getProducts(req)
+            const categories = await Cat.findByParent(null) 
+            if (req.query.category &&  req.query.category != 'All') 
+            {
+                const curCateory  = await Cat.findOne({ name :req.query.category }) 
+                tree = curCateory.tree
+            }
+            
+            var orderStat= null
+            if(userName!='Guest')
+                orderStat = await orderStats(req,res)
 
-
-
-        if (req.query.category &&  req.query.category != 'All') 
-        {
-            const curCateory  = await Cat.findOne({ name :req.query.category }) 
-            tree=tree.concat(curCateory.tree)
-        }
-
-
-
-        var order = null
-        
-        var orderStat= null
-        if(userName!='Guest')
-        {
-            const jwt = require('jsonwebtoken')
-
-            const token = req.session.token;
-            const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-            var params = [ {shop: req.params.shop }]
-            params.push(  { completed: false  } )
-            const match = { $and: params } 
-
-            var stat = await Order.aggregate([
-                  { $match : match } ,
-                { "$unwind": "$products" }, 
-                { "$project": { 
-                    "number": 1,  
-                    "value": { "$multiply": [
-                        { "$ifNull": [ "$products.count", 0 ] }, 
-                        { "$ifNull": [ "$products.price", 0 ] } 
-                    ]},
-                    "items": { $sum: "$products.count" }
-                }}, 
-                { "$group": { 
-                    "_id": "$number", 
-                    "total": { "$sum": "$value" } ,
-                    "totalItems": { "$sum": "$items" }
-
-                }}
-            ])
-            orderStat=stat[0]
-     
-     
-     
-     
-
-
-
-
-            // var userOrders = await user.populate({
-            //     match: { completed: false }   ,
-            //       path: 'orders',
-            //       populate: {
-            //           path: 'products.product',
-            //           model: 'Product'} 
-            //   }).execPopulate()
-            //   if(user.orders.length>0)
-            //   {
-            //         order=userOrders.orders[0]
-            //         req.session.order = order
-            //         // userOrders.orders[0].products.aggregate([
-            //         //     {
-                             
-        
-            //         //       $project: {
-            //         //         prodcount: { $sum: "$count"},
-                            
-            //         //       }
-            //         //     }
-            //         //  ])
-            //   }
-         }
-        res.render('products', { title: 'products',tree:tree, products: products, categories: categories, shopname: req.params.shop, username: userName,order:order,orderStat:orderStat});
+            res.render('products', { title: 'products',tree:tree, products: products, categories: categories, shopname: req.params.shop, username: userName,orderStat:orderStat});
         } 
     catch (e) {
         const obj={} 
@@ -177,17 +128,64 @@ router.get('/:shop/view',async (req, res) => {
      }
 })
  
+async function orderStats(req,res)
+{
+
+    const jwt = require('jsonwebtoken')
+
+    const token = req.session.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+    var params = [ {shop: req.params.shop }]
+    params.push(  { owner: user._id  } )
+
+    params.push(  { completed: false  } )
+    const match = { $and: params } 
+
+    var stat = await Order.aggregate([
+        { $match : match } ,
+        { "$unwind": "$products" }, 
+        { "$project": { 
+            "number": 1,  
+            "value": { "$multiply": [
+                { "$ifNull": [ "$products.count", 0 ] }, 
+                { "$ifNull": [ "$products.price", 0 ] } 
+            ]},
+            "items": { $sum: "$products.count" }
+        }}, 
+        { "$group": { 
+            "_id": "$number", 
+            "total": { "$sum": "$value" } ,
+            "totalItems": { "$sum": "$items" }
+
+        }}
+    ])
+   return stat[0]
+}
+
+
+
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
+    
+    var tree=[]
     try {
-        const product = await Product.findById(req.params.id)
-        const categories = await Cat.findByParent(null) 
-        res.render('product', { title: 'product', product: product, categories: categories, shopname: req.params.shop, username: userName});
+            const product = await Product.findById(req.params.id)
+            const curCateory  = await Cat.findOne({ name :product.category }) 
+            tree = curCateory.tree
+            var orderStat= null
+            if(userName!='Guest')
+                orderStat = await orderStats(req,res)
+
+         
+
+            const categories = await Cat.findByParent(null) 
+            res.render('product', { title: 'product',tree:tree, product: product, categories: categories, shopname: req.params.shop, orderStat:orderStat, username: userName});
         } 
     catch (e) {
         const obj={} 
-        res.render('product', { title: 'product', products: obj ,shopname: req.params.shop, username: userName});   
+        res.render('product', { title: 'product', products: [] ,tree:[],categories:[],shopname: req.params.shop, username: userName});   
      }
  
 })
