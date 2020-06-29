@@ -16,9 +16,6 @@
         <%- include('../partials/header.ejs') %>
      
 
-
-
-
         <article class="main">
 
       <div id = "popup" style="display: none;" >  
@@ -114,7 +111,7 @@
   
             </div>
 
-            <section id="productDiv" class="grid-wrapper">
+            <section id="productsDiv" class="grid-wrapper">
               <% products.forEach(function(product) { %>
                 <div class="product-card">
                   <div class="product-image">   
@@ -137,19 +134,10 @@
           </div>
         
       </article>
-
-
-
-
-
-
-
-
         <aside class="aside aside-1">
           <div class="left_content">
             <%- include('../partials/categories.ejs') %>
           </div>
-
         </aside>
        
         <footer class="footer">Footer</footer>

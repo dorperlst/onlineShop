@@ -5,8 +5,8 @@
     <% var line='odd' %> 
     <% categories.forEach(function(category) { %> 
 
-        <li class="<%= line %>"  ><a onclick="getSubCategories('<%= category.name %>','<%= category.parent %>','<%= category._id %>')"><%= category.name %></a></li>
-        <%  line='even' %> 
+        <li class="<%= line %>"  ><a onclick="subCategories('<%= category.name %>','<%= category.parent %>','<%= category._id %>')"><%= category.name %></a></li>
+        <%  line =line=='odd'? 'even' :'odd' %> 
 
      <% }); %>
 </ul>

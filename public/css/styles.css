@@ -282,7 +282,7 @@ label {
 
 .wrapper {
   height: inherit;
-  width: 100%;
+  max-width: 1400px;
   display: flex;
   flex-flow: row wrap;
   font-weight: bold;
@@ -291,7 +291,7 @@ label {
 }
 
 .header {
-  display: flex;
+  /* display: flex; */
   /* max-height: 140px; */
   padding: 0;
   padding: 0;
@@ -374,7 +374,7 @@ ul.menu li {
   padding: 0 0 0 10;
 }
 .field {
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   /* margin: 0 10px 0 0px; */
   height: 24px;
@@ -517,3 +517,73 @@ a.nav, a.nav:visited {
   }
   
 }
+
+.back-btn {
+  border: none;
+  float: left;
+  text-indent: -4000px;
+  cursor: pointer;
+  width: 28px;
+  content: " ";
+  background: url(../../images/back.png) no-repeat 0 0;
+}
+
+.left_content {
+  width: 180px;
+  float: left;
+  /* padding: 0 0 0 5px; */
+}
+.title_box {
+  width: 180px;
+  height: 30px;
+  /* margin: 0 10px 0 10px; */
+  background: url(../../images/menu_title_bg.gif) no-repeat center;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  color: #159dcc;
+  /* color: #159dcc; */
+  line-height: 30px;
+}
+
+ul.left_menu {
+  width: 180px;
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+ul.left_menu li {
+  margin: 0px;
+  list-style: none;
+  text-align: left;
+}
+
+ul.left_menu li.even div,
+  ul.left_menu li.even a{
+  font-size: 14px;
+  width:166px;
+  height: 25px;
+  display:block;
+  border-bottom:1px #e4e4e4 dashed;
+  background-color:#f0f4f5;
+  text-decoration:none;
+  color:#504b4b;
+  padding:0 0 0 14px;
+  line-height:25px;
+  }
+  ul.left_menu li.even a:hover, ul.left_menu li.odd a:hover{
+  color:#000; text-decoration:underline;
+  }
+
+
+  ul.left_menu li.odd a{
+    font-size: 14px;
+    width:166px;
+    height:25px;
+    display:block;
+    border-bottom:1px #e4e4e4 dashed;
+    text-decoration:none;
+    color:#504b4b;
+    padding:0 0 0 14px;
+    line-height:25px;
+    }

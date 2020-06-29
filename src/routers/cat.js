@@ -50,7 +50,7 @@ router.get('/:shop/cats', async (req, res) => {
     if (req.query.category)  
         params.push( { tree: req.query.category } )
 
-    if (req.query.parent|| req.query.categories == 'true')  
+    if (req.query.parent|| req.query.mainCategories == 'true')  
         params.push( { parent: req.query.parent } )
    
     if (req.query.name)  
@@ -82,9 +82,9 @@ router.delete('/cats/:id',admin, async (req, res) => {
         if(!cat.parent)
             res.status(403).send("Can not Remove Main Category")
 
-        var nestedCategories = await Cat.find( { tree: { $all: cat.name } } )
+        var nestedCategories = await Cat.find( { tree: { $all: catName } } )
         nestedCategories.forEach(function (nestedcat){
-            var foundIndex = nestedcat.tree.findIndex((x=> x == cat.name))
+            var foundIndex = nestedcat.tree.findIndex((x=> x == catName))
             nestedcat.tree.splice(foundIndex, 1);
             nestedcat.markModified("tree");
             if(nestedcat.parent === cat.name)
@@ -141,23 +141,24 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     const allowedUpdates = [ 'description']
     allowedUpdates.forEach((update) => cat[update] = req.body[update])
     var parent = !req.body.category ? undefined : await Cat.findById(req.body.category)
-    var catName = req.body.name
+    var newName = req.body.name
     var  catname = cat.name
     var nestedCategories = await Cat.find( { tree: { $in: catname } } )
-    if(cat.name != catName)
+    if(cat.name != newName)
     {
         nestedCategories.forEach( async function (nestedcat){
             var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
-            nestedcat.tree[foundIndex] = catName
+            nestedcat.tree[foundIndex] = newName
             if(nestedcat.parent === catname)
-                nestedcat.parent = catName
+                nestedcat.parent = newName
             nestedcat.markModified("tree");
             nestedcat.save()
         })
-        cat.name=catName
-        
+       cat[ cat.tree.indexOf(cat.name) ] = newName
+       cat.name = newName
+ 
     }
-    if(cat.parent != parent.name)
+    if(parent && cat.parent != parent.name)
     { 
         var parentree= []
 
@@ -186,7 +187,7 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     var products= await Product.find({category:catname})
     products.forEach(function (product){
 
-        product.category= catName
+        product.category= newName
         product.save()
     })
 
@@ -207,18 +208,6 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     try
     {
         await cat.save()
-
-
-        //  nestedCategories.forEach( async function (nestedcat){
-        //     var foundIndex = nestedcat.tree.findIndex((x=> x == catname))
-        //     var tree = nestedcat.tree
-        //     tree[foundIndex] = catName
-        //     nestedcat.tree = tree
-        //     if(nestedcat.parent === catname)
-        //         nestedcat.parent = catName
-           
-        //     var t =await nestedcat.save()
-        // })
         res.send(cat)
     }
     catch (e) {

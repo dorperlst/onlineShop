@@ -42,7 +42,7 @@ router.get('/product/:id', async (req, res) => {
 
 
 
-// function getSubCategories(shopname, categoryname){
+// function subCategories(shopname, categoryname){
 //     var ulcategories = document.getElementById("ulcategories");  
 //     var innerHTML=  ''  
 //     var url = '/'+shopname+'/cats'
@@ -64,7 +64,7 @@ router.get('/product/:id', async (req, res) => {
 //         {
 
 //             var name = jsonData.cats[data].name
-//             var liinnerHTML =`<li onclick="getSubCategories('${shopname}','${name}')" >${name}</li> `
+//             var liinnerHTML =`<li onclick="subCategories('${shopname}','${name}')" >${name}</li> `
 //             ulcategories.innerHTML += liinnerHTML
 //         } 
 //         getProducts(categoryname) 

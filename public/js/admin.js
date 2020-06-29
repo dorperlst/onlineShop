@@ -352,7 +352,8 @@ form.addEventListener('submit', (e) => {
     }
     formdata.append('name', form.elements['formname'].value)
     formdata.append('description', form.elements['description'].value)
-    formdata.append('category', formcategories[formcategories.selectedIndex].value)
+    if(formcategories[formcategories.selectedIndex].value!=0)
+        formdata.append('category', formcategories[formcategories.selectedIndex].value)
 
     if(formAction === 'products'){
 
@@ -380,15 +381,14 @@ form.addEventListener('submit', (e) => {
     fetch('/' + formAction,
         { method: method, body: formdata})
     .then(function(res) {   
-        
+        closePopUp()
         if(formAction === 'products')
             getProducts()
         else
         {
-            tree = []
-            subCategories(shopname.value, null, null)
+              subCategories()
         }
-        closePopUp()
+       
         return res; 
     })
 })
@@ -433,51 +433,40 @@ function toJsonArray(ul) {
     return JSON.stringify(array)
 }
 
+ 
+ 
+function subCategories( categoryname, parentName,id){
 
-var tree = []
-function backCategory(shopname){
-    tree.pop()
-    var name ='',id=''
-    if(tree.length > 0)
-    {
-        var prevCategory = tree.pop()
-        subCategories(shopname, prevCategory.name, prevCategory.id)
-
-    }
-    else
-        subCategories(shopname, null, null)
-
-}
-
-function getSubCategories(shopname, categoryname, id){
-    tree.push({id:id,name:categoryname})
-    subCategories(shopname, categoryname, id)
-}
-
-function subCategories(shopname, categoryname, id){
-    var ulcategories = document.getElementById("ulcategories"); 
-    var innerHTML=  ''
-    var url = '/'+shopname+'/cats'
-    if(categoryname)
+    var parent= parentName === undefined ? "" : parentName
+    var ulcategories = document.getElementById("ulcategories");  
+    var innerHTML=  ''  
+    var url = '/'+shopName+'/cats'
+    if(categoryname && categoryname!='')
     {
         url +='?parent='+ categoryname
-        innerHTML += '<li><a onclick = backCategory("'+shopname+'")>..Back</a> <h3>'+categoryname+' </h3><a onclick= editCategory("'+ id +'")>Edit</a>  <a onclick= deleteCategory("'+id +'")>Delete</a></li></li>'
+      //  innerHTML += '<li><a onclick = backCategory()>..Back</a> <h3>'+categoryname+' </h3></li>'
+        innerHTML += '<li class="even"><div class="back"><input onclick = subCategories("'+parent+'") type="button"  class="back-btn" ><h3>'+categoryname+' </h3> <a onclick= editCategory("'+ id +'")>Edit</a>  <a onclick= deleteCategory("'+id +'")>Delete</a></div> </li>'
     }
+  
     else 
     {
-       // url +='?categories=true'
-        formcategories.innerHTML=''
+         url +='?mainCategories=true'
     }
-       
+
     ulcategories.innerHTML = innerHTML
   
     fetch( url )
     .then((res) => { 
-        if(res.status == 200)
-            return res.json() 
-        return null
+    if(res.status == 200)
+        return res.json() 
+    return null
     })
     .then((jsonData) => {   
+
+
+      
+
+        var line='odd' 
         for(var data in jsonData.cats)
         {
             if(!categoryname)
@@ -487,18 +476,31 @@ function subCategories(shopname, categoryname, id){
                opt.innerHTML = jsonData.cats[data].name
                formcategories.appendChild(opt); 
             }
-            
-
             var name = jsonData.cats[data].name
-            var liinnerHTML =`<li onclick="getSubCategories('${shopname}','${name}','${jsonData.cats[data]._id}')" >${name}</li> `
-            ulcategories.innerHTML += liinnerHTML
+            var parent= jsonData.cats[data].parent === undefined ? "" : jsonData.cats[data].parent
 
-         }  
+            var liinnerHTML =`<li class=${line} >  <a onclick="subCategories('${name}','${parent}','${jsonData.cats[data]._id}')" >${name}</a>  </li> `
+
+           
+            ulcategories.innerHTML += liinnerHTML
+            line =line=='odd'? 'even' :'odd'  
+        } 
+        getProducts(categoryname) 
     });
-   
-    getProducts(categoryname)
-   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function readURL(input) {
     if (input.files && input.files[0]) {
