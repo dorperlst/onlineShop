@@ -184,14 +184,14 @@ label {
 .flex-container {
   /* We first create a flex layout context */
   display: flex;
-  /* flex-flow: column; */
+  flex-flow: row;
   padding: 10 0 0 0;
   margin-top: 6px;
   list-style: none;
 }
 
 .flex-item {
-  /* display: flex; */
+  display: flex;
   flex-flow: column;
   /* background: tomato; */
   /* padding: 5px; */
@@ -587,3 +587,14 @@ ul.left_menu li.even div,
     padding:0 0 0 14px;
     line-height:25px;
     }
+
+    .mainImg{
+
+      -webkit-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+      -moz-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+      -o-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+      box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    }
+
+    #images li{flex-flow: column;display: flex;justify-content: center;width: fit-content;}  
+      #images img{display: flex;margin:0 auto 0 auto 0;max-width: 200px;}

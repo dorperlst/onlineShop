@@ -1,6 +1,5 @@
 <header class="header">
-  <div class="wrapper">
-    <article >
+     <article >
       <div id="navheader">
         <h1 id="logo"><a href="#">Retina</a></h1>
         <ul class="menu">
@@ -20,7 +19,7 @@
       </div>
       <nav >
         <ul class="menu">
-          <li><a href="#" class="nav"> Home </a></li>
+          <li><a href="/<%= shopname %>/view" class="nav"> Home </a></li>
           <li><a href="#" class="nav">Products</a></li>
           <li><a href="contact.html" class="nav">Contact Us</a></li>
 
@@ -39,12 +38,22 @@
         <ul class="navigation">
           <li> Navigation: </li>
           <% tree.forEach(function(node) { %>
-            <li><a href="#" class="navmap"> <%= node %> </a></li>
+
+
+
+            <%  if (node!=shopname) { %>
+              <li><a href="/<%= shopname %>/view?category=<%= node %>" class="navmap"> <%= node %> </a></li>
+              <% } else {  %>
+              
+                 <li><a href="/<%= shopname %>/view" class="navmap"> Home </a></li>
+                <% }; %>
+
+
           <% }); %>
         </ul>
       </nav>
     </article>
-   </div>
+    
        <script src="/js/user.js"></script>
 
    <script type="text/javascript">

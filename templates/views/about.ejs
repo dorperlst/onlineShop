@@ -99,6 +99,46 @@
       
       </header>
 
+      <li class="flex-item">
+        <div class="flex-container nested">
+        <input type="text" value = "" placeholder="name" required><a onclick="removeli(parentNode)"> 
+          <img src="../../images/delete.png"></img></a> <a href="#" onclick="createAttListItem(parentNode)">
+            <img src="../../images/add.png"></img></a></div>
+        <ul class="flex-item nested">
+          <li><div class="flex-container nested">
+              <input type="text" value = ""  placeholder="value" required ><a onclick="removeli(parentNode)">
+                 <img src="../../images/delete.png"></img></a> 
+                </div>
+          </li> 
+        </ul>
+      </li></div>
+
+
+
+
+      <div class="flex-container nested">
+        <input type="text" value="" placeholder="name" required="">
+        <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a> 
+        <a href="#" onclick="createAttListItem(parentNode)"><img src="../../images/add.png"></a>
+      </div>
+      <ul class="flex-item nested"><li><div class="flex-container nested"><input type="text" value="undefined" placeholder="value" required=""><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a> </div></li></ul>"
+
+
+
+
+
+
+
+      <li><div class="flex-container nested">
+        <input type="text" value="" placeholder="value" required=""><a onclick="removeli(parentNode)">
+           <img src="../../images/delete.png"></a> 
+          </div></li> 
+
+
+
+
+
+
 
       <article class="main">
 
@@ -265,5 +305,140 @@
       </aside>
       <footer class="footer">Footer</footer>
     </div>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<head>
+  <!DOCTYPE html>
+  <html>
+    <link rel="stylesheet" href="/css/test.css">
+    <link rel="icon" href="/img/weather.png">
+</head>
+<body>
+  <div class="wrapper">
+    <%- include('../partials/header.ejs') %>
+    <article class="main">
+      <div class="center_content">
+        <div class="center_title_bar"> <%= product.name %></div>
+        <div class="prod_box_big">
+          <div class="center_prod_box_big">
+            <div class="product_img_big"> 
+              <div class="productImg">
+              <a href="javascript:popImage('images/big_pic.jpg')" title="">
+                <% if (product.images && product.images.length > 0) { %>
+                  <img id="mainImg" src="../../uploads/<%= product.images[0] %>" alt="" border="0">
+                <% }
+                else  { %>
+                  <img  src="../../images/default.jpg"></img> 
+                <% } %>
+              </a>
+            </div>
+              <div class="details_big_box">
+                <div class="product_title_big"><%= product.name %></div>
+
+                <div class="specifications">Available:
+                <% if (product.isavailable) { %>
+                  <span class="blue">In stock</span>
+                  <% }
+                else  { %>
+                  <span class="blue">Out of stock</span>
+                  <% } %>
+                 <br/>
+                  Description :<span class="blue">  <%= product.description %>  </span><br>
+
+                  <%  product.attributes.forEach(function(att) { %>
+                  <div>  
+                    <label><%=att.name%></label>  <select>
+                     <%  att.values.forEach(function(val) { %>
+                     <option value="<%= val %>"><%= val %></option>
+  
+                       <% }); %>
+                    </select>
+                  </div> 
+                     <% }); %>
+
+                        <!-- <div class="thumbs">
+                          <%  product.imgattributes.forEach(function(att) { %>
+                         <label><%=att.name%></label>  
+                         <%  att.values.forEach(function(val) { %>
+                          <label><%= val.value %></label>
+                          <a href="#" title="header=[<%= val.value %>] body=[&nbsp;] fade=[on]">  
+                            <img onclick="changeImg(<%= val.img %>)" 
+                              onmouseover="changeImg(<%= val.img %>)"  src="../../uploads/<%= val.img %> " alt="" border="0")> </a>
+                          <% }); %>
+                      <% }); %>
+                      </div>  -->
+
+                <div class="prod_price_big"><span class="price"> <%= product.price %>$</span>
+                </div>
+              <a  onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" href="#" class="prod_buy">add...</a> 
+
+             
+
+            </div>
+            </div>
+            <div class="thumbs">
+              <%  product.images.forEach(function(image) { %>
+              <a href="#" title="header=[Thumb2] body=[&nbsp;] fade=[on]">  <img onclick=changeImg("<%= image %>") onmouseover=changeImg("<%= image %>")  src="../../uploads/<%= image %>" alt="" border="0"></a> 
+              <% }); %>
+          </div>
+         
+            <div id ="productOrdersDiv"></div>
+          </div>
+          <div id ="ordersDiv"></div>
+        </div>
+      </div>
+    </article>
+    <aside class="aside aside-1">
+      <div class="left_content">
+        <%- include('../partials/categories.ejs') %>
+        <script src="/js/categories.js"></script>
+
+      </div>
+    </aside>
+    <aside class="aside aside-2">
+      <% if(username == 'Guest' ){%>
+        <%- include('../partials/login.ejs') %>
+      <% } else {   %>
+     
+
+        <div class="shopping_cart">
+          <div class="title_box">Shopping cart</div>
+          <div class="cart_details"> <%= orderStat.totalItems %> items <br>
+            <span class="border_cart"></span> Total: <span class="price"><%= orderStat.total %>$</span> </div>
+          <div class="cart_icon"><a href="#"><img src="../../images/shoppingcart.png" alt="" width="35" height="35" border="0"></a></div>
+        </div>
+         
+      <% } %>
+      <div class="title_box">Manufacturers</div>
+      <ul class="left_menu">
+        <li class="odd"><a href="#">Bosch</a></li>
+        <li class="even"><a href="#">Samsung</a></li>
+        <li class="odd"><a href="#">Makita</a></li>
+        <li class="even"><a href="#">LG</a></li>
+        <li class="odd"><a href="#">Fujitsu Siemens</a></li>
+        <li class="even"><a href="#">Motorola</a></li>
+        <li class="odd"><a href="#">Phillips</a></li>
+        <li class="even"><a href="#">Beko</a></li>
+      </ul>
+    </aside>
+      <footer class="footer">Footer</footer>
+    </div>
+  </div>
+  <script src="/js/categories.js"></script>
+
+<script src="/js/product.js"></script>
   </body>
 </html>

@@ -7,7 +7,7 @@ var categoriesDiv = document.getElementById("categoriesDiv");
 var imagesDiv = document.getElementById("imagesDiv")
 const popup = document.getElementById("popup");    
 var formcategories = form.elements['categories'];    
-var ulAttributes = document.getElementById("attributes");    
+var ulAttributes = document.getElementById("ulAttributes");    
 var ulImgAttributes = document.getElementById("imgAttributes");    
 var ultags = document.getElementById("tags"); 
 var ulimages = document.getElementById("images"); 
@@ -50,9 +50,9 @@ function getProducts(category){
         .then((jsonData) => {   
             productsDiv.innerHTML = ''
            
-            for(var ind in jsonData.products)
+            for(var ind in jsonData.products.products)
             {
-                var product = jsonData.products[ind]
+                var product = jsonData.products.products[ind]
                 var innerHTML ='<div class ="box zone "> '
                 if ( product.images[0]) 
                     innerHTML+='<img  class="" src="../../uploads/'+ product.images[0]+'"></img> '
@@ -195,55 +195,70 @@ function editCategory(id){
 function createImgAttListItem(parent, name,  img){
     const imgVal = img ? img : ''
     const nameVal = name ? name :''
-    
-    parent.parentElement.getElementsByTagName("ul")[0].innerHTML+= createImgListItem(nameVal, imgVal);
+   
+    parent.parentElement.getElementsByTagName("ul")[0].appendChild(createImgListItem(nameVal, imgVal));
 }
 
 function createAttListItem(parent, name){
     const nameVal = name ? name :''
-    parent.parentElement.appendChild( createListItem(nameVal));
-}
+    var ul  =parent.parentElement.getElementsByTagName("ul")[0]
+    ul.appendChild( createAtrributeListItem(nameVal));
+    ul.getElementsByTagName("input")[0].focus
+ 
+ }
 
 function addAttributes(isImg, name='', values){
-    // var li = document.createElement("li");
-    var innerHTML  = '<li class="flex-item"><div class="flex-container nested"><input type="text" value = "'+name +'" placeholder="name" required><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
+    var liAtrributes = document.createElement("li");
+    liAtrributes.className="flex-item"
+    
+
+    var innerHTML  = '<div class="flex-container nested"><input type="text" value = "'+name +'" placeholder="name" required><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
     if(isImg == true)
         innerHTML +=  '<a href="#" onclick="createImgAttListItem(parentNode)"><img src="../../images/add.png"></img></a></div>'
     else
-        innerHTML +=  '<a href="#" onclick="createAttListItem(parentNode)"><img src="../../images/add.png"></img></a></li></div>'
+        innerHTML +=  '<a href="#" onclick="createAttListItem(parentNode)"><img src="../../images/add.png"></img></a></div>'
 
-    var attInnerHTML=''
+    liAtrributes.innerHTML  =innerHTML
+    var nestedUl = document.createElement("ul");
+    nestedUl.className="flex-item nested"
     if(isImg == true )
     {
-        attInnerHTML ='<ul class="flex-item nested">'
+        attInnerHTML =''
         if(!values || values.length ==0)
         {
             // attInnerHTML +=  '<div class="flex-container nested"> '
-            attInnerHTML+= createImgListItem("", "")  
-           
+             nestedUl.appendChild( createImgListItem("", ""));
+
         }
         else
         {
-         
-        for(var ind in values){
-            attInnerHTML+= createImgListItem(values[ind].value, values[ind].img);
+            for(var ind in values)
+                nestedUl.appendChild( createImgListItem(values[ind].value, values[ind].img));
         }
-    }
-        attInnerHTML+=" </ul>"
-    }
+     }
     else
     {
+         if(!values || values.length ==0)
+        {
+            // attInnerHTML +=  '<div class="flex-container nested"> '
 
+             nestedUl.appendChild(createAtrributeListItem(""));
+        }
+        else
+        {
+            for(var ind in values)
+                nestedUl.appendChild(createAtrributeListItem(values[ind]));
+        }
     }
-    innerHTML  += attInnerHTML+ '</li></div>'
-     
+    liAtrributes.appendChild(nestedUl) 
     if(isImg == true)
-        ulImgAttributes.innerHTML+=innerHTML;
+        ulImgAttributes.appendChild (liAtrributes);
     else
-        ulAttributes.innerHTML+=innerHTML;;
-}
+        ulAttributes.appendChild (liAtrributes);
+        
+    liAtrributes.getElementsByTagName("input")[0].focus
 
- 
+}
 
 function addDetails(name = ''){
     uldetails.appendChild( createListItem(name));
@@ -283,7 +298,10 @@ function selectImage(parent, img){
     else
     {
         mainImg = img;
-        parent.classList.add("selected");
+        var selected = document.getElementsByClassName("mainImg");
+        if(selected.length>0)
+             selected[0].className = "";
+        parent.className="mainImg";
     }
 }
 
@@ -298,10 +316,28 @@ function showImages(){
     imagesDiv.style.display="grid"
     form.style.display="none"
 }
+function attrListItem(val){
+
+    var innerHTML ="<li class= flex-item nested><div >  <input type='text' value = '"+name+"' placeholder='value' required> "
+    
+    innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
+    innerHTML  += ' </div></li>'
+    return innerHTML 
+}
+function createAtrributeListItem(name){
+    var li = document.createElement("li");
+    var innerHTML =  '<div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
+    
+    innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
+    innerHTML +='</div>'
+    li.innerHTML= innerHTML
+    return li
+}
 
 function createImgListItem(name, img){
+    var li = document.createElement("li");
 
-    var innerHTML =  '<li><div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
+    var innerHTML =  '<div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
     innerHTML +=  '<input  disabled="disabled" type="text" value = "'+img +'"  placeholder="value" required >'
     innerHTML +=  "<div class=big-wrap><div class=big onmouseover=hover(this,'"+img +"')><img class=to-big"
     if(!img || img=='')
@@ -310,13 +346,15 @@ function createImgListItem(name, img){
     innerHTML +=  ' src = "../../uploads/'+img +'" > </div></div>'
     innerHTML +=  '<a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>'
     innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
-    innerHTML +='</div></li>'
-    return innerHTML
+    innerHTML +='</div>'
+    li.innerHTML = innerHTML
+    return li
 }
 function hover(div, img)
 {
     div.style="  background: url(../../uploads/"+img+") left no-repeat;"
 }
+
 
 function createListItem(name, img){
     var li = document.createElement("li");
@@ -330,6 +368,7 @@ function createListItem(name, img){
     innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
     innerHTML  += ' </div>'
     li.innerHTML= innerHTML
+    li.className="flex-item nested"
     return li
 }
 

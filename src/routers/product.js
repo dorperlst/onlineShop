@@ -8,6 +8,7 @@ const router = new express.Router()
 var multer = require('multer'); 
 const admin = require('../middleware/auth').admin
  
+const limit = 15
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -41,36 +42,6 @@ router.get('/product/:id', async (req, res) => {
 })
 
 
-
-// function subCategories(shopname, categoryname){
-//     var ulcategories = document.getElementById("ulcategories");  
-//     var innerHTML=  ''  
-//     var url = '/'+shopname+'/cats'
-//     if(categoryname)
-//     {
-//         url +='?parent='+ categoryname
-//         innerHTML += '<li><a onclick = backCategory("'+shopname+'")>..Back</a> <h3>'+categoryname+' </h3></li>'
-//     }
-//     ulcategories.innerHTML = innerHTML
-  
-//     fetch( url )
-//     .then((res) => { 
-//     if(res.status == 200)
-//         return res.json() 
-//     return null
-//     })
-//     .then((jsonData) => {   
-//         for(var data in jsonData.cats)
-//         {
-
-//             var name = jsonData.cats[data].name
-//             var liinnerHTML =`<li onclick="subCategories('${shopname}','${name}')" >${name}</li> `
-//             ulcategories.innerHTML += liinnerHTML
-//         } 
-//         getProducts(categoryname) 
-//     });
-// }
-
 router.get('/admin', admin, async (req, res) => {
     var userName = req.session.name  
     if (userName == undefined)
@@ -87,6 +58,7 @@ router.get('/admin', admin, async (req, res) => {
         res.render('admin', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
      }
 })
+
 router.get('/add', admin, async (req, res) => {
     var userName = req.session.name  
     if (userName == undefined)
@@ -119,12 +91,12 @@ router.get('/:shop/view',async (req, res) => {
             var orderStat= null
             if(userName!='Guest')
                 orderStat = await orderStats(req,res)
-
-            res.render('products', { title: 'products',tree:tree, products: products, categories: categories, shopname: req.params.shop, username: userName,orderStat:orderStat});
+            const pager =    products.totalRows > limit
+            res.render('products', { title: 'products',tree:tree, products: products.products,  totalRows: products.totalRows, pager:products.pager ,
+                categories: categories, shopname: req.params.shop, username: userName,orderStat:orderStat});
         } 
     catch (e) {
-        const obj={} 
-        res.render('products', { title: 'products', products: [] , categories: [],shopname: req.params.shop, username: userName});   
+         res.render('products', { title: 'products', products: [] , categories: [],shopname: req.params.shop, username: userName});   
      }
 })
  
@@ -167,8 +139,6 @@ async function orderStats(req,res)
 
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
-
-    
     var tree=[]
     try {
             const product = await Product.findById(req.params.id)
@@ -177,9 +147,6 @@ router.get('/:shop/view/:id', async (req, res) => {
             var orderStat= null
             if(userName!='Guest')
                 orderStat = await orderStats(req,res)
-
-         
-
             const categories = await Cat.findByParent(null) 
             res.render('product', { title: 'product',tree:tree, product: product, categories: categories, shopname: req.params.shop, orderStat:orderStat, username: userName});
         } 
@@ -214,8 +181,8 @@ async function getProducts(req)
 {
     var params = [ {shop: req.params.shop }]
     var sort = { "parent": -1 }
-    var limit = !req.query.limit ? 15 : req.query.limit
-    var skip = !req.query.skip ? 0 : req.query.skip
+    const pageNum =  req.query.pageNum? parseInt(req.query.pageNum) : 0
+    const skip = pageNum * limit  
     if (req.query.category &&  req.query.category != 'All') 
     {
         var catname= req.query.category
@@ -250,8 +217,16 @@ async function getProducts(req)
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
     
-    var prod = await Product.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
-    return prod
+ 
+    const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
+    // var totalUsers = db.user.cound(match);
+
+    var totalRows = await await Product.find(match).count();
+
+    var pager =  products.totalRows % limit >0 ? products.totalRows / limit + 1 : products.totalRows / limit ; 
+
+
+    return {products, totalRows, pager}
 }
 
 router.delete('/products/:id', async (req, res) => {

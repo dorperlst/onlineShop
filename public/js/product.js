@@ -2,14 +2,10 @@ var productDiv = document.getElementById("productDiv");
 
 var ordersDiv = document.getElementById("ordersDiv");    
 
-var bigImg = document.getElementById("bigImg");    
+const mainImg= document.getElementById("mainImg")
+const attributeValue= document.getElementById("attValue")
 
 
-function bigimg(img){
-    
-    bigImg.src=img.src;
-}
- 
 
 function getOrders(){
    fetch('/orders')
@@ -47,6 +43,11 @@ function addCount(delta){
         counter.innerHTML = count  + delta
       
 }
+function changeImg(img, value ){
+    if(value)
+       attributeValue.innerHTML = value;
+    mainImg.src = "../../uploads/"+img;    }
+
 
 function orderProduct(name, id, price ){
     productOrdersDiv.innerHTML = '<div> <label>Name : '+ name+'</label> </br>'
@@ -79,5 +80,4 @@ function addToOrder(id){
 
 }
 
-
-
+ 

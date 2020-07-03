@@ -13,21 +13,30 @@
         <div class="prod_box_big">
           <div class="center_prod_box_big">
             <div class="product_img_big"> 
-              <a href="javascript:popImage('images/big_pic.jpg','Some Title')" title="">
+
+            <div class= "flex-container">
+              <div class="productImg flex-item">
+              <a href="javascript:popImage('images/big_pic.jpg')" title="">
                 <% if (product.images && product.images.length > 0) { %>
-                  <img src="../../uploads/<%= product.images[0] %>" alt="" border="0">
+                  <img id="mainImg" src="../../uploads/<%= product.images[0] %>" alt="" border="0">
                 <% }
                 else  { %>
                   <img  src="../../images/default.jpg"></img> 
                 <% } %>
               </a>
-              <div class="thumbs">
-                  <%  product.images.forEach(function(image) { %>
-                  <a href="#" title="header=[Thumb2] body=[&nbsp;] fade=[on]">  <img src="../../uploads/<%= image %>" alt="" border="0"></a> 
-                  <% }); %>
+
+
+
+              <div class="thumbs flex-grid ">
+                <%  product.images.forEach(function(image) { %>
+                  
+                <a href="#"   fade=[on]">  <img onclick=changeImg("<%= image %>") onmouseover=changeImg("<%= image %>")  src="../../uploads/<%= image %>" alt="" border="0"></a> 
+                <% }); %>
               </div>
             </div>
-            <div class="details_big_box">
+
+            </div>
+              <div class="details_big_box">
                 <div class="product_title_big"><%= product.name %></div>
 
                 <div class="specifications">Available:
@@ -37,16 +46,69 @@
                 else  { %>
                   <span class="blue">Out of stock</span>
                   <% } %>
-  <br/>
-
-  <!-- <span class="reduce">350$</span>  -->
-  
+                 <br/>
                   Description :<span class="blue">  <%= product.description %>  </span><br>
+
+
+                  <%  product.attributes.forEach(function(att) { %>
+                  <div>  
+                    <label><%=att.name%></label>  <select>
+                     <%  att.values.forEach(function(val) { %>
+                     <option value="<%= val %>"><%= val %></option>
+  
+                       <% }); %>
+                    </select>
+                  </div> 
+                     <% }); %>
+
+                     <!-- <div class=" flex-container">
+                      <label></label>
+
+                      <label id="attValue"></label>
+                     </div> -->
+
+
+
+
+
+
+                      <%  product.imgattributes.forEach(function(att) { %>
+                        <div class=" flex-container">
+                          <label><%=att.name%> :</label>
+                          <%  if (att.values.length>0) { %>
+                            <label id="attValue"><%=att.values[0].value%></label>
+                          <% }; %>
+
+                         </div>
+                        <div class=" flex-container">
+ 
+                         <%  att.values.forEach(function(val) { %>
+                          <div class="thumbs  flex-item">
+
+                          <a href="#"   fade=[on]">  
+                            <img onclick=changeImg("<%=val.img%>","<%=val.value%>") onmouseover=changeImg("<%=val.img%>","<%=val.value%>") 
+                             src="../../uploads/<%= val.img %>" alt="" border="0"></a> 
+                          </div>
+                          <% }); %>
+                      <% }); %>
+                      
+                      </div> 
+                      <ul>
+                        <%  product.details.forEach(function(detail) { %>
+                          <li><%=detail%> </li> 
+                        <% }); %>
+      
+                        </ul>
+                  </div>
+                  
+                <div class="prod_price_big"><span class="price"> <%= product.price %>$</span>
                 </div>
-                <div class="prod_price_big"><span class="price"> <%= product.price %>$</span></div>
-              <a  onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" href="#" class="prod_buy">add...</a> 
+                  <a  onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" href="#" class="prod_buy">add...</a> 
+
+              </div>
             </div>
-              <!-- <a href="#" class="prod_compare">compare</a> -->
+            
+         
             <div id ="productOrdersDiv"></div>
           </div>
           <div id ="ordersDiv"></div>
@@ -64,14 +126,15 @@
       <% if(username == 'Guest' ){%>
         <%- include('../partials/login.ejs') %>
       <% } else {   %>
-        <div class="title_box">           
-          <a class="icon-cart">Your Cart</a> </div>
-        <div>
-          <label>Items</label>
-          <label><%= orderStat.totalItems %></label>
-          <label>Total</label>
-          <label><%= orderStat.total %>$</label>
+     
+
+        <div class="shopping_cart">
+          <div class="title_box">Shopping cart</div>
+          <div class="cart_details"> <%= orderStat.totalItems %> items <br>
+            <span class="border_cart"></span> Total: <span class="price"><%= orderStat.total %>$</span> </div>
+          <div class="cart_icon"><a href="#"><img src="../../images/shoppingcart.png" alt="" width="35" height="35" border="0"></a></div>
         </div>
+         
       <% } %>
       <div class="title_box">Manufacturers</div>
       <ul class="left_menu">
