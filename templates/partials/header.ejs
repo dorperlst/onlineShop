@@ -6,7 +6,7 @@
           <li class="field search push" > 
             <select id="categories">
               <option value="0">--all--</option>
-                <% categories.forEach(function(cat) { %>
+                <% categories.categories.forEach(function(cat) { %>
                   <option value="<%= cat._id %>"><%= cat.name %></option>
                 <% }); %>
             </select>
@@ -35,22 +35,35 @@
        </ul>
       </nav>
       <nav > 
-        <ul class="navigation">
-          <li> Navigation: </li>
-          <% tree.forEach(function(node) { %>
+        <div class="crumb_navigation"> Navigation:
+
+          <% var scale_text, scale_image; %>
+          <% scale_text = scale_image = 'free_transform'; %>
 
 
-
-            <%  if (node!=shopname) { %>
-              <li><a href="/<%= shopname %>/view?category=<%= node %>" class="navmap"> <%= node %> </a></li>
-              <% } else {  %>
+     
+        
+          <%  if ( categories.tree.length>1) { %>
+            <span >Home</span> 
+         
+            <% for( var i=1; i <categories.tree.length -1; i++) { %>
               
-                 <li><a href="/<%= shopname %>/view" class="navmap"> Home </a></li>
-                <% }; %>
+              <span> <%= categories.tree[i] %></span> 
 
+                  
+          <% } %>
+         
+          <span class="current"> <%= categories.tree[categories.tree.length -1] %></span> 
 
-          <% }); %>
-        </ul>
+          
+
+          <% }  else{  %>
+            <span class="current">Home</span> 
+
+          <% }    %>
+
+        </div>
+         
       </nav>
     </article>
     

@@ -16,14 +16,14 @@
           <div class="center_title_bar"> Products</div>
 
           <section id="secProducts" class="grid-wrapper">
-            <% products.forEach(function(product) { %>
+            <% products.products.forEach(function(product) { %>
               <div class="product-card">
                 <div class="product-image">   
-            <% if ( product.images[0]) { %>
-                  <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
+            <% if ( product.mainimage) { %>
+                  <img alt="" border="0"  src="../../uploads/<%= product.mainimage %>"></img> 
   
             <% } else  { %>
-              <img  src="../../uploads/default.png"></img> 
+              <img  src="../../images/default.jpg"></img> 
               <% }  %>
               </div>
             
@@ -38,93 +38,60 @@
 
 
           </section>  
+          <div class="center_title_bar"> Recommended</div>
 
+          <section id="secPromotion" class="grid-wrapper">
+            <% products.promotion.forEach(function(product) { %>
+              <div class="product-card">
+                <div class="product-image">   
+            <% if ( product.images[0]) { %>
+                  <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
+  
+            <% } else  { %>
+              <img  src="../../images/default.jpg"></img> 
+              <% }  %>
+              </div>
+            
+              <div class="product-info">
+                  <label><%= product.name %> </label>
+                  <label><%= product.price %>$</label>
+                  <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
+              </div>
+            </div>
+  
+          <% }); %>
+
+
+          </section>  
  
           <div class="center">
-            <%  if ( parseInt(pager) >0) { %>
-              <li><a href="tryit.asp-filename=trycss_ex_pagination_center.html#">«</a></li>
+            <% if ( parseInt(products.pager) > 1) { %>   
+              <ul class="pagination"> 
+                <li><a href=" ">«</a></li>
 
-            <ul class="pagination"></ul>
-            <%  for (i=0;i< parseInt(product.pager) ;i++) { %>
-             
-                <li><a class="active" href="tryit.asp-filename=trycss_ex_pagination_center.html#">i</a></li>
-                
+                <% for (i=0;i< parseInt(products.pager) ;i++) { %>
+                  <li><a class="active" href=" "><%= i+1 %></a></li>
+                <% }  %>
+                <li><a href=" ">»</a></li>
               </ul>
-              <li><a href="tryit.asp-filename=trycss_ex_pagination_center.html#">»</a></li>
-
-        <% }  %>
-        
-        <% }  %>
-            <label><%= products.length %> rows out of   <%= totalRows %></label> 
+            <% }  %>
+            <label><%= products.products.length %> rows out of   <%= products.totalRows %></label> 
 
           </div>
           
           </body>
           </html>
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-          
         </article>
 
 
 
-        <aside class="aside aside-1">
-          <div class="left_content">
-            <%- include('../partials/categories.ejs') %>
-            <script src="/js/categories.js"></script>
+       
+            <%- include('../partials/aside.ejs') %>
 
-          </div>
+            <%- include('../partials/login_aside.ejs') %>
 
-        </aside>
-        <aside class="aside aside-2">
  
-          <% if(username == 'Guest' ){%>
-  
-          <%- include('../partials/login.ejs') %>
-  
-          <% } else {   %>
-   
-            <div class="shopping_cart">
-              <div class="title_box">Shopping cart</div>
-              <div class="cart_details"> <%= orderStat.totalItems %> items <br>
-                <span class="border_cart"></span> Total: <span class="price"><%= orderStat.total %>$</span> </div>
-              <div class="cart_icon"><a href="#"><img src="../../images/shoppingcart.png" alt="" width="35" height="35" border="0"></a></div>
-            </div>
-  
-          <% } %>
-  
-  
-          <div class="title_box">Manufacturers</div>
-          <ul class="left_menu">
-            <li class="odd"><a href="#">Bosch</a></li>
-            <li class="even"><a href="#">Samsung</a></li>
-            <li class="odd"><a href="#">Makita</a></li>
-            <li class="even"><a href="#">LG</a></li>
-            <li class="odd"><a href="#">Fujitsu Siemens</a></li>
-            <li class="even"><a href="#">Motorola</a></li>
-            <li class="odd"><a href="#">Phillips</a></li>
-            <li class="even"><a href="#">Beko</a></li>
-          </ul>
-        </aside>
         <footer class="footer">Footer</footer>
       </div>
   </body>

@@ -188,22 +188,9 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     products.forEach(function (product){
 
         product.category= newName
+        product.tree = cat.tree
         product.save()
     })
-
-    //    for(i =0;i<nestedCategories;i++)
-    //    {
-          
-    //         var foundIndex = nestedCategories[i].tree.foundIndex((x=> x.parent == cat.name))
-    //         console.log('foundIndex----'+ foundIndex)
-    //         nestedCategories[i].tree =parent.tree.concat( nestedCategories[i].tree.slice(foundIndex))
-    //          nestedCategories[i].save()
-    //         console.log(nestedCategories[i].tree)
-
-    //    }
-    // }
-
-
 
     try
     {

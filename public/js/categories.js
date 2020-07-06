@@ -1,7 +1,7 @@
 
- var tree = []
+//  var tree = []
  
-
+console.log(categories.categories)
 // function subCategories(categoryname)
 // {
 //     tree.push({name:categoryname})
@@ -49,19 +49,7 @@
     });
 }
 
-// function backCategory(){
-//     tree.pop()
-//     var name ='',id=''
-//     if(tree.length >0)
-//     {
-//         var prevCategory = tree.pop()
-//         subCategories( prevCategory.name)
 
-//     }
-//     else
-//     subCategories( null)
-
-// }
 
 
 function getProducts(categoryname){

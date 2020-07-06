@@ -503,7 +503,7 @@ a.nav, a.nav:visited {
 
 .product-card {
 
-/* check */display: flex;grid-template-columns: repeat(auto-fill);/* grid-gap: 5px; *//* display: flex; */flex-direction: row;padding-top: 2%;/* flex: 1 16%; */background-color: #FFF;/* box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.25); */}
+/* check */display: flex;grid-template-columns: repeat(auto-fill);/* grid-gap: 5px; */display: flex;flex-direction: column;padding-top: 2%;/* flex: 1 16%; */background-color: #FFF;/* box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.25); */}
 
 @media ( max-width: 920px ) {
         
@@ -563,7 +563,7 @@ ul.left_menu li.even div,
   font-size: 14px;
   width:166px;
   height: 25px;
-  display:block;
+  /* display:block; */
   border-bottom:1px #e4e4e4 dashed;
   background-color:#f0f4f5;
   text-decoration:none;
@@ -580,7 +580,7 @@ ul.left_menu li.even div,
     font-size: 14px;
     width:166px;
     height:25px;
-    display:block;
+    /* display:block; */
     border-bottom:1px #e4e4e4 dashed;
     text-decoration:none;
     color:#504b4b;
@@ -598,3 +598,7 @@ ul.left_menu li.even div,
 
     #images li{flex-flow: column;display: flex;justify-content: center;width: fit-content;}  
       #images img{display: flex;margin:0 auto 0 auto 0;max-width: 200px;}
+
+      .actionli >a{
+        width:30px
+      }

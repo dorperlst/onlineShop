@@ -3,7 +3,10 @@ const form = document.getElementById("form");
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData(form);
-    formdata.append("currentUrl", window.location.href)
+    if(window.location.href.indexOf("login")>0)
+       formdata.append("currentUrl", "/admin")
+   else
+       formdata.append("currentUrl", window.location.href)
     fetch('/users/login',//
         { method: 'POST', body: formdata})
     .then(function(res) {

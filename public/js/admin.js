@@ -57,13 +57,15 @@ function getProducts(category){
                 if ( product.images[0]) 
                     innerHTML+='<img  class="" src="../../uploads/'+ product.images[0]+'"></img> '
                 else  
-                    innerHTML+='<img  class="" src="../../uploads/default.jpeg"></img>'
+                    innerHTML+='<img  class="" src="../../images/default.jpg"></img>'
                 
                 innerHTML+='<h4>'+product.name+'</h4>'
                 innerHTML+='<h4>'+product.description+'</h4>'
                 innerHTML+='<h4>'+product.price +'</h4>'
-                innerHTML += '<a onclick=editProduct("'+ product._id +'")>Edit </a>'
-                innerHTML += '<a onclick="deleteProduct("' + product._id + '")">Delete</a>'+' </div> '
+                innerHTML += '<a onclick=editProduct("'+product._id+'")>Edit </a>'
+                innerHTML += '<a onclick=deleteProduct("'+product._id+'")>Delete </a>'
+
+                innerHTML += ' </div> '
                 productsDiv.innerHTML += innerHTML
                          
             }
@@ -99,6 +101,12 @@ function editProduct(id){
         form.elements['formname'].value = product.name
         form.elements['price'].value = product.price
         form.elements['description'].value = product.description
+        form.elements['available'].value = product.isavailable==true?1:0
+        form.elements['promotion'].value = product.promotion==true?1:0
+
+        
+        
+
         form.elements['id'].value = product._id
         mainImg = product.mainimage
         formcategories.selectedIndex =  [...formcategories.options].findIndex(option => option.text ===  product.category)  
@@ -396,16 +404,27 @@ form.addEventListener('submit', (e) => {
 
     if(formAction === 'products'){
 
-        if(!mainImg && ulimages.length>0)
-            mainImg = ulimages[0]
-        formdata.append('mainimage', mainImg)
+        // if(mainImg == "undefined" && ulimages.children.length>0)
+        // {
+        //     var input = ulimages.children[0].getElementsByTagName("input");
+        //     mainImg = input[0].value
+
+        // }
+        if(mainImg == "undefined")
+            formdata.append('mainimage', mainImg)
         formdata.append('price', form.elements['price'].value)
         formdata.append( 'attributes', toAttJsonArray(ulAttributes, false) )
         formdata.append( 'imgattributes', toAttJsonArray(ulImgAttributes, true) )
-
         
+        formdata.append( 'isavailable', form.elements['available'].value )
+        formdata.append( 'promotion', form.elements['promotion'].value )
+
         formdata.append( 'details', toJsonArray (uldetails) )
-        formdata.append( 'images', toJsonArray( ulimages ) )
+        var ulImages = toJsonArray( ulimages ) 
+        formdata.append( 'images', ulImages)
+
+
+
         formdata.append( 'tags', toJsonArray( ultags ) )
         for (i=0 ; i < productFiles.files.length; i++)
             formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
@@ -484,7 +503,11 @@ function subCategories( categoryname, parentName,id){
     {
         url +='?parent='+ categoryname
       //  innerHTML += '<li><a onclick = backCategory()>..Back</a> <h3>'+categoryname+' </h3></li>'
-        innerHTML += '<li class="even"><div class="back"><input onclick = subCategories("'+parent+'") type="button"  class="back-btn" ><h3>'+categoryname+' </h3> <a onclick= editCategory("'+ id +'")>Edit</a>  <a onclick= deleteCategory("'+id +'")>Delete</a></div> </li>'
+        innerHTML += '<li class="odd actionli"><div><input onclick = subCategories("'+parent+'") type="button"  class="back-btn" ><span>'+categoryname+' </span> </div>'
+        innerHTML += '<div><a onclick= editCategory("'+ id +'")>Edit</a>  <a onclick= deleteCategory("'+id +'")>Delete</a></div> </li>'
+
+ 
+ 
     }
   
     else 
@@ -493,7 +516,7 @@ function subCategories( categoryname, parentName,id){
     }
 
     ulcategories.innerHTML = innerHTML
-  
+    // formcategories.innerHTML =""
     fetch( url )
     .then((res) => { 
     if(res.status == 200)
@@ -508,13 +531,12 @@ function subCategories( categoryname, parentName,id){
         var line='odd' 
         for(var data in jsonData.cats)
         {
-            if(!categoryname)
-            { 
-               var opt = document.createElement('option');
-               opt.value = jsonData.cats[data]._id;
-               opt.innerHTML = jsonData.cats[data].name
-               formcategories.appendChild(opt); 
-            }
+             
+            //    var opt = document.createElement('option');
+            //    opt.value = jsonData.cats[data]._id;
+            //    opt.innerHTML = jsonData.cats[data].name
+            //    formcategories.appendChild(opt); 
+           
             var name = jsonData.cats[data].name
             var parent= jsonData.cats[data].parent === undefined ? "" : jsonData.cats[data].parent
 
@@ -524,7 +546,7 @@ function subCategories( categoryname, parentName,id){
             ulcategories.innerHTML += liinnerHTML
             line =line=='odd'? 'even' :'odd'  
         } 
-        getProducts(categoryname) 
+        getProducts() 
     });
 }
 

@@ -16,6 +16,11 @@ const productSchema = new mongoose.Schema({
         required: false,
         default: true
     },
+    promotion: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     price: {
         type: Number,
         required: true
@@ -80,7 +85,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    }
+    },
+    tree:[{
+        type:String,
+        required: true,
+        trim: true 
+    }],
 }, {
     timestamps: true
 })

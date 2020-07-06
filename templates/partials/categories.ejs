@@ -1,13 +1,23 @@
-<div class="title_box">Categories</div>
+<div class="left_content">
  
 
+    
+   <div class="flex-item title_box">Categories  </div>
+
+ <div class="flex-container add">
+   <span class="flex-item"> Add new</span>
+
+     <a class="flex-item"  onclick="addCategory()"><img class="actionImg" src="../../images/add.png"></a>  
+ </div>
+
 <ul class="left_menu" id =ulcategories>
+     
     <% var line='odd' %> 
-    <% categories.forEach(function(category) { %> 
+    <% categories.categories.forEach(function(category) { %> 
 
         <li class="<%= line %>"  ><a onclick="subCategories('<%= category.name %>','<%= category.parent %>','<%= category._id %>')"><%= category.name %></a></li>
         <%  line =line=='odd'? 'even' :'odd' %> 
 
      <% }); %>
 </ul>
-   
+</div>  

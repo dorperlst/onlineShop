@@ -17,7 +17,7 @@
      
 
         <article class="main">
-
+          <% categories.categories%>
       <div id = "popup" style="display: none;" >  
         <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
         <div  style="display: none;" id ="imagesDiv">
@@ -33,11 +33,14 @@
             <input class="flex-item" placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
           
           </div>
+          
+       
         
+
           <div class="flex-container">
             <label class="flex-item">  Category</label>
             <select class="flex-item" name="categories">
-            <% categories.forEach(function(category) { %>
+            <% categories.categories.forEach(function(category) { %>
                 <option value="<%= category._id %>"><%= category.name %></option>
               <% }); %>
             </select>
@@ -52,6 +55,25 @@
                 <label class="flex-item">  Price</label>
                 <input class="flex-item"  id="price" name="price" placeholder="Price" type="text" tabindex="2" >
               </div>
+
+              <div class="flex-container">
+                <label class="flex-item">  Promotion</label>
+                <select class="flex-item" name="promotion">
+                  <option value="0"> false</option>
+                  <option value="1"> true</option>
+    
+    
+                 </select>
+              </div>
+              <div class="flex-container">
+                <label class="flex-item">  Available</label>
+                <select class="flex-item" name="available">
+                  <option value="1"> Available</option>
+                  <option value="0"> Out Of Stock</option>
+    
+                 </select>
+              </div>
+
               <div class="flex-container">
                 <label class="flex-item">  Attributes  </label> 
                 <a class="flex-item" onclick="addAttributes(false)"><img src="../../images/add.png"></a>
@@ -118,7 +140,7 @@
                     <% if ( product.images[0]) { %>
                       <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
                     <% } else  { %>
-                      <img  src="../../uploads/default.png"></img> 
+                      <img  src="../../images/default.png"></img> 
                     <% }  %>
                   </div>
               
@@ -128,7 +150,7 @@
                     <a onclick="editProduct('<%= product._id %>')">Edit</a> 
                     <a onclick="deleteProduct('<%= product._id %>')">Delete</a>            
                   </div>
-    
+     </div>
               <% }); %>
               </section>
           </div>
