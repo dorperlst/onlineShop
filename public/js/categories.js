@@ -1,13 +1,4 @@
-
-//  var tree = []
  
-console.log(categories.categories)
-// function subCategories(categoryname)
-// {
-//     tree.push({name:categoryname})
-//     subCategories( categoryname)
-
-// }
 
  function subCategories( categoryname, parentName){
     var parent= parentName === undefined ? "" : parentName

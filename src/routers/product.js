@@ -6,7 +6,10 @@ const Cat = require('../models/cat')
 const User = require('../models/user')
 const router = new express.Router()
 var multer = require('multer'); 
-const admin = require('../middleware/auth').admin
+const authObj= require('../middleware/auth')
+const admin = authObj.admin
+const auth = authObj.auth
+
 const limit = 15
 const promtionLimit = 5
 
@@ -77,6 +80,42 @@ router.get('/add', admin, async (req, res) => {
      }
 })
 
+router.get('/:shop/account', auth, async (req, res) => {
+    
+    const categories = await getCategories(req)
+
+ 
+    const orderStat= await orderStats(req, res)
+    await req.user.populate({
+        path: 'orders',
+        populate: {
+            path: 'products.product',
+            model: 'Product'
+          } 
+    }).execPopulate()
+
+
+  
+    res.render('account', {
+   title: 'contact',categories:categories, shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
+     user: req.user
+
+})
+})
+
+router.get('/:shop/contact', async (req, res) => {
+    const categories = await getCategories(req)
+
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+
+    const orderStat= orderStats(req,res)
+
+    res.render('contact', {
+   title: 'contact',categories:categories,shopname: req.params.shop,   username: userName,orderStat: orderStat
+
+})
+})
+
 router.get('/:shop/view',async (req, res) => {
     
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
@@ -92,12 +131,8 @@ router.get('/:shop/view',async (req, res) => {
                   cats.forEach((cat) => prodCat.push(cat.name))
                   params.push( { category: { $in: prodCat } } )
             }
-
-                  
             const products = await getProducts(req, params)
-            
-            const orderStat= orderStats(req,res)
-         
+            const orderStat= await orderStats(req,res)
             res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, 
                 username: userName, orderStat: orderStat});
         } 
@@ -213,8 +248,8 @@ async function getCategories(req){
 
 async function orderStats(req,res)
 {
-    if(userName =='Guest')
-        return null
+    if(!req.session.token)
+        return {total:0,totalItems:0}
 
     const jwt = require('jsonwebtoken')
     const token = req.session.token;
@@ -244,7 +279,7 @@ async function orderStats(req,res)
 
         }}
     ])
-   return stat[0]
+   return stat.length >0 ? stat[0] : {total:0,totalItems:0}
 }
 
 
@@ -272,9 +307,6 @@ router.get('/:shop/view/:id', async (req, res) => {
      }
  
 })
-
-
-
 
 
 router.delete('/products/:id', async (req, res) => {

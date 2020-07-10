@@ -2,9 +2,11 @@ const express = require('express')
 const multer = require('multer')
 const sharp = require('sharp')
 const User = require('../models/user')
+const Contact = require('../models/contact')
+
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
-const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
+const { sendWelcomeEmail, sendContactEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router()
 
 
@@ -36,6 +38,24 @@ router.get('/users', async (req, res) => {
     res.send({ user })
     
 })
+ 
+router.post('/users/contact', multer().none(), async (req, res) => {
+ 
+    
+
+    try {
+        const contact = new Contact (req.body)
+        await contact.save()
+       // sendContactEmail(req.body.email, req.body.name)
+        res.send({ msg: "msessage as been send successfully" })
+     } catch (e) {
+        console.log(e)
+        res.status(400).send(e)
+    }
+   })
+
+
+
 
 router.post('/users', upload.single('avatar'), async function (req, res, next) {
  //console.log(req.body)
@@ -117,19 +137,15 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
-router.patch('/users/me', auth, async (req, res) => {
+router.post('/:shop/account', auth,multer().none(), async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password', 'age']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' })
-    }
-
+ 
+    const allowedUpdates = ['name', 'last', 'email', 'phone','address']
+    allowedUpdates.forEach((update) => req.user[update] = req.body[update])
+    
     try {
-        updates.forEach((update) => req.user[update] = req.body[update])
-        await req.user.save()
-        res.send(req.user)
+        
+        res.redirect("/"+req.params.shop+"/account")
     } catch (e) {
         res.status(400).send(e)
     }

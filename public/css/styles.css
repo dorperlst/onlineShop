@@ -60,7 +60,10 @@ body {
   /* padding: 7px; */
   height: 24px;
 }
-
+#contact select
+{
+  margin-left: 5px;
+}
 #contact button,
  #contact img {
   max-height: 20px;
@@ -70,6 +73,7 @@ body {
   padding-left: 10px;
 }
 #contact label {
+  width: 100px;
   padding: 2 5 0 0;
 }
 
@@ -602,3 +606,6 @@ ul.left_menu li.even div,
       .actionli >a{
         width:30px
       }
+
+
+      select

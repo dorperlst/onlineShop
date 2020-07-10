@@ -12,87 +12,89 @@
     <body>
       <div class="wrapper">
         <%- include('../partials/header.ejs') %>
+       
         <article class="main">
-          <div class="center_title_bar"> Products</div>
+          <div class="main-wrapper">
+            <article class="main-center">
+              <div class="center_title_bar"> Products</div>
 
-          <section id="secProducts" class="grid-wrapper">
-            <% products.products.forEach(function(product) { %>
-              <div class="product-card">
-                <div class="product-image">   
-            <% if ( product.mainimage) { %>
-                  <img alt="" border="0"  src="../../uploads/<%= product.mainimage %>"></img> 
-  
-            <% } else  { %>
-              <img  src="../../images/default.jpg"></img> 
-              <% }  %>
-              </div>
-            
-              <div class="product-info">
-                  <label><%= product.name %> </label>
-                  <label><%= product.price %>$</label>
-                  <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
-              </div>
-            </div>
-  
-          <% }); %>
-
-
-          </section>  
-          <div class="center_title_bar"> Recommended</div>
-
-          <section id="secPromotion" class="grid-wrapper">
-            <% products.promotion.forEach(function(product) { %>
-              <div class="product-card">
-                <div class="product-image">   
-            <% if ( product.images[0]) { %>
-                  <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
-  
-            <% } else  { %>
-              <img  src="../../images/default.jpg"></img> 
-              <% }  %>
-              </div>
-            
-              <div class="product-info">
-                  <label><%= product.name %> </label>
-                  <label><%= product.price %>$</label>
-                  <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
-              </div>
-            </div>
-  
-          <% }); %>
+              <section id="secProducts" class="grid-wrapper">
+                <% products.products.forEach(function(product) { %>
+                  <div class="product-card">
+                    <div class="product-image">   
+                <% if ( product.mainimage) { %>
+                      <img alt="" border="0"  src="../../uploads/<%= product.mainimage %>"></img> 
+      
+                <% } else  { %>
+                  <img  src="../../images/default.jpg"></img> 
+                  <% }  %>
+                  </div>
+                
+                  <div class="product-info">
+                      <label><%= product.name %> </label>
+                      <label><%= product.price %>$</label>
+                      <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
+                  </div>
+                </div>
+      
+              <% }); %>
 
 
-          </section>  
- 
-          <div class="center">
-            <% if ( parseInt(products.pager) > 1) { %>   
-              <ul class="pagination"> 
-                <li><a href=" ">«</a></li>
+              </section>  
+              <div class="center_title_bar"> Recommended</div>
 
-                <% for (i=0;i< parseInt(products.pager) ;i++) { %>
-                  <li><a class="active" href=" "><%= i+1 %></a></li>
+              <section id="secPromotion" class="grid-wrapper">
+                <% products.promotion.forEach(function(product) { %>
+                  <div class="product-card">
+                    <div class="product-image">   
+                <% if ( product.images[0]) { %>
+                      <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
+      
+                <% } else  { %>
+                  <img  src="../../images/default.jpg"></img> 
+                  <% }  %>
+                  </div>
+                
+                  <div class="product-info">
+                      <label><%= product.name %> </label>
+                      <label><%= product.price %>$</label>
+                      <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
+                  </div>
+                </div>
+      
+              <% }); %>
+
+
+              </section>  
+    
+              <div class="center">
+                <% if ( parseInt(products.pager) > 1) { %>   
+                  <ul class="pagination"> 
+                    <li><a href=" ">«</a></li>
+
+                    <% for (i=0;i< parseInt(products.pager) ;i++) { %>
+                      <li><a class="active" href=" "><%= i+1 %></a></li>
+                    <% }  %>
+                    <li><a href=" ">»</a></li>
+                  </ul>
                 <% }  %>
-                <li><a href=" ">»</a></li>
-              </ul>
-            <% }  %>
-            <label><%= products.products.length %> rows out of   <%= products.totalRows %></label> 
+                <label><%= products.products.length %> rows out of   <%= products.totalRows %></label> 
 
-          </div>
-          
-          </body>
-          </html>
+              </div>
+              
+            
+              </article>  <%- include('../partials/aside.ejs') %>
+
+                <%- include('../partials/login_aside.ejs') %>
+        </div>
           
         </article>
 
 
 
        
-            <%- include('../partials/aside.ejs') %>
-
-            <%- include('../partials/login_aside.ejs') %>
-
- 
-        <footer class="footer">Footer</footer>
+           
+        <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
       </div>
   </body>
 </html>

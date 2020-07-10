@@ -41,6 +41,11 @@ app.get('/login', (req, res) => {
     })
 })
 
+app.get('/signup', (req, res) => {
+    res.render('signup', {
+        title: 'signup'
+    })
+})
 app.get('/help', (req, res) => {
           res.render('help', {
          title: 'about'
@@ -60,9 +65,9 @@ app.get('/about', (req, res) => {
 
 
 
-app.get('', (req, res) => {
-    res.render('index', {
-        title: 'products',
+app.get('sign', (req, res) => {
+    res.render('sign', {
+        title: 'sign',
         name: 'online shop'
     })
 })

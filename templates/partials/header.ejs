@@ -21,7 +21,7 @@
         <ul class="menu">
           <li><a href="/<%= shopname %>/view" class="nav"> Home </a></li>
           <li><a href="#" class="nav">Products</a></li>
-          <li><a href="contact.html" class="nav">Contact Us</a></li>
+          <li><a href="/<%= shopname %>/contact" class="nav">Contact Us</a></li>
 
           <% if ( username !='Guest'){ %>
             <li><a href="#" class="nav login">My account</a></li>
@@ -29,31 +29,26 @@
             <li><a a onclick="logoutAll()" href="#" class="nav login">Logout  All</a></li>
          
             <% } else  { %>
-              <li><a href="#" class="nav guest">Sign Up</a></li>
+              <li><a href="/signup" class="nav guest">Sign Up</a></li>
            <% }  %>
          <li class="push"><a  id="userlabel" class="nav icon-lock" href="javascript:void(0)"> Hello  <%= username %> </a></li>
        </ul>
       </nav>
       <nav > 
         <div class="crumb_navigation"> Navigation:
-
-          <% var scale_text, scale_image; %>
-          <% scale_text = scale_image = 'free_transform'; %>
-
-
-     
         
           <%  if ( categories.tree.length>1) { %>
-            <span >Home</span> 
-         
+      
+            <a href="/<%= shopname %>/view" class="navmap"> <span>Home</span>   </a>
+
             <% for( var i=1; i <categories.tree.length -1; i++) { %>
               
-              <span> <%= categories.tree[i] %></span> 
+ 
+              <a href="/<%= shopname %>/view?category=<%= categories.tree[i] %>" class="navmap"> <span><%= categories.tree[i] %></span>   </a>
 
-                  
           <% } %>
          
-          <span class="current"> <%= categories.tree[categories.tree.length -1] %></span> 
+           <a href="/<%= shopname %>/view?category=<%= categories.tree[categories.tree.length -1] %>" class="navmap"> <span class="current" ><%= categories.tree[categories.tree.length -1] %></span>   </a>
 
           
 
