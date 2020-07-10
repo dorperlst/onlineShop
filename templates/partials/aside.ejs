@@ -1,0 +1,53 @@
+
+
+
+<aside class="aside aside-1">
+    <div class="title_box">Categories</div>
+    <% var curCategory="";   %>
+
+    <% if( categories.tree.length > 1 ) {%>
+        <%  curCategory = categories.tree[1] %>
+      <% }   %>
+  
+    <ul class="left_menu" id ="ulcategories">
+        <% var line='odd' %> 
+        <% categories.categories.forEach(function(category) { %> 
+
+            <li class="<%= line %>"  >  <a href="/<%= shopname %>/view?category=<%= category.name %>"  > <%= category.name %> </a>
+            </li>
+
+
+
+                <% if(curCategory ==  category.name) { %> 
+                    <ul class="left_menu">
+                        <% for(i=2; i < categories.tree.length ; i++) { %> 
+
+                        <li class="<%= line %>"  >  <a href="/<%= shopname %>/view?category=<%= categories.tree[i]  %>"  > <%=  categories.tree[i] %> </a>
+                        </li>
+                     
+
+                 <% }   %>
+                    </ul> 
+                    <% categories.subCats.forEach(function(sub) { %> 
+                        <li class="<%= line %>"  >  <a href="/<%= shopname %>/view?category=<%= sub.name %>"  > <%=  sub.name %> </a>
+                        </li>
+ 
+                        <% }) }; %>
+
+
+
+
+            <%  line =line=='odd'? 'even' :'odd' %> 
+    
+         <% }); %>
+    </ul>
+       
+
+ 
+
+</aside>
+
+
+
+ 
+

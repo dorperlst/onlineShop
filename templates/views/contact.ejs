@@ -1,0 +1,73 @@
+<head>
+    <!DOCTYPE html>
+    <html>
+      <link rel="stylesheet" href="/css/test.css">
+      <link rel="icon" href="/img/weather.png">
+  </head>
+  <body>
+    <div class="wrapper">
+        <%- include('../partials/header.ejs') %>
+         <div class="wrapper">
+       
+          <article class="main">
+            <div class="main-wrapper">
+              <article class="main-center">
+        
+                <div class="center_content">
+                  <div class="center_title_bar">Contact Us</div>
+                  <div class="prod_box_big">
+                    <div class="center_prod_box_big">
+                      
+                      <form  id="contact_form" class="contact_form" enctype="multipart/form-data" action="/users/contact"  method="post">
+
+                    
+                        <div class="form_row">
+                          <label class="contact"><strong>Name:</strong></label>
+                          <input type="text" value ="doron" name="name" tabindex="1" placeholder="name"  class="contact_input" required autofocus>
+                        </div>
+                        <div class="form_row">
+                          <label class="contact"><strong>Email:</strong></label>
+                          <input tabindex="2" placeholder="email"  value ="dorperlst@gmail.com" name="email" type="text" class="contact_input" >
+                        </div>
+                        <div class="form_row">
+                          <label class="contact"><strong>Phone:</strong></label>
+                          <input  placeholder="phone" name="phone"value ="555555555" tabindex="3" type="text" class="contact_input">
+                        </div>
+                      
+                        <div class="form_row">
+                          <label class="contact"><strong>Message:</strong></label>
+                          <textarea  placeholder="Your Message" value ="dffffffffffffffff"  name="msg" tabindex="5" class="contact_textarea"></textarea>
+                        </div>
+                        <div class="form_row">
+                          <input class="prod_details" type="submit" value="Send">  
+
+                          
+                          
+                        </div>
+                      </form>
+
+                      <div class="">
+                        <h3 id="msg"> </h3>
+                      
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <%- include('../partials/aside.ejs') %>
+              <%- include('../partials/login_aside.ejs') %>
+            </div>
+
+        </article> 
+     
+      </div>
+
+
+        <footer class="footer">Footer</footer>
+      </div>
+    </div>
+    <script src="/js/contact.js"></script>
+
+    </body>
+  </html>

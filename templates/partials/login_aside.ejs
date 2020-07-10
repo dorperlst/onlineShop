@@ -1,0 +1,31 @@
+<login_aside class="aside aside-2">
+    <% if(username == 'Guest' ){%>
+      <login>
+
+        <div class="title_box">Login</div>
+        <form id= "loginForm" enctype="multipart/form-data" action="/"  method="post">
+            <label>Email</label>
+             <input type="text" name="email"  value="dorperlst@gmail.com" id="email"  class="field" placeholder="email.." title="email...">
+            <label>password</label>
+            <input type="text"  value = "onlinepass"  name="password" id="password"  class="field" placeholder="password.." title="password...">
+            <div class="submit"> <input class="prod_buy" type="submit" value="Submit"> </div>
+        </form>
+        <hr>
+        <script src="/js/productLogin.js"></script>
+    
+    </login>
+    
+    <% } else {   %>
+   
+
+      <div class="shopping_cart">
+        <div class="title_box">Shopping cart</div>
+        <div class="cart_details"> <%= orderStat.totalItems %> items <br>
+          <span class="border_cart"></span> Total: <span class="price"><%= orderStat.total %>$</span> </div>
+        <div class="cart_icon"><a href="#"><img src="../../images/shoppingcart.png" ></a></div>
+      </div>
+       
+    <% } %>
+    <div class="title_box">something</div>
+   
+  </login_aside>
