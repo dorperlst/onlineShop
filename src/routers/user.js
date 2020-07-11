@@ -108,7 +108,7 @@ router.post('/users/login', multer().none(), async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         
-        redirectSession(req, res, user,req.body.currentUrl)
+        redirectSession(req, res, user, req.body.currentUrl)
     } catch (e) {
         res.status(400).send('Unable to login')
     }

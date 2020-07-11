@@ -24,10 +24,10 @@
 
                         <li class="<%= line %>"  >  <a href="/<%= shopname %>/view?category=<%= categories.tree[i]  %>"  > <%=  categories.tree[i] %> </a>
                         </li>
-                     
+                      </ul> 
 
                  <% }   %>
-                    </ul> 
+                   
                     <% categories.subCats.forEach(function(sub) { %> 
                         <li class="<%= line %>"  >  <a href="/<%= shopname %>/view?category=<%= sub.name %>"  > <%=  sub.name %> </a>
                         </li>

@@ -33,49 +33,13 @@ function resetForm(){
     ulimages.innerHTML = '';
     ultags.innerHTML = '';
     fileDiv.innerHTML = '';
-    if(formcategories.length >0 && formcategories[0].value == 0)
-        formcategories.remove(0)
     
 }
 
-function getProducts(category){
-    resetForm()
-    var url ='/'+shopName+'/products'
-    if(category)
-        url +='?category=' + category
-    fetch(url)
-        .then((res) => { 
-            if(res.status == 200)
-                return res.json() 
-            return null
-        })
-        .then((jsonData) => {   
-            productsDiv.innerHTML = ''
-           
-            for(var ind in jsonData.products.products)
-            {
-                var product = jsonData.products.products[ind]
-                var innerHTML ='<div class ="box zone "> '
-                if ( product.images[0]) 
-                    innerHTML+='<img  class="" src="../../uploads/'+ product.images[0]+'"></img> '
-                else  
-                    innerHTML+='<img  class="" src="../../images/default.jpg"></img>'
-                
-                innerHTML+='<h4>'+product.name+'</h4>'
-                innerHTML+='<h4>'+product.description+'</h4>'
-                innerHTML+='<h4>'+product.price +'</h4>'
-                innerHTML += '<a onclick=editProduct("'+product._id+'")>Edit </a>'
-                innerHTML += '<a onclick=deleteProduct("'+product._id+'")>Delete </a>'
-
-                innerHTML += ' </div> '
-                productsDiv.innerHTML += innerHTML
-                         
-            }
-        });
-}
+ 
 
 function addProduct(){
-    formProductDisplay("products")
+    formProductDisplay("products","Add Product")
     form.elements['id'].value = ''
 }
 
@@ -84,12 +48,21 @@ function deleteProduct(id){
     var r = confirm("Are you sure you want to delete this product!");
     if (r == true) {
         var formdata = new FormData();
+
+
+        formdata.append("currentUrl", window.location.href)
+
         fetch('/products/'+id,
-            { method: 'delete',body :{}})
-        .then(function(res) {   
-            getProducts()
-            return res; 
-        })
+            { method: 'delete', body: formdata})
+            then(function(res) {
+                if (res.redirected)  
+                {
+                    window.location.href = res.url;
+                }
+              
+                else
+                    document.getElementById("err").textContent="Action Fail"
+            })
     } 
 
     
@@ -97,7 +70,8 @@ function deleteProduct(id){
 
 
 function editProduct(id){
-    formProductDisplay("products")
+    formProductDisplay("products", "Edit Product")
+
     fetch('/product/'+id+'/')
     .then((res) => { 
         if(res.status == 200)
@@ -111,10 +85,6 @@ function editProduct(id){
         form.elements['description'].value = product.description
         form.elements['available'].value = product.isavailable==true?1:0
         form.elements['promotion'].value = product.promotion==true?1:0
-
-        
-        
-
         form.elements['id'].value = product._id
         mainImg = product.mainimage
         formcategories.selectedIndex =  [...formcategories.options].findIndex(option => option.text ===  product.category)  
@@ -154,8 +124,11 @@ function editProduct(id){
     });
 }
 
-function formProductDisplay(action){
+function formProductDisplay(action, title){
+    document.getElementById("action").innerHTML=title;
+
     formAction = action
+
     resetForm()
     var productDisplay = action=="products"? "block" :"none"
     document.getElementsByClassName("product")[0].style.display = productDisplay
@@ -164,21 +137,25 @@ function formProductDisplay(action){
 }
 
 function deleteCategory(id){
-    fetch('/cats/'+id,
-        { method: "delete"})
-    .then((res) => { 
-        if(res.status == 200)
-            return res.json() 
-        return null
-    })
-    .then((jsonData) => {
-        tree = []
-        subCategories(shopname.value, null, null)
-    });
+
+    var conf = confirm("Are you sure you want to delete this category!");
+    if (conf == true) {
+        var formdata = new FormData();
+        formdata.append("currentUrl", window.location.href)
+
+        fetch('/cats/'+id,
+            { method: 'delete', body: formdata})
+            then(function(res) {
+                if (res.redirected)  
+                    window.location.href = res.url;
+                else
+                    document.getElementById("err").textContent="Action Fail"
+            })
+    } 
 }
 
 function addCategory(id){
-    formProductDisplay("cats")
+    formProductDisplay("cats","Add Category")
     form.elements['id'].value =''
     formcategories.innerHTML = '<option value=0>none</option>'+ formcategories.innerHTML
 
@@ -189,10 +166,8 @@ function addCategory(id){
 }
 
 function editCategory(id){
-    formProductDisplay("cats")
-        
+    formProductDisplay("cats","Edit Category")
     formcategories.innerHTML = '<option value=0>none</option>'+ formcategories.innerHTML
-
     fetch('/'+shopName+'/cats/'+id)
     .then((res) => { 
         if(res.status == 200)
@@ -214,19 +189,17 @@ function editCategory(id){
 function replay(parent, contact_id){
     var x = document.getElementById("myDIV");
     var reply= parent.parentElement.parentElement.querySelectorAll(".reply")[0].value;
-
     var formdata = new FormData();
-
     formdata.append("reply",reply);
     formdata.append("id",contact_id);
  
     fetch(  '/users/'+shopName+'/contact ',
     
     { method: "PATCH", body: formdata})
-.then(function(res) {   
+    // .then(function(res) {   
     
-    return  ; 
-})
+    // return  ; 
+    // })
 }
 
 
@@ -403,7 +376,7 @@ function showContacts(name, img){
 function closeContacts(name, img){
     contactsDiv.style.display="none"
 
-    productsDiv.style.display="flex"
+    productsDiv.style.display="grid"
 }
 
 
@@ -411,18 +384,29 @@ function createListItem(name, img){
     var li = document.createElement("li");
     var innerHTML  = ''
     if(img != undefined)
-    {
-        innerHTML += "<div class=images><img onclick=selectImage(this,'"+ img+"') src='../../uploads/"+img+"'></img></div> "
-    }
-    innerHTML +="<div >  <input type='text' value = '"+name+"' placeholder='name' required> "
-    
-    innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
+        innerHTML += "<div class=images><img onclick=selectImage(this,'"+img+"') src='../../uploads/"+img+"'></img></div> "
+    if(name != undefined && name != "" && img != undefined)
+        innerHTML +="<div >  <input type='text' disable='disable' value = '"+name+"' placeholder='name' required> "
+
+    else
+        innerHTML +="<div >  <input type='text' value = '"+name+"' placeholder='name' required> "
+    if(img != undefined)
+        innerHTML += "<a href='#' onclick=removeimgli(parentNode,'"+name.trim()+"')><img src='../../images/delete.png'></img></a></div></li>"
+    else
+        innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"></img></a></div></li>'
+
     innerHTML  += ' </div>'
     li.innerHTML= innerHTML
     li.className="flex-item nested"
     return li
 }
 
+
+function removeimgli(parentNode, name){
+    removeli(parentNode);
+    if (mainImg==name)
+         mainImg=undefined;
+}
 function removeli(parentNode){
     var parent = parentNode.parentNode.parentNode
     parent.removeChild(parentNode.parentNode)
@@ -442,17 +426,10 @@ form.addEventListener('submit', (e) => {
     }
     formdata.append('name', form.elements['formname'].value)
     formdata.append('description', form.elements['description'].value)
-    if(formcategories[formcategories.selectedIndex].value!=0)
+    if(formcategories[formcategories.selectedIndex].value!="")
         formdata.append('category', formcategories[formcategories.selectedIndex].value)
 
     if(formAction === 'products'){
-
-        // if(mainImg == "undefined" && ulimages.children.length>0)
-        // {
-        //     var input = ulimages.children[0].getElementsByTagName("input");
-        //     mainImg = input[0].value
-
-        // }
  
         formdata.append('price', form.elements['price'].value)
         formdata.append( 'attributes', toAttJsonArray(ulAttributes, false) )
@@ -467,8 +444,6 @@ form.addEventListener('submit', (e) => {
         if(mainImg != undefined)
             formdata.append('mainimage', mainImg )
 
-
-
         formdata.append( 'tags', toJsonArray( ultags ) )
         for (i=0 ; i < productFiles.files.length; i++)
             formdata.append('myFiles', productFiles.files[i], productFiles.files[i].name);
@@ -480,21 +455,24 @@ form.addEventListener('submit', (e) => {
             formdata.append('avatar', productFiles.files[0], productFiles.files[0].name);
 
     }
+    formdata.append("currentUrl", window.location.href)
+
     fetch('/' + formAction,
         { method: method, body: formdata})
-    .then(function(res) {   
-        closePopUp()
-        if(formAction === 'products')
-            getProducts()
-        else
-        {
-              subCategories()
-        }
-       
-        return res; 
-    })
-})
 
+
+        .then(function(res) {
+            if (res.redirected)  
+            {
+                window.location.href = res.url;
+            }
+          
+            else
+                document.getElementById("err").textContent="Action Fail"
+        })
+    
+    })
+ 
 
 function toAttJsonArray(ul, isImg) {
 
@@ -534,78 +512,6 @@ function toJsonArray(ul) {
     }
     return JSON.stringify(array)
 }
-
- 
- 
-function subCategories( categoryname, parentName,id){
-
-    var parent= parentName === undefined ? "" : parentName
-    var ulcategories = document.getElementById("ulcategories");  
-    var innerHTML=  ''  
-    var url = '/'+shopName+'/cats'
-    if(categoryname && categoryname!='')
-    {
-        url +='?parent='+ categoryname
-      //  innerHTML += '<li><a onclick = backCategory()>..Back</a> <h3>'+categoryname+' </h3></li>'
-        innerHTML += '<li class="odd actionli"><div><input onclick = subCategories("'+parent+'") type="button"  class="back-btn" ><span>'+categoryname+' </span> </div>'
-        innerHTML += '<div><a onclick= editCategory("'+ id +'")>Edit</a>  <a onclick= deleteCategory("'+id +'")>Delete</a></div> </li>'
-
- 
- 
-    }
-  
-    else 
-    {
-         url +='?mainCategories=true'
-    }
-
-    ulcategories.innerHTML = innerHTML
-    // formcategories.innerHTML =""
-    fetch( url )
-    .then((res) => { 
-    if(res.status == 200)
-        return res.json() 
-    return null
-    })
-    .then((jsonData) => {   
-
-
-      
-
-        var line='odd' 
-        for(var data in jsonData.cats)
-        {
-             
-            //    var opt = document.createElement('option');
-            //    opt.value = jsonData.cats[data]._id;
-            //    opt.innerHTML = jsonData.cats[data].name
-            //    formcategories.appendChild(opt); 
-           
-            var name = jsonData.cats[data].name
-            var parent= jsonData.cats[data].parent === undefined ? "" : jsonData.cats[data].parent
-
-            var liinnerHTML =`<li class=${line} >  <a onclick="subCategories('${name}','${parent}','${jsonData.cats[data]._id}')" >${name}</a>  </li> `
-
-           
-            ulcategories.innerHTML += liinnerHTML
-            line =line=='odd'? 'even' :'odd'  
-        } 
-        getProducts() 
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function readURL(input) {
     if (input.files && input.files[0]) {

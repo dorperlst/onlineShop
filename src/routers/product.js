@@ -45,25 +45,6 @@ router.get('/product/:id', async (req, res) => {
 })
 
 
-router.get('/admin', admin, async (req, res) => {
-    var userName = req.session.name  
-    if (userName == undefined)
-        window.location.href="/login"
-    var tree = [req.shop.name]
-    try {
-        const contacts = await Contact.find({shop: req.shop.name })
-
-        const products = await Product.find({shop: req.shop.name }).sort({ "parent": -1 })
-        const categories ={}
-        categories.categories = await  Cat.find(({ tree: { $in: [req.shop.name] }} )) 
-        categories.tree=[]
-        res.render('admin', { title: 'admin', products: products, contacts:contacts, categories: categories, shopname: req.shop.name,tree:tree, username: userName});
-        } 
-    catch (e) {
-        
-        res.render('admin', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
-     }
-})
 
 router.get('/add', admin, async (req, res) => {
     var userName = req.session.name  
@@ -84,7 +65,7 @@ router.get('/add', admin, async (req, res) => {
 
 router.get('/:shop/account', auth, async (req, res) => {
     
-    const categories = await getCategories(req)
+    const categories = await getCategories(req, req.params.shop)
 
  
     const orderStat= await orderStats(req, res)
@@ -106,7 +87,7 @@ router.get('/:shop/account', auth, async (req, res) => {
 })
 
 router.get('/:shop/contact', async (req, res) => {
-    const categories = await getCategories(req)
+    const categories = await getCategories(req, req.params.shop)
 
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
@@ -122,18 +103,8 @@ router.get('/:shop/view',async (req, res) => {
     
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
     try {
-            var params = [ {shop: req.params.shop }]
-            const categories = await getCategories(req)
-            if (categories.cur!=undefined) 
-            {
-                  var catname= req.query.category
-                  
-                  var cats=  await Cat.find( { tree: { $all: catname } },{_id:0,name:1}).select({_id:0,name:1}); //,
-                  var prodCat=[]
-                  cats.forEach((cat) => prodCat.push(cat.name))
-                  params.push( { category: { $in: prodCat } } )
-            }
-            const products = await getProducts(req, params)
+            const categories = await getCategories(req, req.params.shop)
+            const products = await getProducts(req, req.params.shop ,true)
             const orderStat= await orderStats(req,res)
             res.render('products', { title: 'products', products: products, categories: categories, shopname: req.params.shop, 
                 username: userName, orderStat: orderStat});
@@ -151,27 +122,8 @@ router.get('/:shop/view',async (req, res) => {
 router.get('/:shop/products', async (req, res) => {
   
     try {
-        var name=req.query.category
-         var params = [ {shop: req.params.shop }]
-        if (req.query.category &&  req.query.category != 'All') 
-        {
-            // var catname= req.query.category
-            // var cats=  await Cat.find( { tree: { $all: catname } },{_id:0,name:1}).select({_id:0,name:1}); //,
-            // var prodCat=[]
-            // cats.forEach((cat) => prodCat.push(cat.name))
-            // params.push( { category: { $in: prodCat } } )
-           
-            params.push( {  tree: { $in: [catname] } } )
-
-        }
-        else
-        {
-            var tree = [req.params.shop];
-         //   params.push( { category: { $in: tree } } )
-
-        }
         
-        const products = await getProducts(req, params)
+        const products = await getProducts(req, req.params.shop)
         res.send({ products })
     } catch (e) {
         console.log(e)
@@ -179,13 +131,44 @@ router.get('/:shop/products', async (req, res) => {
     }
 })
  
-async function getProducts(req, params)
+router.get('/admin', admin, async (req, res) => {
+    var userName = req.session.name  
+    if (userName == undefined)
+        window.location.href="/login"
+    var tree = [req.shop.name]
+    try {
+        const contacts = await Contact.find({shop: req.shop.name })
+        const categories = await getCategories(req,req.shop.name)
+       
+        const products = await getProducts(req, req.shop.name)
+
+        categories.allcategories = await  Cat.find(({ tree: { $in: [req.shop.name] }} )) 
+
+         
+        res.render('admin', { title: 'admin', products: products, contacts: contacts, categories: categories, shopname: req.shop.name,tree:tree, username: userName});
+        } 
+    catch (e) {
+        
+        res.render('admin', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
+     }
+})
+async function getProducts(req, shop,promo=false)
 {
+    var params = [ {shop: shop }]
+
     var sort = { "timestamps": -1 }
     const pageNum =  req.query.pageNum? parseInt(req.query.pageNum) : 0
     const skip = pageNum * limit  
  
-
+    if (req.query.category &&  req.query.category != 'All') 
+    {
+        var catname= req.query.category
+        
+        var cats=  await Cat.find( { tree: { $all: catname } },{_id:0,name:1}).select({_id:0,name:1}); //,
+        var prodCat=[]
+        cats.forEach((cat) => prodCat.push(cat.name))
+        params.push( { category: { $in: prodCat } } )
+    }
     if (req.query.name)  
         params.push(  { name: req.query.name  } )
     if (req.query.pricefrom)  
@@ -213,7 +196,9 @@ async function getProducts(req, params)
     
     const promotionParams=[ {shop: req.params.shop },{  "promotion":true }] 
     const promotionMatch = { $and: promotionParams } 
-    const promotion =  await Product.find(promotionMatch).sort(sort).limit( promtionLimit)
+    var promotion ={}
+    if(promo)
+          promotion =  await Product.find(promotionMatch).sort(sort).limit( promtionLimit)
     var pager =  parseInt(totalRows / limit);
     if(totalRows % limit >0)
         pager +=1; 
@@ -221,8 +206,8 @@ async function getProducts(req, params)
     return {products, totalRows, pager, promotion}
 }
 
-async function getCategories(req){
-    var shopName = req.params.shop
+async function getCategories(req, shop){
+    var shopName = shop
      var categories = {}
     if (req.query.category &&  req.query.category != 'All') 
     {
@@ -232,6 +217,8 @@ async function getCategories(req){
         const selectedcat = await Cat.findOne({name:name, tree: { $in: [shopName] } })
         categories.tree = selectedcat.tree
         categories.cur = selectedcat.name
+        categories.curId = selectedcat.id
+
         categories.subCats = subCats
      }
     else
@@ -316,7 +303,7 @@ router.delete('/products/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
         await product.remove()
-        res.send(product)
+        res.redirect(req.body.currentUrl);
     } catch (e) {
         console.log(e)
         res.status(500).send()
@@ -340,7 +327,8 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
     {
        // await attribute.save()
         await product.save()
-        res.send(product)
+        res.redirect(req.body.currentUrl);
+
     }
     catch (e) {
         console.log (e)
@@ -363,12 +351,12 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
     product.attributes = JSON.parse(req.body.attributes)
     product.details = JSON.parse(req.body.details)
     product.tags = JSON.parse(req.body.tags)
- 
+    if((!req.body.mainimage || req.body.mainimage == "")&& product.images.length >0)
+        product.mainimage=product.images[0]
     try
     {
         await product.save()
-        res.send(product)
-    }
+        res.redirect(req.body.currentUrl);    }
     catch (e) {
          res.status(400).send(e)
     }

@@ -13,35 +13,33 @@
     </head>
     <body>
       <div class="wrapper">
-        <%- include('../partials/header.ejs') %>
+        <%- include('../partials/adheader.ejs') %>
      
 
         <article class="main">
-          <% categories.categories%>
-        <div id = "popup" style="display: none;" >  
+         <div id = "popup" style="display: none;" >  
           <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
           <div  style="display: none;" id ="imagesDiv">
             <a class="close" onclick="closeImages()" ><img src="../../images/close.png"> </a>
             <ul class="grid-wrapper"id = "images"></ul>
           </div>
-          <form id="contact" action="" method="post">
+          <form id="contact"  method="post">
           
-            <h3>Update</h3>
+            <h3 id="action">Update</h3>
             
             <div class="flex-container">
               <label class="flex-item">  Name</label>
               <input class="flex-item" placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
             
             </div>
-            
-        
-          
-
             <div class="flex-container">
               <label class="flex-item">  Category</label>
-              <select class="flex-item" name="categories">
-              <% categories.categories.forEach(function(category) { %>
+              <select class="flex-item" name="categories" required>
+                <option value="0">Select</option>
+
+                <% categories.allcategories.forEach(function(category) { %>
                   <option value="<%= category._id %>"><%= category.name %></option>
+
                 <% }); %>
               </select>
             </div>
@@ -118,6 +116,12 @@
               <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
 
             </div>
+   
+            <div class="flex-container">
+              <label id="err"></label>
+
+            </div>
+
             <input type="hidden" value = "" id="id"  name="id">
           </form>
     
@@ -128,10 +132,20 @@
         <div   id="productsWrapper" >
 
           <div  class="flex-container add">
-            
-            <a class="flex-item" onclick = addProduct() > Products</a>
-            <a class="flex-item" onclick = showContacts() > Contacts</a>
+            <a onclick="addProduct()" href="#" class="prod_buy_big">Add Product</a>
+            <a onclick="addCategory()" href="#" class="prod_buy_big">Add Category</a>
 
+           
+            
+            <% if( categories.curId ) {%>
+              <a onclick = editCategory("<%= categories.curId %>")  href="#" class="prod_buy_big">Edit Category</a>
+
+             <% }   %>
+
+             <a onclick = "showContacts()" href="#" class="prod_buy_big">Contacts</a>
+
+
+ 
           </div>
           <section id="contacts" style="display: none;" class="flex-item">
             <a class="close" onclick="closeContacts()" ><img src="../../images/close.png"> </a>
@@ -182,7 +196,7 @@
 
 
           <section id="productsDiv" class="grid-wrapper">
-            <% products.forEach(function(product) { %>
+            <% products.products.forEach(function(product) { %>
               <div class="product-card">
                 <div class="product-image">   
                   <% if ( product.images[0]) { %>

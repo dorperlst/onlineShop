@@ -1,23 +1,43 @@
 <div class="left_content">
  
+  <div class="title_box">Categories</div>
+  <% var curCategory="";   %>
 
-    
-   <div class="flex-item title_box">Categories  </div>
+  <% if( categories.tree.length > 1 ) {%>
+      <%  curCategory = categories.tree[1] %>
+    <% }   %>
 
- <div class="flex-container add">
-   <span class="flex-item"> Add new</span>
-
-     <a class="flex-item"  onclick="addCategory()"><img class="actionImg" src="../../images/add.png"></a>  
- </div>
-
-<ul class="left_menu" id =ulcategories>
-     
+  <ul class="left_menu" id ="ulcategories">
     <% var line='odd' %> 
     <% categories.categories.forEach(function(category) { %> 
+    
+        <% if(curCategory ==  category.name) { %> 
+          <li class="cur <%=line%> "  >  <a href="/admin?category=<%= category.name %>"  > <%= category.name %> </a>
+          </li>
+          <%  line =line=='odd'? 'even' :'odd' %> 
 
-        <li class="<%= line %>"  ><a onclick="subCategories('<%= category.name %>','<%= category.parent %>','<%= category._id %>')"><%= category.name %></a></li>
-        <%  line =line=='odd'? 'even' :'odd' %> 
+          
+            <ul class="left_menu">
+                <% for(i=2; i < categories.tree.length ; i++) { %> 
+                  <li class="<%= line %>"  >  <a href="/admin?category=<%= categories.tree[i]  %>"  > <%=  categories.tree[i] %> </a>
+                  </li>
+                <% }   %>
+            </ul> 
+            <% categories.subCats.forEach(function(sub) { %> 
+                <li class="<%= line %>"  >  <a href="/admin?category=<%= sub.name %>"  > <%=  sub.name %> </a>
+                </li>
+            <% }) ; %>
+        <%  }else{ %>
+          <li class="<%= line %>"  >  <a href="/admin?category=<%= category.name %>"  > <%= category.name %> </a>
+    </li>
+          <%  } %>
 
-     <% }); %>
-</ul>
+            <%  line =line=='odd'? 'even' :'odd' %> 
+
+    <% }); %>
+  </ul>
+     
+
+
+ 
 </div>  

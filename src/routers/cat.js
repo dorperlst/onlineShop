@@ -98,7 +98,7 @@ router.delete('/cats/:id',admin, async (req, res) => {
             product.save()
         })
         await cat.remove()
-        res.send(cat)
+        res.redirect(req.body.currentUrl);
     } catch (e) {
         console.log(e)
         res.status(500).send()
@@ -123,7 +123,7 @@ router.post('/cats', admin, upload.single('avatar'), async function (req, res, n
     try
     {
         await cat.save()
-        res.send(cat)
+        res.redirect(req.body.currentUrl);    
     }
     catch (e) {
         console.log(e)
@@ -140,7 +140,7 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
 
     const allowedUpdates = [ 'description']
     allowedUpdates.forEach((update) => cat[update] = req.body[update])
-    var parent = !req.body.category ? undefined : await Cat.findById(req.body.category)
+    var parent = req.body.category=="0" ? undefined : await Cat.findById(req.body.category)
     var newName = req.body.name
     var  catname = cat.name
     var nestedCategories = await Cat.find( { tree: { $in: catname } } )
@@ -195,7 +195,7 @@ router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, r
     try
     {
         await cat.save()
-        res.send(cat)
+        res.redirect('/admin');    
     }
     catch (e) {
          res.status(400).send(e)
