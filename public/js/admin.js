@@ -1,6 +1,8 @@
 
 const form = document.getElementById("contact");
-var productsDiv = document.getElementById("productsDiv");    
+var productsDiv = document.getElementById("productsDiv");   
+var contactsDiv = document.getElementById("contacts");    
+
 var productsWrapper = document.getElementById("productsWrapper");    
 var productFiles = document.getElementById("productFiles");    
 var categoriesDiv = document.getElementById("categoriesDiv");    
@@ -78,13 +80,19 @@ function addProduct(){
 }
 
 function deleteProduct(id){
-    var formdata = new FormData();
-    fetch('/products/'+id,
-        { method: 'delete',body :{}})
-    .then(function(res) {   
-        getProducts()
-        return res; 
-    })
+
+    var r = confirm("Are you sure you want to delete this product!");
+    if (r == true) {
+        var formdata = new FormData();
+        fetch('/products/'+id,
+            { method: 'delete',body :{}})
+        .then(function(res) {   
+            getProducts()
+            return res; 
+        })
+    } 
+
+    
 }
 
 
@@ -133,11 +141,13 @@ function editProduct(id){
         for(var ind in product.tags)
            addTags(product.tags[ind]);
 
+           if(product.images.length>0 && mainImg == undefined)
+                mainImg=product.images[0]
         for(var ind in product.images)
         {
             ulimages.appendChild(createListItem(product.images[ind], product.images[ind]));
             if(product.images[ind]===mainImg)
-               ulimages.lastElementChild.className="mainImg";
+               ulimages.lastElementChild.className="flex-item nested mainImg";
          
         }
         
@@ -199,6 +209,26 @@ function editCategory(id){
          
     });
 }
+
+
+function replay(parent, contact_id){
+    var x = document.getElementById("myDIV");
+    var reply= parent.parentElement.parentElement.querySelectorAll(".reply")[0].value;
+
+    var formdata = new FormData();
+
+    formdata.append("reply",reply);
+    formdata.append("id",contact_id);
+ 
+    fetch(  '/users/'+shopName+'/contact ',
+    
+    { method: "PATCH", body: formdata})
+.then(function(res) {   
+    
+    return  ; 
+})
+}
+
 
 function createImgAttListItem(parent, name,  img){
     const imgVal = img ? img : ''
@@ -358,9 +388,22 @@ function createImgListItem(name, img){
     li.innerHTML = innerHTML
     return li
 }
+
 function hover(div, img)
 {
     div.style="  background: url(../../uploads/"+img+") left no-repeat;"
+}
+
+function showContacts(name, img){
+    contactsDiv.style.display="flex"
+
+    productsDiv.style.display="none"
+}
+
+function closeContacts(name, img){
+    contactsDiv.style.display="none"
+
+    productsDiv.style.display="flex"
 }
 
 
@@ -369,7 +412,7 @@ function createListItem(name, img){
     var innerHTML  = ''
     if(img != undefined)
     {
-        innerHTML += "<img onclick=selectImage(this,'"+ img+"') src='../../uploads/"+img+"'></img> "
+        innerHTML += "<div class=images><img onclick=selectImage(this,'"+ img+"') src='../../uploads/"+img+"'></img></div> "
     }
     innerHTML +="<div >  <input type='text' value = '"+name+"' placeholder='name' required> "
     
@@ -410,8 +453,7 @@ form.addEventListener('submit', (e) => {
         //     mainImg = input[0].value
 
         // }
-        if(mainImg == "undefined")
-            formdata.append('mainimage', mainImg)
+ 
         formdata.append('price', form.elements['price'].value)
         formdata.append( 'attributes', toAttJsonArray(ulAttributes, false) )
         formdata.append( 'imgattributes', toAttJsonArray(ulImgAttributes, true) )
@@ -422,6 +464,8 @@ form.addEventListener('submit', (e) => {
         formdata.append( 'details', toJsonArray (uldetails) )
         var ulImages = toJsonArray( ulimages ) 
         formdata.append( 'images', ulImages)
+        if(mainImg != undefined)
+            formdata.append('mainimage', mainImg )
 
 
 

@@ -29,6 +29,7 @@ body {
 #contact {
   /* display: grid; */
   width: 100%;
+  /* justify-content: left; */
   flex-flow: column;
   background: #F9F9F9;
   /* padding: 25px; */
@@ -188,6 +189,7 @@ label {
 .flex-container {
   /* We first create a flex layout context */
   display: flex;
+  justify-content: left;
   flex-flow: row;
   padding: 10 0 0 0;
   margin-top: 6px;
@@ -507,7 +509,7 @@ a.nav, a.nav:visited {
 
 .product-card {
 
-/* check */display: flex;grid-template-columns: repeat(auto-fill);/* grid-gap: 5px; */display: flex;flex-direction: column;padding-top: 2%;/* flex: 1 16%; */background-color: #FFF;/* box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.25); */}
+/* check */display: flex;grid-template-columns: repeat(auto-fill);/* grid-gap: 5px; */display: flex;flex-direction: column;padding-top: 2%;/* flex: 1 16%; */height: 350px;background-color: #FFF;/* box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.25); */}
 
 @media ( max-width: 920px ) {
         
@@ -601,11 +603,98 @@ ul.left_menu li.even div,
     }
 
     #images li{flex-flow: column;display: flex;justify-content: center;width: fit-content;}  
-      #images img{display: flex;margin:0 auto 0 auto 0;max-width: 200px;}
+      #images img{display: flex;margin:0 auto 0 auto 0;max-width: 200px;margin: auto;}
 
       .actionli >a{
         width:30px
       }
 
 
-      select
+      
+input.contact_input {width: 253px;height: 22px;background-color: #fff;color: #999999;border: 1px #DFDFDF solid;border: 1px solid #d3d3d3;color: #464141;/* background: #f5f1f187; */border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
+ 
+ 
+input.contact_input:hover,input.contact_input:focus {width: 253px;outline: none;height: 22px;background-color: #fff;color: #999999;border: 2px solid #d3d3d3;color: #464141;background: #f5f1f187;/* border-radius: 5px; */-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
+
+.form_row {
+  display: flex;
+  /* width: 335px; */
+  clear: both;
+  padding: 10px 0 10px 0;
+  /* color: #a53d17; */
+  color: #666;
+}
+form >div {
+  display: flex;
+  justify-content: center;
+  /* padding-top: 10px; */
+}
+
+.contact_form {
+  width: 355px;
+  /* float: left; */
+  display: flex;
+  flex-flow: column;
+}
+
+label.contact {
+  width: 75px;
+  height: 22px;
+  /* float: left; */
+  font-size: 12px;
+  /* text-align: right; */
+  padding: 4px 5px 0 0;
+  /* color: #333333; */
+}
+
+
+.prod_details {
+  border: none;
+  width: 75px;
+  height: 24px;
+  display: block;
+  
+  background: url(../../images/link_bg.gif) no-repeat center;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  line-height: 24px;
+  text-decoration: none;
+  color: #159dcc;
+}
+
+textarea.contact_textarea {
+  width: 253px;
+  height: 100px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #999999;
+  background-color: #fff;
+  border: 1px #DFDFDF solid;
+  float: left;
+}
+
+.product-image  {
+  display: flex;
+  /* justify-content: center; */
+  margin: auto;
+}
+.product-image img {
+  max-width: 200px;
+  /* max-width: 100%; */
+  height: fit-content;
+}
+.images{
+  display: flex;
+  width: 250p;
+  flex-direction: column;
+  padding-top: 2%;
+  /* flex: 1 16%; */
+  height: 350px;
+  background-color: #FFF;
+}
+#contacts{
+  position: relative;
+}
+
+ 

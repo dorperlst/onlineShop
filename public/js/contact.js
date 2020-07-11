@@ -4,10 +4,10 @@ const contact_form = document.getElementById("contact_form");
 contact_form.addEventListener('submit', (e) => {
     e.preventDefault()
     var formdata = new FormData(contact_form);
-    formdata.append('currentUrl', window.location.href)
+    formdata.append("shop", shopName)
     
-
-    fetch('/users/contact',//
+var url="/users/"+shopName+"/contact"
+    fetch(url,//
         { method: 'POST', body: formdata})
         .then((res) => { 
             if(res.status == 200)
@@ -15,6 +15,6 @@ contact_form.addEventListener('submit', (e) => {
         return null 
         }
     ).then((jsonData) => {   
-        document.getElementById("msg").innerHTML=jsonData.msg
+        document.getElementById("msg").innerHTML = jsonData.msg
     });
 })  

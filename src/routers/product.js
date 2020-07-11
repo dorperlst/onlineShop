@@ -1,12 +1,12 @@
 var express = require('express');
 const Product = require('../models/product')
 const Order = require('../models/order').Order
-const Attribute = require('../models/attribute')
-const Cat = require('../models/cat')
+ const Cat = require('../models/cat')
 const User = require('../models/user')
 const router = new express.Router()
 var multer = require('multer'); 
-const authObj= require('../middleware/auth')
+const authObj= require('../middleware/auth');
+const Contact = require('../models/contact');
 const admin = authObj.admin
 const auth = authObj.auth
 
@@ -51,11 +51,13 @@ router.get('/admin', admin, async (req, res) => {
         window.location.href="/login"
     var tree = [req.shop.name]
     try {
+        const contacts = await Contact.find({shop: req.shop.name })
+
         const products = await Product.find({shop: req.shop.name }).sort({ "parent": -1 })
         const categories ={}
         categories.categories = await  Cat.find(({ tree: { $in: [req.shop.name] }} )) 
         categories.tree=[]
-        res.render('admin', { title: 'admin', products: products, categories: categories, shopname: req.shop.name,tree:tree, username: userName});
+        res.render('admin', { title: 'admin', products: products, contacts:contacts, categories: categories, shopname: req.shop.name,tree:tree, username: userName});
         } 
     catch (e) {
         

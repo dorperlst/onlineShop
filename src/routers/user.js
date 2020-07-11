@@ -7,6 +7,7 @@ const Contact = require('../models/contact')
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
 const { sendWelcomeEmail, sendContactEmail, sendCancelationEmail } = require('../emails/account')
+const { admin } = require('../middleware/auth')
 const router = new express.Router()
 
 
@@ -39,22 +40,51 @@ router.get('/users', async (req, res) => {
     
 })
  
-router.post('/users/contact', multer().none(), async (req, res) => {
+router.post('/users/:shop/contact', multer().none(), async (req, res) => {
  
     
 
     try {
         const contact = new Contact (req.body)
+        contact.shop = req.params.shop
         await contact.save()
-       // sendContactEmail(req.body.email, req.body.name)
+        
+        sendContactEmail(req.body.email, req.body.name,"Your msg is recived")
         res.send({ msg: "msessage as been send successfully" })
      } catch (e) {
         console.log(e)
         res.status(400).send(e)
     }
-   })
+})
+
+router.patch('/users/:shop/contact', multer().none(), async (req, res) => {
+    try {
+        const contact = await Contact.findById(req.body.id)
+        contact.reply = req.body.reply
+        await contact.save()
+        sendContactEmail(contact.email, contact.name, contact.reply)
+        res.send({ msg: "msessage as been send successfully" })
+     } catch (e) {
+        console.log(e)
+        res.status(400).send(e)
+    }
+})
 
 
+router.get('/contact',admin, async (req, res) => {
+
+    const contact = await Contact.find({shop:req.shop.name})
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+
+    const orderStat= orderStats(req,res)
+
+    res.render('contact', {   title: 'contact',contact:contact,shopname: req.shop.name,   username: userName})
+})
+
+
+
+    
+    
 
 
 router.post('/users', upload.single('avatar'), async function (req, res, next) {

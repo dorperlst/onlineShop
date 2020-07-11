@@ -39,8 +39,22 @@
       
               <% }); %>
 
-
+              
               </section>  
+              <div class="center">
+                <% if ( parseInt(products.pager) > 1) { %>   
+                  <ul class="pagination"> 
+                    <li><a href=" ">«</a></li>
+
+                    <% for (i=0;i< parseInt(products.pager) ;i++) { %>
+                      <li><a class="active" href=" "><%= i+1 %></a></li>
+                    <% }  %>
+                    <li><a href=" ">»</a></li>
+                  </ul>
+                <% }  %>
+                <label>showing  <%= products.products.length %>   out of   <%= products.totalRows %></label> 
+
+              </div>
               <div class="center_title_bar"> Recommended</div>
 
               <section id="secPromotion" class="grid-wrapper">
@@ -67,20 +81,7 @@
 
               </section>  
     
-              <div class="center">
-                <% if ( parseInt(products.pager) > 1) { %>   
-                  <ul class="pagination"> 
-                    <li><a href=" ">«</a></li>
-
-                    <% for (i=0;i< parseInt(products.pager) ;i++) { %>
-                      <li><a class="active" href=" "><%= i+1 %></a></li>
-                    <% }  %>
-                    <li><a href=" ">»</a></li>
-                  </ul>
-                <% }  %>
-                <label><%= products.products.length %> rows out of   <%= products.totalRows %></label> 
-
-              </div>
+            
               
             
               </article>  <%- include('../partials/aside.ejs') %>

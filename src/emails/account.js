@@ -22,14 +22,13 @@ const sendCancelationEmail = (email, name) => {
 }
  
 
-const sendContactEmail = (email, name) => {
+const sendContactEmail = (email,name, msg) => {
     sgMail.send({
-        to: process.env.EMAIL_ACCOUNT,
+        to: email,
         from: process.env.EMAIL_ACCOUNT,
-        html:"<div>hello, ${name} thank you for contact us </div>",
-        subject: 'Contact from Online Shop!',
-        text: `<div> ${email} </div>`
-    })
+        html:`<div>hello, ${name} ${msg}</div>`,
+        subject: 'Online Shop!'
+     })
     // sgMail.send({
     //     to: email,
     //     from: process.env.EMAIL_ACCOUNT,

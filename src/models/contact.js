@@ -12,13 +12,24 @@ const contactSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    reply: {
+        type: String,
+        required: false,
+        trim: true
+    },
     
     phone: {
         type: String,
         required: true,
         trim: true
     },
-     
+    shop: {
+        type: String,
+        required: true,
+        trim: true
+         
+    },
+    
     
     email: {
         type: String,

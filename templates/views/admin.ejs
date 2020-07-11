@@ -18,142 +18,189 @@
 
         <article class="main">
           <% categories.categories%>
-      <div id = "popup" style="display: none;" >  
-        <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
-        <div  style="display: none;" id ="imagesDiv">
-          <a class="close" onclick="closeImages()" ><img src="../../images/close.png"> </a>
-          <ul class="grid-wrapper"id = "images"></ul>
-        </div>
-        <form id="contact" action="" method="post">
-        
-          <h3>Update</h3>
-          
-          <div class="flex-container">
-            <label class="flex-item">  Name</label>
-            <input class="flex-item" placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
-          
+        <div id = "popup" style="display: none;" >  
+          <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
+          <div  style="display: none;" id ="imagesDiv">
+            <a class="close" onclick="closeImages()" ><img src="../../images/close.png"> </a>
+            <ul class="grid-wrapper"id = "images"></ul>
           </div>
+          <form id="contact" action="" method="post">
           
-       
-        
-
-          <div class="flex-container">
-            <label class="flex-item">  Category</label>
-            <select class="flex-item" name="categories">
-            <% categories.categories.forEach(function(category) { %>
-                <option value="<%= category._id %>"><%= category.name %></option>
-              <% }); %>
-            </select>
-          </div>
-        
-          <div class="flex-container">
-            <label class="flex-item">  Description</label>
-            <textarea class="flex-item" id ="description" name="description" placeholder="Product Description...." tabindex="5" required></textarea>
-          </div>
-          <div class="product">
-              <div class="flex-container">
-                <label class="flex-item">  Price</label>
-                <input class="flex-item"  id="price" name="price" placeholder="Price" type="text" tabindex="2" >
-              </div>
-
-              <div class="flex-container">
-                <label class="flex-item">  Promotion</label>
-                <select class="flex-item" name="promotion">
-                  <option value="0"> false</option>
-                  <option value="1"> true</option>
-    
-    
-                 </select>
-              </div>
-              <div class="flex-container">
-                <label class="flex-item">  Available</label>
-                <select class="flex-item" name="available">
-                  <option value="1"> Available</option>
-                  <option value="0"> Out Of Stock</option>
-    
-                 </select>
-              </div>
-
-              <div class="flex-container">
-                <label class="flex-item">  Attributes  </label> 
-                <a class="flex-item" onclick="addAttributes(false)"><img src="../../images/add.png"></a>
-              </div>
-              <div class="flex-container">
-                <ul class="flex-item "  id = "ulAttributes"></ul>
-              </div>
-              <div class="flex-container">
-                <label class="flex-item"> Images Attributes  </label> 
-                <a class="flex-item" onclick="addAttributes(true)"><img src="../../images/add.png"></a>
-              </div>
-              <div class="flex-container"> 
-                <ul class="flex-item " id = "imgAttributes"></ul>
-              </div>
+            <h3>Update</h3>
             
-              <div class="flex-container">
-                <label class="flex-item"> Details </label> 
-                <a  onclick="addDetails()"> <img src="../../images/add.png"></a> 
-              </div>
-                <div class="flex-container"> 
-                <ul class="flex-item nested" id = "details"></ul>
-              </div>
-
-              <div class="flex-container">
-                <label class="flex-item"> Tags </label> 
-                <a  onclick="addTags()"> <img src="../../images/add.png"></a> 
-              </div>
-                <div class="flex-container"> 
-                <ul class="flex-item" id = "tags"></ul>
-              </div>
-              
-          </div>
-          <div class="flex-container">
-            <a onclick="showImages()"> Images... </a> 
-          </div>
-        
-          <div class="flex-container">
-              Select images: <input type="file" onchange="loadImageFileAsURL()" id="productFiles" name="myFiles" multiple>
-          </div>
-        
-          <div class="flex-container">
-            <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
-
-          </div>
-          <input type="hidden" value = "" id="id"  name="id">
-        </form>
-  
-        <div id ="fileDiv"></div>
-        <input type="hidden" value ='<%= shopname %>' id=shopname>
-  
-      </div>
-          <div   id="productsWrapper" >
-
-            <div  class="flex-container add">
-              <span class="flex-item"> Products</span>
-              <a class="flex-item" onclick = addProduct() > <img  class ="actionImg" src="../../images/add.png"></a>
-  
+            <div class="flex-container">
+              <label class="flex-item">  Name</label>
+              <input class="flex-item" placeholder="Name" id="formname" name="formname" type="text" tabindex="1" required autofocus>
+            
             </div>
+            
+        
+          
 
-            <section id="productsDiv" class="grid-wrapper">
-              <% products.forEach(function(product) { %>
-                <div class="product-card">
-                  <div class="product-image">   
-                    <% if ( product.images[0]) { %>
-                      <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
-                    <% } else  { %>
-                      <img  src="../../images/default.png"></img> 
-                    <% }  %>
-                  </div>
+            <div class="flex-container">
+              <label class="flex-item">  Category</label>
+              <select class="flex-item" name="categories">
+              <% categories.categories.forEach(function(category) { %>
+                  <option value="<%= category._id %>"><%= category.name %></option>
+                <% }); %>
+              </select>
+            </div>
+          
+            <div class="flex-container">
+              <label class="flex-item">  Description</label>
+              <textarea class="flex-item" id ="description" name="description" placeholder="Product Description...." tabindex="5" required></textarea>
+            </div>
+            <div class="product">
+                <div class="flex-container">
+                  <label class="flex-item">  Price</label>
+                  <input class="flex-item"  id="price" name="price" placeholder="Price" type="text" tabindex="2" >
+                </div>
+
+                <div class="flex-container">
+                  <label class="flex-item">  Promotion</label>
+                  <select class="flex-item" name="promotion">
+                    <option value="0"> false</option>
+                    <option value="1"> true</option>
+      
+      
+                  </select>
+                </div>
+                <div class="flex-container">
+                  <label class="flex-item">  Available</label>
+                  <select class="flex-item" name="available">
+                    <option value="1"> Available</option>
+                    <option value="0"> Out Of Stock</option>
+      
+                  </select>
+                </div>
+
+                <div class="flex-container">
+                  <label class="flex-item">  Attributes  </label> 
+                  <a class="flex-item" onclick="addAttributes(false)"><img src="../../images/add.png"></a>
+                </div>
+                <div class="flex-container">
+                  <ul class="flex-item "  id = "ulAttributes"></ul>
+                </div>
+                <div class="flex-container">
+                  <label class="flex-item"> Images Attributes  </label> 
+                  <a class="flex-item" onclick="addAttributes(true)"><img src="../../images/add.png"></a>
+                </div>
+                <div class="flex-container"> 
+                  <ul class="flex-item " id = "imgAttributes"></ul>
+                </div>
               
-                  <div class="product-info">
-                    <label><%= product.name %> </label>
-                    <label><%= product.price %>$</label>
-                    <a onclick="editProduct('<%= product._id %>')">Edit</a> 
-                    <a onclick="deleteProduct('<%= product._id %>')">Delete</a>            
-                  </div>
-     </div>
-              <% }); %>
-              </section>
+                <div class="flex-container">
+                  <label class="flex-item"> Details </label> 
+                  <a  onclick="addDetails()"> <img src="../../images/add.png"></a> 
+                </div>
+                  <div class="flex-container"> 
+                  <ul class="flex-item nested" id = "details"></ul>
+                </div>
+
+                <div class="flex-container">
+                  <label class="flex-item"> Tags </label> 
+                  <a  onclick="addTags()"> <img src="../../images/add.png"></a> 
+                </div>
+                  <div class="flex-container"> 
+                  <ul class="flex-item" id = "tags"></ul>
+                </div>
+                
+            </div>
+            <div class="flex-container">
+              <a onclick="showImages()"> Images... </a> 
+            </div>
+          
+            <div class="flex-container">
+                Select images: <input type="file" onchange="loadImageFileAsURL()" id="productFiles" name="myFiles" multiple>
+            </div>
+          
+            <div class="flex-container">
+              <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
+
+            </div>
+            <input type="hidden" value = "" id="id"  name="id">
+          </form>
+    
+          <div id ="fileDiv"></div>
+          <input type="hidden" value ='<%= shopname %>' id=shopname>
+    
+        </div>
+        <div   id="productsWrapper" >
+
+          <div  class="flex-container add">
+            
+            <a class="flex-item" onclick = addProduct() > Products</a>
+            <a class="flex-item" onclick = showContacts() > Contacts</a>
+
           </div>
+          <section id="contacts" style="display: none;" class="flex-item">
+            <a class="close" onclick="closeContacts()" ><img src="../../images/close.png"> </a>
+            <% contacts.forEach(function(contact) { %>
+              <div class="contact_form">
+  
+                      
+                <div class="form_row">
+                  <label class="contact"><strong>Name:</strong></label>
+                  <input disabled="disabled" type="text" value =<%= contact.name %> name="name" tabindex="1" placeholder="name"  class="contact_input" required autofocus>
+                </div>
+                <div class="form_row">
+                  <label class="contact"><strong>Email:</strong></label>
+                  <input disabled="disabled" tabindex="2" placeholder="email"  value ="<%= contact.email %>" name="email" type="text" class="contact_input" >
+                </div>
+                <div class="form_row">
+                  <label class="contact"><strong>Phone:</strong></label>
+                  <input  disabled="disabled" placeholder="phone" name="phone" value =<%= contact.phone %> tabindex="3" type="text" class="contact_input">
+                </div>
+              
+                <div class="form_row">
+                  <label class="contact"><strong>Message:</strong></label>
+                  <textarea disabled="disabled" placeholder="Your Message"   name="msg" tabindex="5" class="contact_textarea"><%= contact.msg %></textarea>
+                </div>
+                    
+                <div class="form_row">
+                  <label class="contact "><strong>Reply:</strong></label>
+                  <textarea   placeholder="Reply..."   name="msg" tabindex="5" class="reply contact_textarea"><%= contact.reply %></textarea>
+  
+   
+                </div>
+                <div class="form_row">
+                  
+                  <input class="prod_details"  onclick = replay(this,"<%= contact._id %>") type="button" value="Send">  
+  
+                </div>
+  
+  
+  
+              </div>
+  
+              <% })  %>
+
+          </section>
+      
+
+
+
+
+          <section id="productsDiv" class="grid-wrapper">
+            <% products.forEach(function(product) { %>
+              <div class="product-card">
+                <div class="product-image">   
+                  <% if ( product.images[0]) { %>
+                    <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
+                  <% } else  { %>
+                    <img  src="../../images/default.png"></img> 
+                  <% }  %>
+                </div>
+            
+                <div class="product-info">
+                  <label><%= product.name %> </label>
+                   <a onclick="editProduct('<%= product._id %>')">Edit</a> 
+                  <a onclick="deleteProduct('<%= product._id %>')">Delete</a>            
+                </div>
+    </div>
+            <% }); %>
+            </section>
+        </div>
         
       </article>
         <aside class="aside aside-1">
