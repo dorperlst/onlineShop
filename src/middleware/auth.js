@@ -17,6 +17,8 @@ const auth = async (req, res, next) => {
         }
 
         req.user = user
+       // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3100');
+
         next()
     } catch (e) {
         console.log('----usersuth-----------', req.session.token)

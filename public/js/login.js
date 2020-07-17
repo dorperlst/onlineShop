@@ -13,7 +13,8 @@ form.addEventListener('submit', (e) => {
         if (res.redirected)  
 {
     //addshop("5e9f216829efa7242bd514c4")
-    window.location.href = res.url;
+    window.location.href =    "/yyyy/account"
+    ;
 }
       
         else

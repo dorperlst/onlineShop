@@ -1,137 +1,152 @@
 <head>
-    <!DOCTYPE html>
-    <html>
-      <link rel="stylesheet" href="/css/test.css">
-      <link rel="icon" href="/img/weather.png">
-  </head>
-  <body>
-    <div class="wrapper">
-        <%- include('../partials/header.ejs') %>
-        
-          <article class="main">
-            <div class="main-wrapper">
-              <article class="main-center">
-             
-                <div class="center_content">
-                  <div class="center_title_bar">Orders</div>
+  <!DOCTYPE html>
+  <html>
+    <link rel="stylesheet" href="/css/test.css">
+    <link rel="icon" href="/img/weather.png">
+</head>
+<body>
+  <div class="wrapper static_wrapper">
+      <%- include('../partials/header.ejs') %>
+      
+        <article class="main">
+          <div class="main-wrapper">
+            <article class="main-center">
+
+              <% if(user.orders.length > 0) { %>
+              <div class="center_content">
+                <div class="center_title_bar">Orders</div>
+                <div class="order-container">
 
                     <% user.orders.forEach(function(order) { %>
-                
-                        <div class="order-container">
-                          <% var line='even-order' %> 
-                          <div class="order-details">
-                            <span>    Status:  <%= order.completed %> </span>
-                            <%  var create = order.createdAt.getDate() + "-" + (order.createdAt.getMonth() + 1) + "-" + order.createdAt.getFullYear()   %>
-                            <%  var updated = order.updatedAt.getDate() + "-" + (order.updatedAt.getMonth() + 1) + "-" + order.updatedAt.getFullYear()   %>
-      
-                            <span>    Create:  <%= create %> </span>
-                            <span>    Updated:  <%= updated %> </span>
-      
-                            
-      
-                          </div>
-                          <div class="order-details">
-                            <h3><strong>Order Summary</strong></h3>
-                          
-
-                          </div>
-                       
-                    
-
-                          <div class="odd order-box">
-                            <span>Item </span><span>Price </span>  <span>Quantity</span>     <span>Total</span>     
-    
-                          </div>
-               
+                      <% var line='even-order' %> 
+                      <div class="order-details">
+                        <span>    Status:  <%= order.status %> </span>
+                        <%  var create = order.createdAt.getDate() + "-" + (order.createdAt.getMonth() + 1) + "-" + order.createdAt.getFullYear()   %>
+                        <%  var updated = order.updatedAt.getDate() + "-" + (order.updatedAt.getMonth() + 1) + "-" + order.updatedAt.getFullYear()   %>
+                        <span>    Create:  <%= create %> </span>
+                        <span>    Updated:  <%= updated %> </span>
+                      </div>
+                      <div class="order-details">
+                        <h3><strong>Order Summary</strong></h3>
+                      </div>
+                      <div class="order-details">
+                        <span>Item </span><span>Price </span>  <span>Quantity</span>     <span>Total</span> <span>Action</span>     
+                      </div>
                       <% order.products.forEach(function(product) { %> 
-                          <div class=" <%= line %> order-box">
-                            
-                         <span> <%= product.product.name %> </span><span> <%= product.product.price %> </span>  
-                         <span>  <%= product.count %></span>     <span> <%= product.count * product.product.price %></span>
-                        <%  line =line=='odd'? 'even-order' :'odd' %> 
+                        <div class=" <%= line %> order-details">
+                          <span> <%= product.product.name %> </span><span> <label class="calc"><%= product.product.price %> </label></span>  
+                          <span  > 
+                            <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
+                            <label class="calc"><%= product.count %></label>  
+                            <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
+                          </span>    
+                           <span class="calc" > <%= product.count * product.product.price %></span>
+                           <%if( order.status == 0) {%> 
+                             
+                            <span>
 
-                          </div>
-                      
-                      
-                      
-            
+                               <button class="btn-danger" onclick="deleteProduct('<%= order._id %>')" type="button">&nbsp
+                               </button>
+                               <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" onclick="deleteProduct('<%= order._id %>')" type="button">&nbsp
+
+                           
+                            </span>
+                          <%}%> 
+                           
+                          <%  line =line=='odd'? 'even-order' :'odd' %> 
+                        </div>
+                      <% }); %>
+                     
+                      <%if( order.status == 0) {%> 
+                        <div class="total order-details">
+                          <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
+                             <span id="order_total" ><%= orderStat.total %> </span>  <span>&nbsp;</span>
+                        </div>
+                        <div class="order-details">
+                          <a  class="prod_buy" href="/<%=shopname%>/create" >payment..</a> 
+                        
+
+                        </div>
+                        <div class="order-details">
+                          <label id ="orderMsg"></label>       
+                        </div>
+    
+                      <%} else {%> 
+                        <div class="total order-details">
+                          <span>&nbsp;</span><span>&nbsp; </span>  <span ><%= orderStat.totalItems %> </span>  
+                             <span  ><%= orderStat.total %> </span>  <span>&nbsp;</span>
+                        </div>
+                      <%} %> 
+
                     <% }); %>
-
-                
-
-                  
-          
-                  <% }); %>
-
-
-                  
-                    </div>
-                  </div>
-
-                  <div class="center_content">
-                  <div class="center_title_bar">My Account</div>
-                  <div class="prod_box_big ">
-                    <div class="center_prod_box_big">
-                      
-                      <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/<%=shopname%>/account"  method="post">
-                        <div class="flex-container">
-                         </div>
-
-                        <div class="form_row">
-                          <img id="mainImg" src="../../users/<%= user.image %>" alt="" border="0">
-
-      
-       
-                        </div>
-                        <div class="form_row">
-                          <label class="contact"><strong> First Name:</strong></label>
-                          <input type="text" placeholder="first name" value ="<%=user.name%>" name="name" tabindex="1"  class="contact_input" required autofocus>
-                        </div>
-                        <div class="form_row">
-                          <label class="contact"><strong> Last Name:</strong></label>
-                          <input type="text" placeholder="last name"  value ="<%=user.last%>" name="last" tabindex="2"  class="contact_input" required autofocus>
-                        </div>
-                        <div class="form_row">
-                          <label class="contact"><strong>Email:</strong></label>
-                          <input tabindex="3" placeholder="email" value ="<%=user.email%>" name="email" type="text" class="contact_input" >
-                        </div>
                     
-       
-      
-                        <div class="form_row">
-                          <label class="contact"><strong>Phone:</strong></label>
-                          <input  name="phone" placeholder="phone"  value ="<%=user.phone%>" tabindex="5" type="text" class="contact_input">
-                        </div>
-                       
-                        <div class="form_row">
-                          <label class="contact"><strong>Address::</strong></label>
-                          <textarea  placeholder="Full Address" name="address" tabindex="6" class="contact_textarea"><%=user.address%></textarea>
-                        </div>
-      
-      
-                        <div class="form_row">
-                          <input class="prod_details" tabindex="8"  type="submit" value="Submit">  
-      
-                          
-                          
-                        </div>
-                      </form>
-                    </div>
-                  </div>
                 </div>
-              </article>
-              <%- include('../partials/aside.ejs') %>
-              <%- include('../partials/login_aside.ejs') %>
-            </div>
+              </div>
+              <% } %>
 
 
-        </article> 
-     
- 
+              <div class="center_content">
+                <div class="center_title_bar">My Account</div>
+                <div class="prod_box_big ">
+                  <div class="center_prod_box_big">
+                    
+                    <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/<%=shopname%>/account"  method="post">
 
-        <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
-      </div>
+                      <div class="form_row">
+                        <img id="mainImg" src="../../users/<%= user.image %>" alt="" border="0">
+                      </div>
+                      <div class="form_row">
+                        <label class="contact"><strong> First Name:</strong></label>
+                        <input type="text" placeholder="first name" value ="<%=user.name%>" name="name" tabindex="1"  class="contact_input" required >
+                      </div>
+                      <div class="form_row">
+                        <label class="contact"><strong> Last Name:</strong></label>
+                        <input type="text" placeholder="last name"  value ="<%=user.last%>" name="last" tabindex="2"  class="contact_input" required >
+                      </div>
+                      <div class="form_row">
+                        <label class="contact"><strong>Email:</strong></label>
+                        <input tabindex="3" placeholder="email" value ="<%=user.email%>" name="email" type="text" class="contact_input" >
+                      </div>
+                      <div class="form_row">
+                        <label class="contact"><strong>Phone:</strong></label>
+                        <input  name="phone" placeholder="phone"  value ="<%=user.phone%>" tabindex="5" type="text" class="contact_input">
+                      </div>
+                      <div class="form_row">
+                        <label class="contact"><strong>Address::</strong></label>
+                        <textarea  placeholder="Full Address" name="address" tabindex="6" class="contact_textarea"><%=user.address%></textarea>
+                      </div>
+                      <div class="form_row">
+                        <input class="prod_details" tabindex="8"  type="submit" value="Submit">  
+                      </div>
+                    </form>
+                </div>
+              </div>
+              </div>
+          </article>
+            <%- include('../partials/aside.ejs') %>
+            <%- include('../partials/login_aside.ejs') %>
+          </div>
+
+
+      </article> 
+   
+
+
+      <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
     </div>
-     
-    </body>
-  </html>
+  </div>
+   
+  </body>
+</html>
+
+
+<script src="/js/account.js"></script>
+
+
+
+
+
+
+
+
+ 

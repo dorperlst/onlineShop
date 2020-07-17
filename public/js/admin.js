@@ -51,7 +51,7 @@ function deleteProduct(id){
 
 
         formdata.append("currentUrl", window.location.href)
-
+//todo change redirect 
         fetch('/products/'+id,
             { method: 'delete', body: formdata})
             then(function(res) {

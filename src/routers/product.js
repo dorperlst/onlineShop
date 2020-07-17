@@ -9,7 +9,7 @@ const authObj= require('../middleware/auth');
 const Contact = require('../models/contact');
 const admin = authObj.admin
 const auth = authObj.auth
-
+  
 const limit = 15
 const promtionLimit = 5
 
@@ -45,6 +45,8 @@ router.get('/product/:id', async (req, res) => {
 })
 
 
+
+ 
 
 router.get('/add', admin, async (req, res) => {
     var userName = req.session.name  
@@ -217,7 +219,7 @@ async function getCategories(req, shop){
         const selectedcat = await Cat.findOne({name:name, tree: { $in: [shopName] } })
         categories.tree = selectedcat.tree
         categories.cur = selectedcat.name
-        categories.curId = selectedcat.id
+        categories.curId = selectedcat.idstatus
 
         categories.subCats = subCats
      }
@@ -244,31 +246,9 @@ async function orderStats(req,res)
     const token = req.session.token;
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-    var params = [ {shop: req.params.shop }]
-    params.push(  { owner: user._id  } )
+    return await Order.orderStats(user._id,req.params.shop )
 
-    params.push(  { completed: false  } )
-    const match = { $and: params } 
-
-    var stat = await Order.aggregate([
-        { $match : match } ,
-        { "$unwind": "$products" }, 
-        { "$project": { 
-            "number": 1,  
-            "value": { "$multiply": [
-                { "$ifNull": [ "$products.count", 0 ] }, 
-                { "$ifNull": [ "$products.price", 0 ] } 
-            ]},
-            "items": { $sum: "$products.count" }
-        }}, 
-        { "$group": { 
-            "_id": "$number", 
-            "total": { "$sum": "$value" } ,
-            "totalItems": { "$sum": "$items" }
-
-        }}
-    ])
-   return stat.length >0 ? stat[0] : {total:0,totalItems:0}
+ 
 }
 
 

@@ -11,7 +11,7 @@
         <link rel="icon" href="/img/weather.png">
     </head>
     <body>
-      <div class="wrapper">
+      <div class="wrapper static_wrapper">
         <%- include('../partials/header.ejs') %>
        
         <article class="main">
@@ -53,7 +53,7 @@
                           <span class="blue">In stock</span>
                           <% }
                         else  { %>
-                          <span class="blue">Out of stock</span>
+                          <span class="red">Out of stock</span>
                           <% } %>
                          <br/>
                           Description :<span class="blue">  <%= product.description %>  </span><br>
@@ -113,11 +113,25 @@
 
                                 <div class="prod_price_big"><span class="price"> <%= product.price %>$</span>
                                 </div>
-                                <a  onclick = "orderProduct('<%= product.name %>', '<%= product._id %>',<%= product.price %>)" href="#" class="prod_buy">add...</a> 
-                                <div id ="productOrdersDiv"></div>
+
+
+                                <div class="counter"> 
+
+
+
+
+                                   <div class="input-append">
+                                  <button onclick = "addCount(-1)" class="btn btn-mini" type="button">-</button>
+                                  <label id="count">1</label> 
+
+                                  <button onclick = "addCount(1)" class="btn btn-mini" type="button"> + </button>
+                                  
+                                </div>
+                              </div>
+
+                                 <a  class="prod_buy" onclick = addToOrder('<%= product._id %>')  href="#" >add...</a> 
                           </div>
-                          <div id ="ordersDiv"></div>
-                      
+                       
         
                       </div>
                     </div>

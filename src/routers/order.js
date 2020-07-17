@@ -16,31 +16,45 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
     if (!product)
         res.status(400).send('product not found')
  
-    var order = await Order.findOne({ owner :  req.user._id, shop : req.body.shop})
- 
-    if (!order) {
-        order = new Order()
-        order.shop = req.body.shop
-        order.owner= req.user._id
-        order.products= []
-    }
-    var user =req.user
-var userOrders=user.orders? user.orders: []
-
-const orderProduct =  new OrderProduct()
-    orderProduct.price = product.price
-    orderProduct.count = req.body.count
-    orderProduct.product = req.body.product
-    order.products.push(orderProduct)
-    if(!userOrders.includes(order._id))
-        userOrders.push(order._id)
-    user.orders=userOrders
     try {
-        await user.save()
+        var order = await Order.findOne({ owner :  req.user._id, shop : req.body.shop,  status:  Order.statusEnum.OPEN })
+        if (!order) {
+            order = new Order()
+            order.shop = req.body.shop
+            order.owner= req.user._id
+            order.products= []
+        }
+        var user =req.user
+        var userOrders= user.orders ? user.orders: []
+        var  orderProduct = null;
+        
+        order.products.forEach(function (product){
+            if(product.product.toString()=== req.body.product)
+            { 
+                orderProduct = product
+                orderProduct.count =  parseInt(orderProduct.count)+     parseInt(req.body.count)
+                
+            }
+        })
 
-        await order.save()
-       
-        res.status(201).send(order)
+        if(orderProduct == null)
+        {
+            orderProduct =  new OrderProduct()
+            orderProduct.price = product.price
+            orderProduct.count = req.body.count
+            orderProduct.product = req.body.product
+            order.products.push(orderProduct)
+        }
+    
+        if(!userOrders.includes(order._id))
+            userOrders.push(order._id)
+        user.orders = userOrders
+    
+            await user.save()
+
+            await order.save()
+        var stats= await Order.orderStats(user._id,req.body.shop )
+            res.status(200).send(stats)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -96,25 +110,20 @@ router.get('/orders/:id', auth, async (req, res) => {
     }
 })
 
-router.patch('/orders/:id', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['description', 'completed']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' })
-    }
-
+router.patch('/orders', auth, multer().none(), async (req, res) => {
     try {
-        const order = await Order.findOne({ _id: req.params.id, owner: req.user._id})
+            var products = JSON.parse(req.body.products)
+            var order = await  Order.findById( req.body.id)
 
-        if (!order) {
-            return res.status(404).send()
-        }
+            order.products.forEach(async function (orderproduct){
+                var p = products.find(o => o.id === orderproduct.product._id.toString());
+                if(p)
+                    orderproduct.count = p.count
+            })
+            order.save()
+            
+            res.send("update successfully")
 
-        updates.forEach((update) => order[update] = req.body[update])
-        await order.save()
-        res.send(order)
     } catch (e) {
         res.status(400).send(e)
     }
@@ -122,8 +131,7 @@ router.patch('/orders/:id', auth, async (req, res) => {
 
 router.delete('/orders/:id', auth, async (req, res) => {
     try {
-        const order = await Order.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
-
+        const order = await Order.findOneAndDelete({ _id: req.params.id, owner: req.user.id })
         if (!order) {
             res.status(404).send()
         }

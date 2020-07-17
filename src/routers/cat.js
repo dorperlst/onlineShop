@@ -94,7 +94,7 @@ router.delete('/cats/:id',admin, async (req, res) => {
 
         var products = await Product.find({category:catName})
         products.forEach(function (product){
-            product.category=cat.parent
+            product.category = cat.parent
             product.save()
         })
         await cat.remove()

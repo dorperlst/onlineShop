@@ -1,6 +1,9 @@
 const express= require('express');
 const router= new express.Router()
 const paypal= require('paypal-rest-sdk')
+const auth = require('../middleware/auth').auth
+const Order = require('../models/order').Order
+var multer = require('multer'); 
 
 paypal.configure({
     'mode': 'sandbox', 
@@ -9,9 +12,10 @@ paypal.configure({
 });
 
 
-router.get('/create', function(req, res){
-    const total= '7.47',
-    currency= 'USD'
+router.get('/:shop/create', multer().none(), auth, async (req, res) => {
+
+    var orderStats = await Order.orderStats(req.user._id, req.params.shop )
+    currency = 'USD'
     //build PayPal payment request
     var payReq = JSON.stringify({
         'intent':'sale',
@@ -24,16 +28,16 @@ router.get('/create', function(req, res){
         },
         'transactions':[{
             'amount':{
-                'total': total,
+                'total': orderStats.total,
                 'currency': currency
             },
-            'description': 'This is the payment transaction description.'
+            'description': 'online shop test'
         }]
     });
 
     paypal.payment.create(payReq, function(error, payment){
         if(error){
-            console.error(error);
+            res.send({error});
         } else {
             //capture HATEOAS links
             var links = {};
@@ -52,19 +56,40 @@ router.get('/create', function(req, res){
             }
         }
     });
+
+
+
 });
 
 
 router.get('/process', function(req, res){
+   
+       
+
+
+
+
     var paymentId = req.query.paymentId;
     var payerId = { 'payer_id': req.query.PayerID };
 
-    paypal.payment.execute(paymentId, payerId, function(error, payment){
+    paypal.payment.execute(paymentId, payerId, async function(error, payment){
         if(error){
             console.error(error);
         } else {
             if (payment.state == 'approved'){ 
-                res.send('payment completed successfully');
+
+                if(req.user && req.user.orders  )
+                {
+                  
+                    const order = req.user.orders.find(element => element.status == 0);
+                    order.status = Order.statusEnum.PAYED;
+                    order.paymentId = paymentId;
+                    await order.save()
+
+                }
+
+
+                res.send({paymentId : paymentId, msg :'payment completed successfully'});
             } else {
                 res.send('payment not successful');
             }
