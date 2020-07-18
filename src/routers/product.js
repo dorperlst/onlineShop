@@ -219,7 +219,7 @@ async function getCategories(req, shop){
         const selectedcat = await Cat.findOne({name:name, tree: { $in: [shopName] } })
         categories.tree = selectedcat.tree
         categories.cur = selectedcat.name
-        categories.curId = selectedcat.idstatus
+        categories.curId = selectedcat.id
 
         categories.subCats = subCats
      }

@@ -54,7 +54,7 @@ body {
  
 #contact input[type="text"],
  #contact textarea {
-  /* width: 100%; */
+  width: 240px;
   border: 1px solid #ccc;
   /* background: #FFF; */
   margin: 0 0 5px 5px;
@@ -64,6 +64,8 @@ body {
 #contact select
 {
   margin-left: 5px;
+  height: 24px;
+  width: 240px;
 }
 #contact button,
  #contact img {
@@ -298,7 +300,7 @@ label {
 
 .header {
   /* display: flex; */
-  /* max-height: 140px; */
+  max-height: 140px;
   padding: 0;
   padding: 0;
   margin: 0;
@@ -494,7 +496,7 @@ a.nav, a.nav:visited {
 @media all and (min-width: 800px) {
   .main    {flex: 5 0 0;}
   .aside-1 { order: 1; } 
-  .main    {/* display: flex; */order: 2;height: 100%;/* background: #fff; */}
+  .main    {/* display: flex; */order: 2;/* height: 100%; */background: #fff;}
   .aside-2 { order: 3; }
   .footer  {order: 4;}
 }
@@ -624,10 +626,11 @@ input.contact_input:hover,input.contact_input:focus {width: 253px;outline: none;
 
 .form_row {
   display: flex;
-  /* width: 335px; */
+  width: 100%;
   clear: both;
   padding: 10px 0 10px 0;
   /* color: #a53d17; */
+  /* justify-content: left; */
   color: #666;
 }
 form >div {
@@ -637,10 +640,12 @@ form >div {
 }
 
 .contact_form {
-  width: 355px;
+  /* width: 355px; */
+  background-color: #f5f5f5;
   /* float: left; */
   display: flex;
   flex-flow: column;
+  margin-bottom: 40px;
 }
 
 label.contact {
@@ -762,4 +767,24 @@ a.prod_buy_big{
   background: url(../../images/navsep.png) center no-repeat;
   padding-left: 15px;
 }
- 
+
+.order-details {
+  /* height: 40px; */
+  display: flex;
+  /* flex-flow: wrap-reverse; */
+  /* justify-content: space-between; */
+  font-size: 14px;
+  align-items: center;
+  /* justify-content: center; */
+}
+.order-details >span {
+  width: 250px;
+  /* text-align: center; */
+}
+.order-details >span  >label {
+  /* width: 100px; */
+  /* text-align: center; */
+}
+.contact >input{
+  width: 240px;
+}

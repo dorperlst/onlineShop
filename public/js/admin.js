@@ -187,11 +187,11 @@ function editCategory(id){
 
 
 function replay(parent, contact_id){
-    var x = document.getElementById("myDIV");
+    
     var reply= parent.parentElement.parentElement.querySelectorAll(".reply")[0].value;
     var formdata = new FormData();
-    formdata.append("reply",reply);
-    formdata.append("id",contact_id);
+    formdata.append("reply", reply);
+    formdata.append("id", contact_id);
  
     fetch(  '/users/'+shopName+'/contact ',
     

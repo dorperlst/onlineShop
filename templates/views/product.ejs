@@ -18,49 +18,60 @@
           <div class="main-wrapper">
             <article class="main-center">
               <div class="center_content">
-                <div class="center_title_bar"> <%= product.name %></div>
-                <div class="prod_box_big">
+                 <div class="prod_box_big">
                   <div class="center_prod_box_big">
                     <div class="product_img_big"> 
-        
+                      <div class="thumbs flex-grid ">
+                        <%  product.images.forEach(function(image) { %>
+
+                          <a href="#"   fade=[on]">  
+                            <img onclick='changeImg("<%=image%>")' onmouseover='changeImg("<%=image%>")' 
+                              src="../../uploads/<%= image%>" alt="" border="0">
+                          </a> 
+                        <% }); %>
+                      </div>
                     <div class= "flex-container">
                       <div class="productImg flex-item">
-                      <a href="javascript:popImage('images/big_pic.jpg')" title="">
+                    
                         <% if (product.images && product.images.length > 0) { %>
                           <img id="mainImg" src="../../uploads/<%= product.images[0] %>" alt="" border="0">
                         <% }
                         else  { %>
                           <img  src="../../images/default.jpg"></img> 
                         <% } %>
-                      </a>
+                     
         
         
         
-                      <div class="thumbs flex-grid ">
-                        <%  product.images.forEach(function(image) { %>
-                          
-                        <a href="#"   fade=[on]">  <img onclick=changeImg("<%= image %>") onmouseover=changeImg("<%= image %>")  src="../../uploads/<%= image %>" alt="" border="0"></a> 
-                        <% }); %>
-                      </div>
+                     
                     </div>
         
                     </div>
                       <div class="details_big_box">
                         <div class="product_title_big"><%= product.name %></div>
-        
-                        <div class="specifications">Available:
-                        <% if (product.isavailable) { %>
-                          <span class="blue">In stock</span>
-                          <% }
-                        else  { %>
-                          <span class="red">Out of stock</span>
-                          <% } %>
-                         <br/>
-                          Description :<span class="blue">  <%= product.description %>  </span><br>
-        
+
+                        <div>
+                          <label  >  <%= product.description %>  </label><br>
+                       </div>
+                        <div class="specifications">
+                       
+                       
+                          <div class=" flex-container">
+                            <label>Available:</label>
+                            <% if (product.isavailable) { %>
+                              <label class="blue">In stock</label>
+                              <% }
+                            else  { %>
+                              <label class="red">Out of stock</label>
+                              <% } %>
+                           </div>
+
+
+                     
+                         
         
                           <%  product.attributes.forEach(function(att) { %>
-                          <div>  
+                          <div class=" flex-container">  
                             <label><%=att.name%></label>  <select>
                              <%  att.values.forEach(function(val) { %>
                              <option value="<%= val %>"><%= val %></option>
@@ -69,17 +80,6 @@
                             </select>
                           </div> 
                              <% }); %>
-        
-                             <!-- <div class=" flex-container">
-                              <label></label>
-        
-                              <label id="attValue"></label>
-                             </div> -->
-        
-        
-        
-        
-        
         
                               <%  product.imgattributes.forEach(function(att) { %>
                                 <div class=" flex-container">
@@ -95,7 +95,7 @@
                                   <div class="thumbs  flex-item">
         
                                   <a href="#"   fade=[on]">  
-                                    <img onclick=changeImg("<%=val.img%>","<%=val.value%>") onmouseover=changeImg("<%=val.img%>","<%=val.value%>") 
+                                    <img onclick='changeImg("<%=val.img%>","<%=val.value%>")' onmouseover='changeImg("<%=val.img%>","<%=val.value%>")' 
                                      src="../../uploads/<%= val.img %>" alt="" border="0"></a> 
                                   </div>
                                   <% }); %>
@@ -109,27 +109,24 @@
               
                                 </ul>
 
+                                <div class="flex-container">
 
+                                
+                                  <label class="price-label">Price:</label>
 
-                                <div class="prod_price_big"><span class="price"> <%= product.price %>$</span>
-                                </div>
+                                
+                                    <label class="price-label "><span class="price"> <%= product.price %>$</span></label>
 
+                                  <input type="number" class="span6" min="1"  placeholder="Qty.">
+                            
 
-                                <div class="counter"> 
-
-
-
-
-                                   <div class="input-append">
-                                  <button onclick = "addCount(-1)" class="btn btn-mini" type="button">-</button>
-                                  <label id="count">1</label> 
-
-                                  <button onclick = "addCount(1)" class="btn btn-mini" type="button"> + </button>
-                                  
-                                </div>
+ 
                               </div>
+                              <div class="cart_add">
+                                <a href="#" onclick = "addToOrder('<%= product._id %>')"  class="prod_buy_big icon-cart">add to cart</a>
 
-                                 <a  class="prod_buy" onclick = addToOrder('<%= product._id %>')  href="#" >add...</a> 
+                              </div>
+                                
                           </div>
                        
         

@@ -74,14 +74,14 @@
 
                 <div class="flex-container">
                   <label class="flex-item">  Attributes  </label> 
-                  <a class="flex-item" onclick="addAttributes(false)"><img src="../../images/add.png"></a>
+                  <a   onclick="addAttributes(false)"><img src="../../images/add.png"></a>
                 </div>
                 <div class="flex-container">
                   <ul class="flex-item "  id = "ulAttributes"></ul>
                 </div>
                 <div class="flex-container">
                   <label class="flex-item"> Images Attributes  </label> 
-                  <a class="flex-item" onclick="addAttributes(true)"><img src="../../images/add.png"></a>
+                  <a   onclick="addAttributes(true)"><img src="../../images/add.png"></a>
                 </div>
                 <div class="flex-container"> 
                   <ul class="flex-item " id = "imgAttributes"></ul>
@@ -134,11 +134,8 @@
           <div  class="flex-container add">
             <a onclick="addProduct()" href="#" class="prod_buy_big">Add Product</a>
             <a onclick="addCategory()" href="#" class="prod_buy_big">Add Category</a>
-
-           
-            
-            <% if( categories.curId ) {%>
-              <a onclick = editCategory("<%= categories.curId %>")  href="#" class="prod_buy_big">Edit Category</a>
+           <% if( categories.curId ) {%>
+              <a onclick = 'editCategory("<%= categories.curId %>")'  href="#" class="prod_buy_big">Edit Category</a>
 
              <% }   %>
 
@@ -150,27 +147,31 @@
           <section id="contacts" style="display: none;" class="flex-item">
             <a class="close" onclick="closeContacts()" ><img src="../../images/close.png"> </a>
             <% contacts.forEach(function(contact) { %>
-              <div class="contact_form">
+              <div class="contact_form ">
   
                       
                 <div class="form_row">
-                  <label class="contact"><strong>Name:</strong></label>
-                  <input disabled="disabled" type="text" value =<%= contact.name %> name="name" tabindex="1" placeholder="name"  class="contact_input" required autofocus>
+                  <label class="contact">Name:</label>
+                  <label class="contact"><%= contact.name %></label>
+                 
+                  <label class="contact"> Phone: </label>
+                  <label class="contact" ><%= contact.phone %></label>
+
                 </div>
-                <div class="form_row">
-                  <label class="contact"><strong>Email:</strong></label>
-                  <input disabled="disabled" tabindex="2" placeholder="email"  value ="<%= contact.email %>" name="email" type="text" class="contact_input" >
-                </div>
-                <div class="form_row">
-                  <label class="contact"><strong>Phone:</strong></label>
-                  <input  disabled="disabled" placeholder="phone" name="phone" value =<%= contact.phone %> tabindex="3" type="text" class="contact_input">
-                </div>
+            
+            
               
                 <div class="form_row">
                   <label class="contact"><strong>Message:</strong></label>
-                  <textarea disabled="disabled" placeholder="Your Message"   name="msg" tabindex="5" class="contact_textarea"><%= contact.msg %></textarea>
+                  <span><%= contact.msg %></span>
                 </div>
-                    
+
+                <div class="form_row">
+
+                <label class="contact">Email:</label>
+                <label><%= contact.email %></label>
+              </div>
+
                 <div class="form_row">
                   <label class="contact "><strong>Reply:</strong></label>
                   <textarea   placeholder="Reply..."   name="msg" tabindex="5" class="reply contact_textarea"><%= contact.reply %></textarea>

@@ -61,8 +61,9 @@ router.patch('/users/:shop/contact', multer().none(), async (req, res) => {
     try {
         const contact = await Contact.findById(req.body.id)
         contact.reply = req.body.reply
-        await contact.save()
         sendContactEmail(contact.email, contact.name, contact.reply)
+        await contact.save()
+       
         res.send({ msg: "msessage as been send successfully" })
      } catch (e) {
         console.log(e)
@@ -80,12 +81,6 @@ router.get('/contact',admin, async (req, res) => {
 
     res.render('contact', {   title: 'contact',contact:contact,shopname: req.shop.name,   username: userName})
 })
-
-
-
-    
-    
-
 
 router.post('/users', upload.single('avatar'), async function (req, res, next) {
  //console.log(req.body)
