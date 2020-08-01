@@ -34,10 +34,10 @@ const catSchema = new mongoose.Schema({
 })
 
 
-catSchema.statics.findByParent = async (parentName) => {
+catSchema.statics.findByParent = async (parentName, shop) => {
      try {
-        const cats = await Cat.find({parent:parentName})
-        return cats
+        return  await Cat.find( {parent: parentName, tree: shop} ).select({_id:1, name:1, tree:1})
+       
      } catch (e) {
      return null    }
 }

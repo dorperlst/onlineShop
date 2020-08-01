@@ -11,12 +11,7 @@ form.addEventListener('submit', (e) => {
         { method: 'POST', body: formdata})
     .then(function(res) {
         if (res.redirected)  
-{
-    //addshop("5e9f216829efa7242bd514c4")
-    window.location.href =    "/yyyy/account"
-    ;
-}
-      
+            window.location.href ="/ordersAdmin";
         else
             document.getElementById("err").textContent="Unable to login"
     })

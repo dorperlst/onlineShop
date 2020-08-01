@@ -5,10 +5,15 @@
         <div class="title_box">Login</div>
         <form id= "loginForm" enctype="multipart/form-data" action="/"  method="post">
             <label>Email</label>
-             <input type="text" name="email"  value="dorperlst@gmail.com" id="email"  class="field" placeholder="email.." title="email...">
+            <!-- <label class="required"></label> -->
+             <input type="text" name="email"  tabindex="1"  value="" id="email"  class="field" placeholder="email.." required title="email...">
             <label>password</label>
-            <input type="text"  value = "onlinepass"  name="password" id="password"  class="field" placeholder="password.." title="password...">
+            <!-- <label class="required"></label> -->
+            <input type="text"  value = "onlinepass" required name="password" id="password"  class="field" placeholder="password.."    title="password...">
             <div class="submit"> <input class="prod_buy" type="submit" value="Submit"> </div>
+            <div class="flex-container">
+              <span id="login_msg"></span>
+            </div>
         </form>
         <hr>
         <script src="/js/productLogin.js"></script>

@@ -91,7 +91,7 @@ orderSchema.statics.orderStats = async (owner, shop) => {
 
 const statusEnum = {
     OPEN: 0,
-    PENDING: 1,
+    PAID: 1,
     CLOSE: 2
 }
  

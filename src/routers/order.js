@@ -6,6 +6,8 @@ const Order = OrderObj.Order
 const OrderProduct = OrderObj.OrderProduct
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
+const admin = authObj.admin
+
 const router = new express.Router()
 var multer = require('multer'); 
 
@@ -66,17 +68,7 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
 // GET /orders?limit=10&skip=20
 // GET /orders?sortBy=createdAt:desc
 router.get('/orders', auth, async (req, res) => {
-    // const match = {}
-    // const sort = {}
-
-    // if (req.query.completed) {
-    //     match.completed = req.query.completed === 'true'
-    // }
-
-    // if (req.query.sortBy) {
-    //     const parts = req.query.sortBy.split(':')
-    //     sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
-    // }
+  
 
     try {
         await req.user.populate({
@@ -93,6 +85,7 @@ router.get('/orders', auth, async (req, res) => {
     }
 })
 
+ 
 
 router.get('/orders/:id', auth, async (req, res) => {
     const _id = req.params.id
@@ -110,26 +103,99 @@ router.get('/orders/:id', auth, async (req, res) => {
     }
 })
 
-router.patch('/orders', auth, multer().none(), async (req, res) => {
+router.get('/ordersAdmin',admin, async (req, res) => {
+    var params = [ {shop: req.shop.name }]
+    var limit = 10 
+    var sort = { "owner":-1,"timestamps": -1,"completed":-1 }
+    const pageNum =  req.query.pageNum? parseInt(req.query.pageNum) : 0
+    const skip = pageNum * limit  
+ 
+    if (req.query.status)  
+        params.push( { status: req.query.status } )
+      
+    const match = { $and: params } 
+   
     try {
-            var products = JSON.parse(req.body.products)
-            var order = await  Order.findById( req.body.id)
+     const orders = await Order.aggregate([
+        { $match : match } ,
 
-            order.products.forEach(async function (orderproduct){
-                var p = products.find(o => o.id === orderproduct.product._id.toString());
-                if(p)
-                    orderproduct.count = p.count
-            })
-            order.save()
-            
-            res.send("update successfully")
+        {"$unwind":"$products"},
+        {
+           $lookup: {
+            from: "products",
+            localField: 'products.product',
+            foreignField: "_id", 
+                as: "items"
+           }
+        }  
+        ,
+        {
+            $addFields: { "items.count": "$products.count" }
+          },
+          {
+            "$unwind": "$items"
+        }, 
+  {
+      "$group": {
+          "_id": {"id":"$_id","status":"$status","status":"$status","createdAt":"$createdAt","updatedAt":"$createdAt"},
+
+          "products": {
+              "$push": {
+                   "name": "$items.name",
+                  "count": "$items.count",
+                  "price": "$items.price"
+              }
+          }
+      }
+  },
+    
+  { $sort: sort }
+      ])
+    res.render('orders', { title: 'orders', orders:orders, shopname: req.shop.name});
+
+      
+        // res.send(orders)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send()
+    }
+})
+
+router.patch('/orderStatus', admin, multer().none(), async (req, res) => {
+    try {
+        var order = await  Order.findById( req.body.id)
+        if(order.shop!=req.shop.name)
+            return
+        order.status = req.body.status
+        order.save()
+        
+        res.send(order)
 
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-router.delete('/orders/:id', auth, async (req, res) => {
+router.patch('/orders', auth, multer().none(), async (req, res) => {
+    try {
+        var products = JSON.parse(req.body.products)
+        var order = await  Order.findById( req.body.id)
+
+        order.products.forEach(async function (orderproduct){
+            var p = products.find(o => o.id === orderproduct.product._id.toString());
+            if(p)
+                orderproduct.count = p.count
+        })
+        order.save()
+        
+        res.send("update successfully")
+
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+router.delete('/orders/:id', admin, async (req, res) => {
     try {
         const order = await Order.findOneAndDelete({ _id: req.params.id, owner: req.user.id })
         if (!order) {

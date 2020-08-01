@@ -39,18 +39,27 @@ router.get('/users', async (req, res) => {
     res.send({ user })
     
 })
- 
+router.delete('/contact/:shop/', multer().none(), auth, async (req, res) => {
+    try {
+       
+        var contact = await Contact.findByIdAndDelete(req.body.id)
+        
+        res.send(contact)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
 router.post('/users/:shop/contact', multer().none(), async (req, res) => {
  
-    
+     
 
     try {
         const contact = new Contact (req.body)
         contact.shop = req.params.shop
         await contact.save()
         
-        sendContactEmail(req.body.email, req.body.name,"Your msg is recived")
-        res.send({ msg: "msessage as been send successfully" })
+      //  sendContactEmail(req.body.email, req.body.name,"Your msg is recived")
+        res.send({ msg: "msessage send successfully" })
      } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -102,8 +111,10 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 router.post('/users/login', multer().none(), async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        
-        redirectSession(req, res, user, req.body.currentUrl)
+        if(!user)
+            res.send('Unable to login') 
+        else
+            redirectSession(req, res, user, req.body.currentUrl)
     } catch (e) {
         res.status(400).send('Unable to login')
     }

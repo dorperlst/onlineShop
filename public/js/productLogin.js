@@ -12,6 +12,8 @@ form.addEventListener('submit', (e) => {
         .then((res) => { 
             if (res.redirected)  
                 window.location.href = res.url;
+            else
+                document.getElementById("login_msg").innerHTML= 'Unable to login'
         }
     )
 })

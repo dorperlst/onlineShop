@@ -1,15 +1,10 @@
-
-
+<header>
+    
+  <!DOCTYPE html>
+  <html>
+   
+      <%- include('../partials/head.ejs') %>
  
-
-   <head>
-    
-    <!DOCTYPE html>
-    
-    <html>
-        <link rel="stylesheet" href="/css/test.css">
-        <link rel="icon" href="/img/weather.png">
-    </head>
     <body>
       <div class="wrapper static_wrapper">
         <%- include('../partials/header.ejs') %>
@@ -48,8 +43,9 @@
         
                     </div>
                       <div class="details_big_box">
-                        <div class="product_title_big"><%= product.name %></div>
-
+                        <div class="product_title_big"><%= product.name %>
+                         </div>
+                        
                         <div>
                           <label  >  <%= product.description %>  </label><br>
                        </div>
@@ -110,23 +106,17 @@
                                 </ul>
 
                                 <div class="flex-container">
-
-                                
                                   <label class="price-label">Price:</label>
-
-                                
-                                    <label class="price-label "><span class="price"> <%= product.price %>$</span></label>
-
-                                  <input type="number" class="span6" min="1"  placeholder="Qty.">
-                            
-
- 
-                              </div>
+                                  <label class="price-label "><span class="price"> <%= product.price %>$</span></label>
+                                  <input id="count"  type="number" class="product-counter" min="1"  placeholder="Qty.">
+                                  <label class="required"></label>
+                                </div>
                               <div class="cart_add">
-                                <a href="#" onclick = "addToOrder('<%= product._id %>')"  class="prod_buy_big icon-cart">add to cart</a>
+                                <input href="#" type="button" onclick = "addToOrder('<%= product._id %>')"  class="btn-cart"> 
+                              
 
                               </div>
-                                
+                             
                           </div>
                        
         

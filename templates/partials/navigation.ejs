@@ -1,0 +1,25 @@
+<nav > 
+    <div class="crumb_navigation"> Navigation:
+    
+   
+        <a href="/<%= shopname %>/view" class="navmap"> <span>Home</span>   </a>
+        <% if (tree.length >0){ %>
+            <% for( var i=1; i <tree.length -1; i++) { %>
+            <a href="/<%= shopname %>/view?category=<%= tree[i] %>" class="navmap">
+                <span><%= tree[i] %></span> 
+                </a>
+            <% } %>
+        
+            <% var cur = tree[tree.length -1]  %>
+
+            
+        <a href="/<%= shopname %>/view?category=<%=cur%>" class="navmap"> <span class="current" ><%= cur %></span>   </a>
+
+       <% } %>
+
+
+      
+
+    </div>
+     
+  </nav>

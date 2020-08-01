@@ -1,0 +1,103 @@
+<header>
+    
+  <!DOCTYPE html>
+  <html>
+   
+      <%- include('../partials/head.ejs') %>
+  
+  <body>
+    <div class="wrapper static_wrapper">
+      <article class="main">
+        <div class="main-wrapper">
+          <article class="main-center">
+
+            <% if(orders.length > 0) { %>
+            <div class="center_content_fix">
+              <div class="center_title_bar">Orders</div>
+              <div class="order-container">
+
+                  <% orders.forEach(function(order) { %>
+                    <% var line='even-order' %> 
+                    <div class="order-details">
+                      <span>Status :
+                      <%var select=['','','']; select[order._id.status]='selected';  %>
+                      <select  class="" name="status" >
+                        <option  <%=select[0]%> value="0">Open</option>
+                        <option  <%=select[1]%> value="1">Paid</option>
+                        <option  <%=select[2]%> value="2">Closed</option>
+
+                      </select>
+                    </span>
+                      <%  var create = order._id.createdAt.getDate() + "-" + (order._id.createdAt.getMonth() + 1) + "-" + order._id.createdAt.getFullYear()   %>
+                      <%  var updated = order._id.updatedAt.getDate() + "-" + (order._id.updatedAt.getMonth() + 1) + "-" + order._id.updatedAt.getFullYear()   %>
+                      <span>    Create:  <%= create %> </span>
+                      <span>    Updated:  <%= updated %> </span>
+                    </div>
+                    <div class="order-details">
+                      <h3><strong>Order Summary</strong></h3>
+                    </div>
+                    <div class="order-details">
+                      <span>Item </span><span>Price </span>  <span>Quantity</span>     <span>Total</span>      
+                    </div>
+                    <% order.products.forEach(function(product) { %> 
+                      <div class=" <%= line %> order-details">
+                        <span> <%= product.name %> </span><span> <label class="calc"><%= product.price %> </label></span>  
+                        <span  > 
+                        
+                            <label class="calc"><%= product.count %></label>  
+                          
+                          </span>    
+                          <span class="calc" > <%= product.count * product.price %></span>
+                          
+                          
+                        <%  line =line=='odd'? 'even-order' :'odd' %> 
+                      </div>
+                    <% }); %>
+                    
+                    <div class="order-details">
+                      
+
+                      <input class="prod_details" onclick="changeStatus(this,'<%=order._id.id %>')" type="button" value="Update">
+                      
+                      <input class="prod_details_red" onclick="deleteOrder(this,'<%=order._id.id %>')" type="button" value="Delete">
+                    
+                  
+
+                      <label></label>       
+                    </div>
+                      
+
+                  <% }); %>
+                  
+              </div>
+            </div>
+            <% } %>
+
+
+        
+        </article>
+        
+        </div>
+
+
+    </article> 
+   
+
+<script src="/js/orders_admin.js"></script>
+
+      <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
+    </div>
+    </body>
+  </html>
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+   

@@ -16,6 +16,8 @@ var ulimages = document.getElementById("images");
 var uldetails = document.getElementById("details"); 
 var formAction='' 
 var mainImg = undefined
+var currentAttributeDiv = undefined
+var isAttImg= false
 
 function closePopUp(){
     resetForm()
@@ -24,19 +26,16 @@ function closePopUp(){
 }
 
 function resetForm(){
-    mainImg=undefined
+    mainImg = undefined
     form.reset();
     uldetails.innerHTML = '';
     ulAttributes.innerHTML = '';
     ulImgAttributes.innerHTML = '';
-
     ulimages.innerHTML = '';
     ultags.innerHTML = '';
     fileDiv.innerHTML = '';
     
 }
-
- 
 
 function addProduct(){
     formProductDisplay("products","Add Product")
@@ -45,29 +44,25 @@ function addProduct(){
 
 function deleteProduct(id){
 
-    var r = confirm("Are you sure you want to delete this product!");
-    if (r == true) {
-        var formdata = new FormData();
-
-
-        formdata.append("currentUrl", window.location.href)
+    var confirm = confirm("Are you sure you want to delete this product!");
+    if (confirm != true) 
+        return
+    var formdata = new FormData();
+    formdata.append("currentUrl", window.location.href)
 //todo change redirect 
-        fetch('/products/'+id,
-            { method: 'delete', body: formdata})
-            then(function(res) {
-                if (res.redirected)  
-                {
-                    window.location.href = res.url;
-                }
-              
-                else
-                    document.getElementById("err").textContent="Action Fail"
-            })
-    } 
+    fetch('/products/'+id,
+    { method: 'delete', body: formdata})
+    then(function(res) {
+        if (res.redirected)  
+        {
+            window.location.href = res.url;
+        }
+        
+        else
+            document.getElementById("err").textContent="Action Fail"
+    })
 
-    
 }
-
 
 function editProduct(id){
     formProductDisplay("products", "Edit Product")
@@ -125,10 +120,8 @@ function editProduct(id){
 }
 
 function formProductDisplay(action, title){
-    document.getElementById("action").innerHTML=title;
-
+    document.getElementById("action").innerHTML = title;
     formAction = action
-
     resetForm()
     var productDisplay = action=="products"? "block" :"none"
     document.getElementsByClassName("product")[0].style.display = productDisplay
@@ -138,20 +131,21 @@ function formProductDisplay(action, title){
 
 function deleteCategory(id){
 
-    var conf = confirm("Are you sure you want to delete this category!");
-    if (conf == true) {
-        var formdata = new FormData();
-        formdata.append("currentUrl", window.location.href)
+    var confirm = confirm("Are you sure you want to delete this category!");
+    if (confirm != true) 
+        return
+    var formdata = new FormData();
+    formdata.append("currentUrl", window.location.href)
 
-        fetch('/cats/'+id,
-            { method: 'delete', body: formdata})
-            then(function(res) {
-                if (res.redirected)  
-                    window.location.href = res.url;
-                else
-                    document.getElementById("err").textContent="Action Fail"
-            })
-    } 
+    fetch('/cats/'+id,
+    { method: 'delete', body: formdata})
+    then(function(res) {
+        if (res.redirected)  
+            window.location.href = res.url;
+        else
+            document.getElementById("err").textContent="Action Fail"
+    })
+     
 }
 
 function addCategory(id){
@@ -185,10 +179,9 @@ function editCategory(id){
     });
 }
 
-
 function replay(parent, contact_id){
     
-    var reply= parent.parentElement.parentElement.querySelectorAll(".reply")[0].value;
+    var reply = parent.parentElement.parentElement.querySelectorAll(".reply")[0].value;
     var formdata = new FormData();
     formdata.append("reply", reply);
     formdata.append("id", contact_id);
@@ -202,12 +195,27 @@ function replay(parent, contact_id){
     // })
 }
 
-
 function createImgAttListItem(parent, name,  img){
     const imgVal = img ? img : ''
     const nameVal = name ? name :''
-   
     parent.parentElement.getElementsByTagName("ul")[0].appendChild(createImgListItem(nameVal, imgVal));
+}
+
+function deleteContact(parent, id){
+    var confirm = confirm("Are you sure you want to delete this contact!");
+    if (confirm != true) 
+        return
+ 
+    var formdata = new FormData();
+    formdata.append( 'id', id)
+    fetch('/contact/'+shopName+'/',
+    { method: 'delete', body: formdata})
+    .then(function(res) {
+        if (res.status===200)  
+            parent.parentElement.parentElement.remove()
+        else
+            document.getElementById("err").textContent="Action Fail"
+    })
 }
 
 function createAttListItem(parent, name){
@@ -279,10 +287,6 @@ function addTags(name = ''){
     ultags.appendChild( createListItem(name));
 }
 
-var currentAttributeDiv = undefined
-var isAttImg= false
-
-
 function selectAttImg(element){
     currentAttributeDiv = element.parentElement
     imagesDiv.style.display = "grid"
@@ -327,6 +331,7 @@ function showImages(){
     imagesDiv.style.display="grid"
     form.style.display="none"
 }
+
 function attrListItem(val){
 
     var innerHTML ="<li class= flex-item nested><div >  <input type='text' value = '"+name+"' placeholder='value' required> "
@@ -335,6 +340,7 @@ function attrListItem(val){
     innerHTML  += ' </div></li>'
     return innerHTML 
 }
+
 function createAtrributeListItem(name){
     var li = document.createElement("li");
     var innerHTML =  '<div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
@@ -401,12 +407,12 @@ function createListItem(name, img){
     return li
 }
 
-
 function removeimgli(parentNode, name){
     removeli(parentNode);
     if (mainImg==name)
          mainImg=undefined;
 }
+
 function removeli(parentNode){
     var parent = parentNode.parentNode.parentNode
     parent.removeChild(parentNode.parentNode)
@@ -461,21 +467,19 @@ form.addEventListener('submit', (e) => {
         { method: method, body: formdata})
 
 
-        .then(function(res) {
-            if (res.redirected)  
-            {
-                window.location.href = res.url;
-            }
-          
-            else
-                document.getElementById("err").textContent="Action Fail"
-        })
-    
+    .then(function(res) {
+        if (res.redirected)  
+        {
+            window.location.href = res.url;
+        }
+        
+        else
+            document.getElementById("err").textContent="Action Fail"
     })
+
+})
  
-
 function toAttJsonArray(ul, isImg) {
-
     var array =[]
     for (var i = 0; i < ul.children.length; i++ ) {
         var attribute = {}
@@ -504,7 +508,6 @@ function toAttJsonArray(ul, isImg) {
 }
 
 function toJsonArray(ul) {
-
     var array =[]
     for (var i = 0; i < ul.children.length; i++ ) {
         var input = ul.children[ i ].getElementsByTagName("input");

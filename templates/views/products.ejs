@@ -15,76 +15,24 @@
        
         <article class="main">
           <div class="main-wrapper">
-            <article class="main-center">
-              <div class="center_title_bar"> Products</div>
+            <article id="secProducts" class="main-center">
+              <%- include('../partials/products.ejs') %>
 
-              <section id="secProducts" class="grid-wrapper">
-                <% products.products.forEach(function(product) { %>
-                  <div class="product-card">
-                    <div class="product-image">   
-                <% if ( product.mainimage) { %>
-                      <img alt="" border="0"  src="../../uploads/<%= product.mainimage %>"></img> 
-      
-                <% } else  { %>
-                  <img  src="../../images/default.jpg"></img> 
-                  <% }  %>
-                  </div>
-                
-                  <div class="product-info">
-                      <label><%= product.name %> </label>
-                      <label><%= product.price %>$</label>
-                      <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
-                  </div>
-                </div>
-      
-              <% }); %>
-
-              
-              </section>  
-              <div class="center">
-                <% if ( parseInt(products.pager) > 1) { %>   
-                  <ul class="pagination"> 
-                    <li><a href=" ">«</a></li>
-
-                    <% for (i=0;i< parseInt(products.pager) ;i++) { %>
-                      <li><a class="active" href=" "><%= i+1 %></a></li>
-                    <% }  %>
-                    <li><a href=" ">»</a></li>
-                  </ul>
-                <% }  %>
-                <label>showing  <%= products.products.length %>   out of   <%= products.totalRows %></label> 
-
-              </div>
-              <div class="center_title_bar"> Recommended</div>
-
-              <section id="secPromotion" class="grid-wrapper">
-                <% products.promotion.forEach(function(product) { %>
-                  <div class="product-card">
-                    <div class="product-image">   
-                <% if ( product.images[0]) { %>
-                      <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
-      
-                <% } else  { %>
-                  <img  src="../../images/default.jpg"></img> 
-                  <% }  %>
-                  </div>
-                
-                  <div class="product-info">
-                      <label><%= product.name %> </label>
-                      <label><%= product.price %>$</label>
-                      <a href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
-                  </div>
-                </div>
-      
-              <% }); %>
+               
+            
 
 
-              </section>  
+             
     
             
               
             
-              </article>  <%- include('../partials/aside.ejs') %>
+              </article> 
+              <div > 
+                <%- include('../partials/aside.ejs') %>
+
+                
+              </div>
 
                 <%- include('../partials/login_aside.ejs') %>
         </div>
