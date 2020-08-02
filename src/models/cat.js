@@ -17,7 +17,7 @@ const catSchema = new mongoose.Schema({
     parent: {
         type: String,
         required: false,
-        default : undefined,
+        default : null,
     },
     tree:[{
         type: String,
@@ -36,7 +36,7 @@ const catSchema = new mongoose.Schema({
 
 catSchema.statics.findByParent = async (parentName, shop) => {
      try {
-        return  await Cat.find( {parent: parentName, tree: shop} ).select({_id:1, name:1, tree:1})
+        return  await Cat.find( {parent: parentName, tree: shop} ).select({_id:1, name:1})
        
      } catch (e) {
      return null    }

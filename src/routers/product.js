@@ -134,6 +134,73 @@ router.get('/:shop/products', async (req, res) => {
     }
 })
 
+
+router.get('/:shop/categories', async (req, res) => {
+    const shop = req.params.shop;
+    var categories = [] ;
+    try {
+       
+        
+        var name = "";
+        var tree = []
+
+       
+        if (req.query.category && req.query.category != 'All') 
+        {
+            name = req.query.category
+            const selectedcat = await Cat.findOne({name:name, tree: { $in: [shop] } })
+            tree = selectedcat.tree
+        }
+        
+
+        const params = [{parent: name},{parent: null}, {name: { $in: tree } }  ]
+
+        const match = { $or: params } 
+        categories =  await Cat.aggregate( [
+                    { $match : match } ,
+                    {   
+                        $project: 
+                        {
+                            name: 1,
+                           parent:1,
+                            cat: {
+                                $cond: { if: { $eq: [ "$parent", null ] }, then: "cat", else: "sub" }
+                            }
+                        }
+                    },
+                    {
+                        $group :
+                         {
+                            _id : "$cat",
+                            entries:{
+                                $push:{
+                                    name:"$name",
+                                    class: {
+                                        $cond: { if: { $eq: [ "$parent", name ] }, then: "sub", else: "tree" }
+                                    }                
+                                }
+                            }
+                        }
+                    },
+                    {$sort:{_id:1}}
+            ])
+
+             
+        res.send({ categories })
+         
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e)
+    }
+})
+
+
+
+
+
+
+
+
 //Todo
 router.get('/admin', admin, async (req, res) => {
     var userName = req.session.name  
@@ -214,23 +281,57 @@ async function getProducts(query, shop,promo=false)
 
 async function getCategories(req, shop){
 
-    var categories = {}
-    if (req.query.category &&  req.query.category != 'All') 
-    {
-        var name=req.query.category
-        const subCats = await Cat.find( {parent: name } )
+    const categories = {}
+    
+    var name = "";
+    var tree = []
 
+   
+    if (req.query.category && req.query.category != 'All') 
+    {
+        name = req.query.category
         const selectedcat = await Cat.findOne({name:name, tree: { $in: [shop] } })
-        categories.tree = selectedcat.tree
+        tree = selectedcat.tree
         categories.cur = selectedcat.name
         categories.curId = selectedcat.id
+        categories.tree = selectedcat.tree;
 
-        categories.subCats = subCats
-     }
+    }
     else
-       categories.tree = [req.params.shop];
-   
-    const cats = await Cat.find({parent:null, tree: { $in: [shop] }} )
+        categories.tree = [req.params.shop];
+
+    const params = [{parent: name},{parent: null}, {name: { $in: tree } }  ]
+
+    const match = { $or: params } 
+    const cats =  await Cat.aggregate( [
+        { $match : match } ,
+        {   
+            $project: 
+            {
+                name: 1,
+                parent:1,
+                cat: {
+                    $cond: { if: { $eq: [ "$parent", null ] }, then: "cat", else: "sub" }
+                }
+            }
+        },
+        {
+            $group :
+                {
+                _id : "$cat",
+                entries:{
+                    $push:{
+                        name:"$name",
+                        class: {
+                            $cond: { if: { $eq: [ "$parent", name ] }, then: "sub", else: "tree" }
+                        }                
+                    }
+                }
+            }
+        },
+        {$sort:{_id:1}}
+    ])
+
     categories.categories = cats;
     return categories;
 }
@@ -287,6 +388,9 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
         details: JSON.parse(req.body.details),
         images : req.files.map(x => x.filename)
     })
+    if((!req.body.mainimage || req.body.mainimage == "") && product.images.length >0)
+        product.mainimage = product.images[0]
+
     const cat = await Cat.findOne({ _id: req.body.category}) 
     product.category = cat.name
     product.tree = cat.tree

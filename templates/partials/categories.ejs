@@ -1,43 +1,40 @@
-<div class="left_content">
- 
+
+
+
+
+<aside class="aside aside-1">
   <div class="title_box">Categories</div>
-  <% var curCategory="";   %>
+  <% const curCategory= categories.tree.length > 1 ? categories.tree[1] :"";   %>
 
-  <% if( categories.tree.length > 1 ) {%>
-      <%  curCategory = categories.tree[1] %>
-    <% }   %>
+    <ul class="left_menu" id ="ulcategories">
+      <% var line='odd'; %> 
+      <% categories.categories[0].entries.forEach(function(category) { %> 
+        <% var selected= category.name ==  categories.cur? "selected" :""%> 
 
-  <ul class="left_menu" id ="ulcategories">
-    <% var line='odd' %> 
-    <% categories.categories.forEach(function(category) { %> 
-    
-        <% if(curCategory ==  category.name) { %> 
-          <li class="cur <%=line%> "  >  <a href="/admin?category=<%= category.name %>"  > <%= category.name %> </a>
+          <li class="<%= line %> <%= selected %>    "  >  <a href="/admin?category=<%= category.name %>"  > <%= category.name %> </a>
           </li>
-          <%  line =line=='odd'? 'even' :'odd' %> 
+          <% if(curCategory ==  category.name && categories.categories.length > 1){ %> 
 
-          
-            <ul class="left_menu">
-                <% for(i=2; i < categories.tree.length ; i++) { %> 
-                  <li class="<%= line %>"  >  <a href="/admin?category=<%= categories.tree[i]  %>"  > <%=  categories.tree[i] %> </a>
-                  </li>
-                <% }   %>
-            </ul> 
-            <% categories.subCats.forEach(function(sub) { %> 
-                <li class="<%= line %>"  >  <a href="/admin?category=<%= sub.name %>"  > <%=  sub.name %> </a>
+            <% categories.categories[1].entries.forEach(function(sub) { %> 
+              <%  selected= sub.name == categories .cur? "selected" :""%> 
+
+                <li class="<%= line %> <%= selected %> <%= sub.class %>   nested">  <a href="/admin?category=<%= sub.name  %>"  > <%=  sub.name %> </a>
                 </li>
-            <% }) ; %>
-        <%  }else{ %>
-          <li class="<%= line %>"  >  <a href="/admin?category=<%= category.name %>"  > <%= category.name %> </a>
-    </li>
-          <%  } %>
-
-            <%  line =line=='odd'? 'even' :'odd' %> 
-
-    <% }); %>
+            <% }); %>
+          <% }   %>
+          <%  line =line=='odd'? 'even' :'odd' %> 
+  
+       <% }); %>
   </ul>
      
 
 
+
+</aside>
+
+
+
+
+
+
  
-</div>  

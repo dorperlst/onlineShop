@@ -565,19 +565,18 @@ ul.left_menu li {
   list-style: none;
   text-align: left;
 }
-
-ul.left_menu li.even div,
+ 
   ul.left_menu li.even a{
-  font-size: 14px;
-  width:166px;
-  height: 25px;
-  /* display:block; */
-  border-bottom:1px #e4e4e4 dashed;
-  background-color:#f0f4f5;
-  text-decoration:none;
-  color:#504b4b;
-  padding:0 0 0 14px;
-  line-height:25px;
+    font-size: 14px;
+    width: 166px;
+    height: 25px;
+    display: block;
+    border-bottom: 1px #e4e4e4 dashed;
+    background-color: #f0f4f5;
+    text-decoration: none;
+    color: #504b4b;
+    padding: 10 0 10 14px;
+    line-height: 25px;
   }
 
  li.cur a{
@@ -590,16 +589,22 @@ ul.left_menu li.even div,
   }
 
 
+  ul.left_menu li.even,
+
+  ul.left_menu li.odd{
+    /* height: 45px; */
+  }
+
   ul.left_menu li.odd a{
     font-size: 14px;
-    width:166px;
-    height:25px;
-    /* display:block; */
-    border-bottom:1px #e4e4e4 dashed;
-    text-decoration:none;
-    color:#504b4b;
-    padding:0 0 0 14px;
-    line-height:25px;
+    width: 166px;
+    height: 25px;
+    /* display: block; */
+    border-bottom: 1px #e4e4e4 dashed;
+    text-decoration: none;
+    color: #504b4b;
+    padding: 10 0 10 14px;
+    line-height: 25px;
     }
 
     .mainImg{

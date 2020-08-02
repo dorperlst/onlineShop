@@ -44,8 +44,8 @@ function addProduct(){
 
 function deleteProduct(id){
 
-    var confirm = confirm("Are you sure you want to delete this product!");
-    if (confirm != true) 
+    var conf = confirm("Are you sure you want to delete this product!");
+    if (conf != true) 
         return
     var formdata = new FormData();
     formdata.append("currentUrl", window.location.href)
@@ -131,8 +131,8 @@ function formProductDisplay(action, title){
 
 function deleteCategory(id){
 
-    var confirm = confirm("Are you sure you want to delete this category!");
-    if (confirm != true) 
+    var conf = confirm("Are you sure you want to delete this category!");
+    if (conf != true) 
         return
     var formdata = new FormData();
     formdata.append("currentUrl", window.location.href)
@@ -202,8 +202,8 @@ function createImgAttListItem(parent, name,  img){
 }
 
 function deleteContact(parent, id){
-    var confirm = confirm("Are you sure you want to delete this contact!");
-    if (confirm != true) 
+    var conf = confirm("Are you sure you want to delete this contact!");
+    if (conf != true) 
         return
  
     var formdata = new FormData();

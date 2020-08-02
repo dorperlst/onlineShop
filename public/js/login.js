@@ -11,7 +11,7 @@ form.addEventListener('submit', (e) => {
         { method: 'POST', body: formdata})
     .then(function(res) {
         if (res.redirected)  
-            window.location.href ="/ordersAdmin";
+            window.location.href ="/admin";
         else
             document.getElementById("err").textContent="Unable to login"
     })

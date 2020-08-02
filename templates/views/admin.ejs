@@ -133,6 +133,8 @@
               <a onclick="addCategory()" href="#" class="prod_buy_big">Add Category</a>
               <% if( categories.curId ) {%>
                 <a onclick = 'editCategory("<%= categories.curId %>")'  href="#" class="prod_buy_big">Edit Category</a>
+                <a onclick = 'deleteCategory("<%= categories.curId %>")'  href="#" class="prod_buy_big">Delete Category</a>
+
               <% }   %>
               <a onclick = "showContacts()" href="#" class="prod_buy_big">Contacts</a>
   
@@ -170,11 +172,6 @@
 
             </section>
 
-
-           
-
-
-
             <section id="productsDiv" class="grid-wrapper">
               <% products.products.forEach(function(product) { %>
                 <div class="product-card">
@@ -197,11 +194,9 @@
           </div>
         
         </article>
-        <aside class="aside aside-1">
-          <div class="left_content">
+        
             <%- include('../partials/categories.ejs') %>
-          </div>
-        </aside>
+        
        
         <footer class="footer">Footer</footer>
       </div>
