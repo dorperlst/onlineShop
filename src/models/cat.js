@@ -42,6 +42,61 @@ catSchema.statics.findByParent = async (parentName, shop) => {
      return null    }
 }
 
+catSchema.statics.getCategoriesTree = async (category, shop) => {
+        const categories = {}
+        var name = "";
+        var tree = []
+    try {
+  
+    
+        if (category && category != 'All') 
+        {
+            name = category
+            const selectedCat = await Cat.findOne({name:name, tree: { $in: [shop] } })
+            tree = selectedCat.tree
+            categories.cur = selectedCat.name
+            categories.curId = selectedCat.id
+            categories.tree = selectedCat.tree;
+        }
+        else
+            categories.tree = [shop];
+    
+        const params = [{parent: name},{parent: null}, {name: { $in: tree } }  ]
+        const match = { $or: params } 
+        const cats =  await Cat.aggregate( [
+            { $match : match } ,
+            {   
+                $project: 
+                {
+                    name: 1,
+                    parent:1,
+                    cat: {
+                        $cond: { if: { $eq: [ "$parent", null ] }, then: "cat", else: "sub" }
+                    }
+                }
+            },
+            {
+                $group :
+                    {
+                    _id : "$cat",
+                    entries:{
+                        $push:{
+                            name:"$name",
+                            class: {
+                                $cond: { if: { $eq: [ "$parent", name ] }, then: "sub", else: "tree" }
+                            }                
+                        }
+                    }
+                }
+            },
+            {$sort:{_id:1}}
+        ])
+    
+        categories.categories = cats;
+        return categories;      
+    } catch (e) {
+    return null    }
+}
 
 
 catSchema.pre('remove', async function (next) {

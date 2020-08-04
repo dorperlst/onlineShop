@@ -55,12 +55,8 @@ orderSchema.statics.userOrder = async (owner) => {
 }
 
 
-orderSchema.statics.findProductById = async (orderId, products) => {
- 
-  
-}
-
 orderSchema.statics.orderStats = async (owner, shop) => {
+    
     var params = [ {shop: shop }]
     params.push(  { owner: owner } )
     params.push(  { status: statusEnum.OPEN } )

@@ -1,5 +1,9 @@
 
 const mongoose = require('mongoose')
+const Cat = require('../models/cat')
+
+const limit = 15
+const promtionLimit = 5
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -118,6 +122,63 @@ productSchema.pre('remove', async function (next) {
 
     next()
 })
+
+productSchema.statics.getProducts = async (query, shop, promo=false) => {
+
+    var params = [ {shop: shop }]
+
+    var sort = { "timestamps": -1 }
+    const pageNum =  query.pageNum? parseInt(query.pageNum) : 0
+    const skip = pageNum * limit  
+ 
+    if (query.category &&  query.category != 'All') 
+    {
+        var catName= query.category
+        var cats =  await Cat.find( { tree: { $all: catName } },{_id:0,name:1}).select({_id:0,name:1}); //,
+        var prodCat=[]
+        cats.forEach((cat) => prodCat.push(cat.name))
+        params.push( { category: { $in: prodCat } } )
+    }
+
+    if (query.name)  
+        params.push(  { name: query.name  } )
+    if (query.pricefrom)  
+        params.push(  { price:{"$gte": query.pricefrom}  } )
+    if (query.priceto)  
+        params.push(  { price:{"$lte": query.priceto}  } )
+    if (query.tag)  
+            params.push( {  "tags":query.tag } )
+    
+    if (query.attributes)  
+    { 
+        var att = JSON.parse(query.attributes)
+        for(i=0; i <att.length; i++)
+            params.push( {  "attributes.name":att[i][0], "attributes.value": att[i][1] } )
+    }
+  
+    const match = { $and: params } 
+    if (query.sortBy) {
+        const parts = query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
+    const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
+    const totalRows = await  Product.find(match).count();
+    
+    const promotionParams=[ {shop: shop },{  "promotion":true }] 
+    const promotionMatch = { $and: promotionParams } 
+    var promotion ={}
+    if(promo)
+          promotion =  await Product.find(promotionMatch).sort(sort).limit( promtionLimit)
+    var pager =  parseInt(totalRows / limit);
+    if(totalRows % limit >0)
+        pager +=1; 
+
+    return {products, totalRows, pager, promotion}
+}
+
+
+
 
 const Product = mongoose.model('Product', productSchema)
 

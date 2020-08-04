@@ -1,8 +1,13 @@
 const express = require('express')
 const multer = require('multer')
 const sharp = require('sharp')
+
+const Product = require('../models/product')
+const Order = require('../models/order').Order
+
 const User = require('../models/user')
 const Contact = require('../models/contact')
+const Cat = require('../models/cat')
 
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
@@ -41,18 +46,47 @@ router.get('/users', async (req, res) => {
 })
 router.delete('/contact/:shop/', multer().none(), auth, async (req, res) => {
     try {
-       
         var contact = await Contact.findByIdAndDelete(req.body.id)
-        
         res.send(contact)
     } catch (e) {
         res.status(500).send()
     }
 })
-router.post('/users/:shop/contact', multer().none(), async (req, res) => {
- 
-     
 
+async function orderStats(token, shop)
+{
+    if(!token)
+        return {total:0,totalItems:0}
+
+    const jwt = require('jsonwebtoken')
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+    return await Order.orderStats(user.id, shop )
+}
+
+router.get('/:shop/account', auth, async (req, res) => {
+    const shop = req.params.shop
+
+    const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop) 
+    const orderStat= await orderStats(req.session.token, shop)
+
+     const urlBase=`/${shop}/view`
+    await req.user.populate({
+        path: 'orders',
+         match:{shop: shop},
+        populate: {
+            path: 'products.product',
+            model: 'Product'
+          } 
+    }).execPopulate()
+    res.render('account', {
+        title: 'contact',categories:categories, url_base: urlBase, shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
+        user: req.user
+ 
+    })
+})
+
+router.post('/users/:shop/contact', multer().none(), async (req, res) => {
     try {
         const contact = new Contact (req.body)
         contact.shop = req.params.shop
@@ -80,6 +114,40 @@ router.patch('/users/:shop/contact', multer().none(), async (req, res) => {
     }
 })
 
+router.get('/:shop/contact', async (req, res) => {
+    const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
+    
+    const urlBase=`/${req.params.shop}/view`
+
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+
+    const orderStat= orderStats(req,res)
+
+    res.render('contact', {
+        title: 'contact',categories:categories,shopname: req.params.shop, url_base: urlBase,  username: userName,orderStat: orderStat
+    })
+})
+
+router.get('/admin', admin, async (req, res) => {
+    var userName = req.session.name  
+    if (userName == undefined)
+        window.location.href="/login"
+    const shopName = req.shop.name;
+    var tree = [shopName]
+    try {
+            const urlBase="/admin"
+
+            const contacts = await Contact.find({shop: shopName })
+            const categories = await Cat.getCategoriesTree(req.query.category, shopName)
+            const products = await Product.getProducts(req.query, shopName ,true)
+            categories.allcategories = await  Cat.find(({ tree: { $in: [shopName] }} )) 
+            res.render('admin', { title: 'admin', url_base: urlBase, products: products, contacts: contacts, categories: categories, shopname: shopName, tree:tree, username: userName});
+        } 
+    catch (e) {
+        
+        res.render('admin', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
+     }
+})
 
 router.get('/contact',admin, async (req, res) => {
 

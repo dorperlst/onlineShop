@@ -588,13 +588,7 @@ ul.left_menu li {
   color:#000; text-decoration:underline;
   }
 
-
-  ul.left_menu li.even,
-
-  ul.left_menu li.odd{
-    /* height: 45px; */
-  }
-
+ 
   ul.left_menu li.odd a{
     font-size: 14px;
     width: 166px;
@@ -624,10 +618,10 @@ ul.left_menu li {
 
 
       
-input.contact_input {width: 253px;height: 22px;background-color: #fff;color: #999999;border: 1px #DFDFDF solid;border: 1px solid #d3d3d3;color: #464141;/* background: #f5f1f187; */border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
+input.contact_input {width: 253px;height: 22px;background-color: #fff;color: #999999;border: 1px #DFDFDF solid;border: 1px solid #d3d3d3;color: #464141;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
  
  
-input.contact_input:hover,input.contact_input:focus {width: 253px;outline: none;height: 22px;background-color: #fff;color: #999999;border: 2px solid #d3d3d3;color: #464141;background: #f5f1f187;/* border-radius: 5px; */-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
+input.contact_input:hover,input.contact_input:focus {width: 253px;outline: none;height: 22px;background-color: #fff;color: #999999;border: 2px solid #d3d3d3;color: #464141;background: #f5f1f187;-moz-border-radius: 5px;-webkit-border-radius: 5px;-o-border-radius: 5px;}
 
  
 form >div{
