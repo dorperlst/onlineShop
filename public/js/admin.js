@@ -1,7 +1,8 @@
 
 const form = document.getElementById("contact");
 var productsDiv = document.getElementById("productsDiv");   
-var contactsDiv = document.getElementById("contacts");    
+var contactSec = document.getElementById("contacts");    
+var ordersSec = document.getElementById("orders");    
 
 var productsWrapper = document.getElementById("productsWrapper");    
 var productFiles = document.getElementById("productFiles");    
@@ -374,17 +375,30 @@ function hover(div, img)
 }
 
 function showContacts(name, img){
-    contactsDiv.style.display="flex"
+    contactSec.style.display="flex"
 
-    productsDiv.style.display="none"
+    productsWrapper.style.display = "none"
+}
+function showOrders(name, img){
+
+  
+
+
+    ordersSec.style.display="block"
+    productsWrapper.style.display = "none"
 }
 
+ 
 function closeContacts(name, img){
-    contactsDiv.style.display="none"
+    contactSec.style.display="none"
 
-    productsDiv.style.display="grid"
+    productsWrapper.style.display="block"
 }
+function closeOrders(name, img){
+    ordersSec.style.display="none"
 
+    productsWrapper.style.display="block"
+}
 
 function createListItem(name, img){
     var li = document.createElement("li");

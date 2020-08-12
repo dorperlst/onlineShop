@@ -2,7 +2,7 @@
 const mongoose = require('mongoose')
 const Cat = require('../models/cat')
 
-const limit = 15
+const limit = 3
 const promtionLimit = 5
 
 const productSchema = new mongoose.Schema({
@@ -128,8 +128,10 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     var params = [ {shop: shop }]
 
     var sort = { "timestamps": -1 }
-    const pageNum =  query.pageNum? parseInt(query.pageNum) : 0
-    const skip = pageNum * limit  
+    const pageNum =  query.pageNum? parseInt(query.pageNum) : 1
+    if(pageNum < 1)
+        return
+    const skip = (pageNum -1) * limit  
  
     if (query.category &&  query.category != 'All') 
     {

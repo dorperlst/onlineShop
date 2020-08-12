@@ -17,9 +17,10 @@ function addCount(delta, parent ,id){
     counter.innerHTML = newCount
     var new_total =  parseInt(price.innerHTML) * newCount
 
-    total.innerHTML = new_total
   
     order_total.innerHTML = new_total - parseInt(total.innerHTML) + parseInt(order_total.innerHTML)
+    total.innerHTML = new_total
+
     order_total_item.innerHTML =   delta + parseInt(order_total_item.innerHTML)
     const  ord = order_info.find(o => o.id === id);
 
@@ -30,16 +31,37 @@ function addCount(delta, parent ,id){
         
 }
 
-function deleteProduct(id) {
-    var conf = confirm(" Remove this Item!");
-    if (conf == true) {
-        fetch('/orders/'+id ,
-        { method: "delete"})
+function payment(details, id) {
+    var formdata = new FormData();
+    formdata.append( 'id', id)
+    formdata.append( 'status', 1)
+   // var t= JSON.stringify(details)
+    formdata.append( 'details', JSON.stringify(details))
+    fetch( `/${shopName}/orderStatus`,{ method: "PATCH", body: formdata}) 
+
+
+        
         .then( function(res) {
             if(res.status==200)
                 window.location.href=`/${shopName}/account`
         } ) 
-    }
+    
+}
+
+function deleteProduct(productId, orderId) {
+    var conf = confirm(" Remove this Item!");
+    if (conf == false)
+        return  
+    var formdata = new FormData();
+    formdata.append( 'orderId', orderId)
+    formdata.append( 'productId', productId)
+    fetch('/ordersProduct' ,
+    { method: "delete",  body: formdata})
+    .then( function(res) {
+        if(res.status==200)
+            window.location.href=`/${shopName}/account`
+    } ) 
+  
 }
 
 function updateOrder(id)
@@ -47,7 +69,13 @@ function updateOrder(id)
     var formdata = new FormData();
     formdata.append( 'id', id)
     formdata.append( 'products', JSON.stringify(order_info))
-    fetch('/orders',{ method: "PATCH", body: formdata}).then(function(res) {}
+    fetch('/orders',{ method: "PATCH", body: formdata}) 
 
-    ) 
+        .then((res) => { 
+            
+            var msg= res.status == 200 ? "Update succeed ":"Update Fail"
+            document.getElementById("updateMsg").innerHTML= msg
+        })
+        
+    
 }

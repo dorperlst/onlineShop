@@ -709,7 +709,7 @@ textarea.contact_textarea {
   height: 350px;
   background-color: #FFF;
 }
-#contacts{
+#contacts, #orders{
   position: relative;
 }
 
@@ -772,11 +772,32 @@ a.prod_buy{
   padding-left: 15px;
 }
 
+
+.even-order {
+  background-color: #0489ab0f;
+}
+.order-container {
+    height: 1000px;
+    background-color: #fff;
+}
+.center_title_bar {
+    width: 575px;
+    text-align: center;
+    padding: 0 0 0 10px;
+    margin: 0 auto 20 auto;
+    line-height: 31px;
+    font-size: 12px;
+    background-color: aquamarine;
+    color: #159DCC;
+    font-weight: bold;
+    background: url(../../images/bar_bg.gif) no-repeat;
+}
+
 .order-details {
-  /* height: 40px; */
+  height: 40px;
   display: flex;
-  /* flex-flow: wrap-reverse; */
-  /* justify-content: space-between; */
+  flex-flow: wrap-reverse;
+  justify-content: space-between;
   font-size: 14px;
   align-items: center;
   /* justify-content: center; */
@@ -784,6 +805,7 @@ a.prod_buy{
 .order-details >span {
   width: 250px;
   /* text-align: center; */
+  overflow: hidden;
 }
 .order-details >span  >label {
   /* width: 100px; */

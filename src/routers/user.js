@@ -61,7 +61,7 @@ async function orderStats(token, shop)
     const jwt = require('jsonwebtoken')
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-    return await Order.orderStats(user.id, shop )
+    return await Order.orderStats(user._id, shop )
 }
 
 router.get('/:shop/account', auth, async (req, res) => {
@@ -73,18 +73,75 @@ router.get('/:shop/account', auth, async (req, res) => {
      const urlBase=`/${shop}/view`
     await req.user.populate({
         path: 'orders',
-         match:{shop: shop},
+        match:{shop: shop},
+        options: {sort:{"status": 1}},
         populate: {
             path: 'products.product',
             model: 'Product'
           } 
     }).execPopulate()
     res.render('account', {
-        title: 'contact',categories:categories, url_base: urlBase, shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
+        title: 'Account', categories:categories, url_base: urlBase, sb: process.env.CLIENT_ID, shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
         user: req.user
  
     })
 })
+async function getShopOrders(shop, status)   {
+    var params = [ {shop: shop }]
+    var limit = 10 
+    var sort = { "owner":-1,"status":1,"timestamps": -1 }
+    // const pageNum =  req.query.pageNum? parseInt(req.query.pageNum) : 0
+    // const skip = pageNum * limit  
+ 
+    if (status)  
+        params.push( { status: status } )
+      
+    const match = { $and: params } 
+   
+    try {
+     const orders = await Order.aggregate([
+        { $match : match } ,
+
+        {"$unwind":"$products"},
+        {
+           $lookup: {
+            from: "products",
+            localField: 'products.product',
+            foreignField: "_id", 
+                as: "items"
+           }
+        }  
+        ,
+        {
+            $addFields: { "items.count": "$products.count" }
+          },
+          {
+            "$unwind": "$items"
+        }, 
+  {
+      "$group": {
+          "_id": {"id":"$_id","status":"$status","status":"$status","createdAt":"$createdAt","updatedAt":"$createdAt"},
+
+          "products": {
+              "$push": {
+                   "name": "$items.name",
+                  "count": "$items.count",
+                  "price": "$items.price"
+              }
+          }
+      }
+  },
+    
+  { $sort: sort }
+      ])
+   
+      return orders;
+      
+  } catch (e) {
+        console.log(e)
+        res.status(500).send()
+    }
+}
 
 router.post('/users/:shop/contact', multer().none(), async (req, res) => {
     try {
@@ -136,12 +193,12 @@ router.get('/admin', admin, async (req, res) => {
     var tree = [shopName]
     try {
             const urlBase="/admin"
-
+            const orders= await getShopOrders(shopName)
             const contacts = await Contact.find({shop: shopName })
             const categories = await Cat.getCategoriesTree(req.query.category, shopName)
             const products = await Product.getProducts(req.query, shopName ,true)
             categories.allcategories = await  Cat.find(({ tree: { $in: [shopName] }} )) 
-            res.render('admin', { title: 'admin', url_base: urlBase, products: products, contacts: contacts, categories: categories, shopname: shopName, tree:tree, username: userName});
+            res.render('admin', { title: 'admin', orders: orders, url_base: urlBase, products: products, contacts: contacts, categories: categories, shopname: shopName, tree:tree, username: userName});
         } 
     catch (e) {
         

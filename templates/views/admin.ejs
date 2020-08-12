@@ -35,7 +35,7 @@
               <div class="flex-container">
                 <label class="flex-item">  Category</label>
                 <select class="flex-item" name="categories" required>
-                  <option value="0">Select</option>
+                  <option value="">None</option>
 
                   <% categories.allcategories.forEach(function(category) { %>
                     <option value="<%= category._id %>"><%= category.name %></option>
@@ -137,40 +137,15 @@
 
               <% }   %>
               <a onclick = "showContacts()" href="#" class="prod_buy_big">Contacts</a>
-  
+              <a onclick = "showOrders()" href="#" class="prod_buy_big">Orders</a>
+
+
+              
             </div>
 
-            <section id="contacts" style="display: none;" class="flex-item">
-              <a class="close" onclick="closeContacts()" ><img src="../../images/close.png"> </a>
-              <% contacts.forEach(function(contact) { %>
-                <div class="contact_form ">
-                  <div>
-                    <label class="contact">Name:</label>
-                    <label class="contact"><%= contact.name %></label>
-                    <label class="contact"> Phone: </label>
-                    <label class="contact" ><%= contact.phone %></label>
-                  </div>
-                  <div>
-                    <label class="contact">Email:</label>
-                    <label class="contact"><%= contact.email %></label>
-                  </div>
-                  <div >
-                    <label class="contact"><strong>Message:</strong></label>
-                    <span><%= contact.msg %></span>
-                  </div>
-                  <div>
-                    <label class="contact "><strong>Reply:</strong></label>
-                    <textarea   placeholder="Reply..."   name="msg" tabindex="5" class="reply contact_textarea"><%= contact.reply %></textarea>
-                  </div>
-                  <div>
-                    <input class="prod_details"  onclick = replay(this,"<%= contact._id %>") type="button" value="Send">  
-                    <input class="prod_details_red"  onclick = deleteContact(this,"<%= contact._id %>") type="button" value="Delete">  
-                  </div>  
-                </div>
-    
-                <% })  %>
+         
 
-            </section>
+
 
             <section id="productsDiv" class="grid-wrapper">
               <% products.products.forEach(function(product) { %>
@@ -179,7 +154,7 @@
                     <% if ( product.images[0]) { %>
                       <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
                     <% } else  { %>
-                      <img  src="../../images/default.png"></img> 
+                      <img  src="../../images/default.jpg"></img> 
                     <% }  %>
                   </div>
               
@@ -191,8 +166,98 @@
           </div>
               <% }); %>
               </section>
+
+         
+            
           </div>
-        
+          <section id="contacts" style="display: none;" class="flex-item">
+            <div class="center_title_bar">Contacts</div>
+
+            <a class="close" onclick="closeContacts()" ><img src="../../images/close.png"> </a>
+            <% contacts.forEach(function(contact) { %>
+              <div class="contact_form ">
+                <div>
+                  <label class="contact">Name:</label>
+                  <label class="contact"><%= contact.name %></label>
+                  <label class="contact"> Phone: </label>
+                  <label class="contact" ><%= contact.phone %></label>
+                </div>
+                <div>
+                  <label class="contact">Email:</label>
+                  <label class="contact"><%= contact.email %></label>
+                </div>
+                <div >
+                  <label class="contact"><strong>Message:</strong></label>
+                  <span><%= contact.msg %></span>
+                </div>
+                <div>
+                  <label class="contact "><strong>Reply:</strong></label>
+                  <textarea   placeholder="Reply..."   name="msg" tabindex="5" class="reply contact_textarea"><%= contact.reply %></textarea>
+                </div>
+                <div class="order-details">
+                  <input class="prod_details"  onclick = replay(this,"<%= contact._id %>") type="button" value="Send">  
+                  <input class="prod_details_red"  onclick = deleteContact(this,"<%= contact._id %>") type="button" value="Delete">  
+                </div>  
+                
+
+           
+
+              </div>
+  
+              <% })  %>
+
+          </section>
+          <section id ="orders" style="display: none;" class="main-center">
+            <a class="close" onclick="closeOrders()" ><img src="../../images/close.png"> </a>
+
+            <% if(orders.length > 0) { %>
+            <div class="center_content_fix">
+              <div class="center_title_bar">Orders</div>
+              <div class="order-container">
+
+                  <% orders.forEach(function(order) { %>
+                    <% var line='even-order' %> 
+                    <div class="order-details">
+                      <span>Status :
+                      <%var select=['','','']; select[order._id.status]='selected';  %>
+                      <select  class="" name="status" >
+                        <option  <%=select[0]%> value="0">Open</option>
+                        <option  <%=select[1]%> value="1">Paid</option>
+                        <option  <%=select[2]%> value="2">Closed</option>
+
+                      </select>
+                    </span>
+                      <%  var create = order._id.createdAt.getDate() + "-" + (order._id.createdAt.getMonth() + 1) + "-" + order._id.createdAt.getFullYear()   %>
+                      <%  var updated = order._id.updatedAt.getDate() + "-" + (order._id.updatedAt.getMonth() + 1) + "-" + order._id.updatedAt.getFullYear()   %>
+                      <span>    Create:  <%= create %> </span>
+                      <span>    Updated:  <%= updated %> </span>
+                    </div>
+                    <div class="order-details">
+                      <h3><strong>Order Summary</strong></h3>
+                    </div>
+                    <div class="order-details">
+                      <span>Item </span><span>Price </span>  <span>Quantity</span>     <span>Total</span>      
+                    </div>
+                    <% order.products.forEach(function(product) { %> 
+                      <div class=" <%= line %> order-details">
+                        <span> <%= product.name %> </span><span> <label class="calc"><%= product.price %> </label></span>  
+                        <span  > 
+                            <label class="calc"><%= product.count %></label>  
+                          </span>    
+                          <span class="calc" > <%= product.count * product.price %></span>
+                        <%  line =line=='odd'? 'even-order' :'odd' %> 
+                      </div>
+                    <% }); %>
+                    <div class="order-details">
+                      <input class="prod_details" onclick="changeStatus(this,'<%=order._id.id %>')" type="button" value="Update">
+                      <input class="prod_details_red" onclick="deleteOrder(this,'<%=order._id.id %>')" type="button" value="Delete">
+                      <label></label>       
+                    </div>
+                  <% }); %>
+              </div>
+            </div>
+            <% } %>
+        </section>
         </article>
         
             <%- include('../partials/aside.ejs') %>

@@ -32,26 +32,34 @@
                         <h3><strong>Order Summary</strong></h3>
                       </div>
                       <div class="order-details">
-                        <span>Item </span><span>Price </span>  <span>Quantity</span>     <span>Total</span> <span>Action</span>     
+                        <span>Item </span><span>Price </span>  <span>Quantity</span>     <span>Total</span> 
+                        
+                        <%if( order.status == 0) {%> 
+                        <span>Action</span>     
+                        <%}%> 
                       </div>
                       <% order.products.forEach(function(product) { %> 
                         <div class=" <%= line %> order-details">
                           <span> <%= product.product.name %> </span><span> <label class="calc"><%= product.product.price %> </label></span>  
                           <span  > 
-                            <%if( order.status == 0) %> 
+                            <%if( order.status == 0){ %> 
                               <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
-                            <label class="calc"><%= product.count %></label>  
-                            <%if( order.status == 0) %> 
+                              <%} %> 
+                              <label class="calc"><%= product.count %></label>  
+                            <%if( order.status == 0){ %> 
                               <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
-                          </span>    
+                              <%} %> 
+
+                            </span>    
                            <span class="calc" > <%= product.count * product.product.price %></span>
                            <%if( order.status == 0) {%> 
                              
                             <span>
 
-                               <button class="btn-danger" onclick="deleteProduct('<%= order._id %>')" type="button">&nbsp
-                               </button>
-                               <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" type="button">&nbsp
+                               <button class="btn-danger" onclick="deleteProduct('<%= product.product._id %>', '<%= order._id %>')" type="button">&nbsp </button>
+                              
+                               <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" type="button">&nbsp    </button>
+                                   
 
                            
                             </span>
@@ -64,11 +72,48 @@
                       <%if( order.status == 0) {%> 
                         <div class="total order-details">
                           <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
-                             <span id="order_total" ><%= orderStat.total %> </span>  <span>&nbsp;</span>
+                             <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
                         </div>
-                        <div class="order-details">
-                          <a  class="prod_buy" href="/<%=shopname%>/create" >payment..</a> 
-                        
+                        <div class="">
+
+                          <div id="paypal-button-container"></div>
+
+                          <!-- Include the PayPal JavaScript SDK -->
+                          <script src="https://www.paypal.com/sdk/js?client-id=<%=sb%>&currency=USD"></script>
+                      
+                          <script>
+                              // Render the PayPal button into #paypal-button-container
+                              paypal.Buttons({
+                      
+                                  // Set up the transaction
+                                  createOrder: function(data, actions) {
+                                      return actions.order.create({
+                                          purchase_units: [{
+                                              amount: {
+                                                  value: '0.2'
+                                              }
+                                          }]
+                                      });
+                                  },
+                      
+                                  // Finalize the transaction
+                                  onApprove: function(data, actions) {
+                                      return actions.order.capture().then(function(details) {
+                                          // Show a success message to the buyer
+                                          payment( details,'<%= order._id %>');
+                                      });
+                                  }
+                      
+                      
+                              }).render('#paypal-button-container');
+                          </script>
+
+  
+
+
+
+
+
 
                         </div>
                         <div class="order-details">
@@ -77,15 +122,14 @@
     
                       <%} else {%> 
                         <div class="total order-details">
-                          <span>&nbsp;</span><span>&nbsp; </span>  <span ><%= orderStat.totalItems %> </span>  
-                             <span  ><%= orderStat.total %> </span>  <span>&nbsp;</span>
+                          <span>&nbsp;</span><span>&nbsp; </span>  <span ><%= order.totalItems %> </span>  
+                             <span  ><%= order.total %> </span> 
                         </div>
                       <%} %> 
 
                     <% }); %>
                     
-                </div>
-
+                
              
               <% } %>
 

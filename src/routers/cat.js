@@ -29,14 +29,14 @@ const upload = multer({
   }
 })
  
-// router.get('/:shop/cats/:id', async (req, res) => {
-//     const cat = await Cat.findById(req.params.id)
-//     try {
-//         res.send({ cat })
-//      } catch (e) {
-//         res.status(400).send(e)
-//     }
-// })
+router.get('/:shop/cats/:id', async (req, res) => {
+    const cat = await Cat.findById(req.params.id)
+    try {
+        res.send({ cat })
+     } catch (e) {
+        res.status(400).send(e)
+    }
+})
 
 
 // router.get('/:shop/cats', async (req, res) => {

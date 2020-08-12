@@ -10,14 +10,14 @@
       <% categories.categories[0].entries.forEach(function(category) { %> 
         <% var selected= category.name ==  categories.cur? "selected" :""%> 
 
-          <li class="<%= line %> <%= selected %> "  >  <a href="<%= url_base %>?category=<%= category.name %>"  > <%= category.name %> </a>
+          <li class="<%= line %> <%= selected %>"><a href="<%= url_base %>?category=<%= category.name %>"  > <%= category.name %> </a>
           </li>
           <% if(curCategory ==  category.name && categories.categories.length > 1){ %> 
 
             <% categories.categories[1].entries.forEach(function(sub) { %> 
               <%  selected= sub.name == categories .cur? "selected" :""%> 
 
-                <li class="<%= line %> <%= selected %> <%= sub.class %>   nested">  <a href="<%= url_base %>?category=<%= sub.name  %>"  > <%=  sub.name %> </a>
+                <li class="  <%= selected %> <%= sub.class %>   nested">  <a class="navmap" href="<%= url_base %>?category=<%= sub.name  %>"  > <%=  sub.name %> </a>
                 </li>
             <% }); %>
           <% }   %>

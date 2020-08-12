@@ -28,7 +28,7 @@ router.get('/:shop/create', multer().none(), auth, async (req, res) => {
         },
         'transactions':[{
             'amount':{
-                'total': orderStats.total,
+                'total': 25,
                 'currency': currency
             },
             'description': 'online shop test'

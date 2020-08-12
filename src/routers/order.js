@@ -52,11 +52,11 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
             userOrders.push(order._id)
         user.orders = userOrders
     
-            await user.save()
+        await user.save()
 
-            await order.save()
-        var stats= await Order.orderStats(user._id,req.body.shop )
-            res.status(200).send(stats)
+        await order.save()
+        const stats= await Order.orderStats(user._id,req.body.shop )
+        res.status(200).send(stats)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -64,12 +64,12 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
 })
  
 
-// GET /orders?completed=true
+// GET /orders?status=true
 // GET /orders?limit=10&skip=20
 // GET /orders?sortBy=createdAt:desc
 router.get('/orders', auth, async (req, res) => {
   
-
+var ord=await Order.find()
     try {
         await req.user.populate({
             path: 'orders',
@@ -78,14 +78,69 @@ router.get('/orders', auth, async (req, res) => {
                 model: 'Product'
               } 
         }).execPopulate()
-        res.send(req.user.orders)
+        res.send(ord)
     } catch (e) {
         console.log(e)
         res.status(500).send()
     }
 })
-
+async function orderst(id, shop){
+    var params = [ {shop: shop, owner : id, status:0 }]
+    var limit = 10 
+    var sort = { "timestamps": -1,"status":-1 }
  
+      
+    const match = { $and: params } 
+   
+    try {
+        const orders = await Order.aggregate([
+            { $match : match } ,
+          { "$unwind": "$products" }, 
+
+        {
+           $lookup: {
+            from: "products",
+            localField: 'products.product',
+            foreignField: "_id", 
+                as: "items"
+           }
+        } 
+        ,   { "$unwind": "$items" }, 
+
+
+           { "$project": { 
+               "id": id,  
+               "value": { "$multiply": [
+                   { "$ifNull": [ "$products.count", 0 ] }, 
+                   { "$ifNull": [ "$items.price", 0 ] } 
+               ]},
+               "items": { $sum: "$products.count" }
+           }}, 
+           { "$group": { 
+               "_id": "$id", 
+               "total": { "$sum": "$value" } ,
+               "totalItems": { "$sum": "$items" }
+   
+           }}
+       ])
+ 
+    return orders
+
+      
+     } catch (e) {
+        console.log(e)
+       return null
+    }
+    
+}
+router.get('/orders2', auth, async (req, res) => {
+    
+    var id =req.user._id ;
+  
+   
+    res.send( await orderst(id,"yyyy"));
+   
+})
 
 router.get('/orders/:id', auth, async (req, res) => {
     const _id = req.params.id
@@ -106,7 +161,7 @@ router.get('/orders/:id', auth, async (req, res) => {
 router.get('/ordersAdmin',admin, async (req, res) => {
     var params = [ {shop: req.shop.name }]
     var limit = 10 
-    var sort = { "owner":-1,"timestamps": -1,"completed":-1 }
+    var sort = { "owner":-1,"status":1,"timestamps": -1 }
     const pageNum =  req.query.pageNum? parseInt(req.query.pageNum) : 0
     const skip = pageNum * limit  
  
@@ -161,14 +216,19 @@ router.get('/ordersAdmin',admin, async (req, res) => {
     }
 })
 
-router.patch('/orderStatus', admin, multer().none(), async (req, res) => {
+router.patch('/:shop/orderStatus', auth, multer().none(), async (req, res) => {
     try {
-        var order = await  Order.findById( req.body.id)
-        if(order.shop!=req.shop.name)
+        const stats= await Order.orderStats(req.user._id, req.params.shop )
+        
+        var order = await Order.findById( req.body.id)
+        if(order.shop != req.params.shop || order.owner.toString() != req.user._id.toString())
             return
         order.status = req.body.status
+        order.details = req.body.details
+        order.total = stats.total;
+        order.totalItems = stats.totalItems;
+
         order.save()
-        
         res.send(order)
 
     } catch (e) {
@@ -176,6 +236,7 @@ router.patch('/orderStatus', admin, multer().none(), async (req, res) => {
     }
 })
 
+ 
 router.patch('/orders', auth, multer().none(), async (req, res) => {
     try {
         var products = JSON.parse(req.body.products)
@@ -203,6 +264,22 @@ router.delete('/orders/:id', admin, async (req, res) => {
         }
 
         res.send(order)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+router.delete('/ordersProduct', auth, multer().none(), async (req, res) => {
+    try {
+        const orderId = req.body.orderId
+
+        const ord = await Order.findById(orderId)
+         var id= req.body.productId
+        ord.products = ord.products.filter(function(el) { return el.product != id; }); 
+        ord.save()
+      
+ 
+
+        res.send(ord)
     } catch (e) {
         res.status(500).send()
     }
