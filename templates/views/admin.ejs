@@ -18,6 +18,11 @@
       <div class="wrapper">
         <%- include('../partials/adheader.ejs') %>
         <article class="main">
+
+          <button onclick="addAttributes2()">Submit</button>
+
+
+
           <div id = "popup" style="display: none;" >  
             <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
             <div  style="display: none;" id ="imagesDiv">
@@ -26,7 +31,7 @@
             </div>
             <form id="contact"  method="post">
             
-              <h3 id="action">Update</h3>
+              <h3 id="action"></h3>
               
               <div class="flex-container">
                 <label class="flex-item">  Name</label>
@@ -35,7 +40,7 @@
               <div class="flex-container">
                 <label class="flex-item">  Category</label>
                 <select class="flex-item" name="categories" required>
-                  <option value="">None</option>
+                  <!-- <option value="">None</option> -->
 
                   <% categories.allcategories.forEach(function(category) { %>
                     <option value="<%= category._id %>"><%= category.name %></option>
@@ -71,7 +76,7 @@
 
                   <div class="flex-container">
                     <label class="flex-item">  Attributes  </label> 
-                    <a   onclick="addAttributes(false)"><img src="../../images/add.png"></a>
+                    <a   onclick="addAttributes2()"><img src="../../images/add.png"></a>
                   </div>
                   <div class="flex-container">
                     <ul class="flex-item "  id = "ulAttributes"></ul>
@@ -265,6 +270,154 @@
        
         <footer class="footer">Footer</footer>
       </div>
+
+       
+
+
+
+      <script id="attributes-li-template" type="text/html">
+      <li class="flex-item">
+        <div class="flex-container nested">
+          <input type="text" value='{{name}}' placeholder="name" required>
+          <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a>
+          <a href="#" onclick="createAttListItem(parentNode)">
+            <img src="../../images/add.png">
+          </a>
+        </div>
+
+
+
+        
+        <ul class="flex-item nested">
+
+
+          {{#values}}
+          <li><div class="flex-container nested"> 
+            <input type="text" value="{{.}}" placeholder="value" required="">
+            <a onclick="removeli(parentNode)"> 
+              <img src="../../images/delete.png">
+            </a>
+           </div>
+          </li>
+       {{/values}}
+
+
+
+         
+
+
+
+        </ul>
+      </li>
+
+      </script>
+
+      <script id="img-attributes-li-template" type="text/html">
+
+      <li class="flex-item">
+        <div class="flex-container nested">
+          <input type="text"  value='{{name}}' placeholder="name" required="">
+          <a onclick="removeli(parentNode)"> 
+            <img src="../../images/delete.png">
+          </a> 
+          <a href="#" onclick="createImgAttListItem(parentNode)">
+            <img src="../../images/add.png">
+          </a>
+        </div>
+        <ul class="flex-item nested">
+          {{#values}}
+          <li>
+            <div class="flex-container nested">
+              <input type="text" value="{{value}}" placeholder="value" required="">
+              <input disabled="disabled" type="text" value="{{img}}" placeholder="Select Image.." required="">
+              <div class="big-wrap">
+                <div class="big" onmouseover="hover(this,'{{img}}')">
+                  <img class="to-big" style="display:block" src="../../uploads/{{img}}"> 
+                </div>
+              </div>
+              <a onclick="selectAttImg(this)"><img src="../../images/select.png"></a>
+              <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a>
+            </div>
+          </li>
+          {{/values}}
+        </ul>
+      
+      </li>
+
+  </script>
+
+
+
+
+
+
+      
+      <script id="images-li-template" type="text/html">
+        <div class=images>
+          <img onclick="selectImage(this,'{{img}}')"   style="display:{{display}}"  src = "../../uploads/{{img}}" > 
+        </div> 
+        <div > 
+           <input type='text' disable='disable' value = '{{name}}' placeholder='name' required>
+          <a href='#' onclick=removeimgli(parentNode,{{name}})><img src='../../images/delete.png'></a></div></li>
+        </div>
+
+        <!-- <div class="images"><img onclick="selectImage(this,'61zT1SR09CL._AC_UL320_-1596379219516.jpg')" src="../../uploads/61zT1SR09CL._AC_UL320_-1596379219516.jpg"></div>
+ -->
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+      <script id="img-li-template" type="text/html">
+          <div class="flex-container nested">
+            <input type="text" value = "{{name}}"  placeholder="value" required >
+            <input  disabled="disabled" type="text" value = "{{img}}"  placeholder="Select Image.." required >
+            <div class="big-wrap">
+              <div class="big" onmouseover="hover(this,{{img}})">
+                 <img class="to-big"  style="display:{{display}}"  src = "../../uploads/{{img}}" > 
+              </div>
+            </div>
+           <a onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>
+           <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a>
+          </div>
+      </script>
+
+      <script id="li-value-template" type="text/html">
+        <div> <input type='text' value = "{{name}}"  placeholder='{{placeholder}}' required>
+          <a onclick='removeli(parentNode)'><img src='../../images/delete.png'></img></a></div></li></div>
+
+
+       
+    </script>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+     
   </body>
 </html>
 

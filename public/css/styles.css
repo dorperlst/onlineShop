@@ -405,7 +405,7 @@ ul.menu li {
 li {
   /* text-align: left; */
   /* max-height: 20px; */
-  padding: 10 20 10 0;
+  /* padding: 10 20 10 0; */
 }
 
 
@@ -813,4 +813,8 @@ a.prod_buy{
 }
 .contact >input{
   width: 240px;
+}
+.nested >li
+{
+  padding: 0;
 }

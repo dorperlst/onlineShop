@@ -53,16 +53,40 @@ router.delete('/contact/:shop/', multer().none(), auth, async (req, res) => {
     }
 })
 
+
 async function orderStats(token, shop)
 {
-    if(!token)
+    
+    try
+    {
+        if(!token)
         return {total:0,totalItems:0}
 
-    const jwt = require('jsonwebtoken')
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-    return await Order.orderStats(user._id, shop )
+        const jwt = require('jsonwebtoken')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+        const orderStats = await Order.orderStats(user._id, shop )
+      
+        return orderStats
+    
+    }
+    catch(e){
+        var t=e;
+    }
+    
 }
+
+
+// async function orderStats(token, shop)
+// {
+//     if(!token)
+//         return {total:0,totalItems:0}
+
+//     const jwt = require('jsonwebtoken')
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+//     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+//     return await Order.orderStats(user._id, shop )
+// }
 
 router.get('/:shop/account', auth, async (req, res) => {
     const shop = req.params.shop
@@ -86,6 +110,7 @@ router.get('/:shop/account', auth, async (req, res) => {
  
     })
 })
+
 async function getShopOrders(shop, status)   {
     var params = [ {shop: shop }]
     var limit = 10 
@@ -178,7 +203,7 @@ router.get('/:shop/contact', async (req, res) => {
 
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
-    const orderStat= orderStats(req,res)
+    const orderStat= await orderStats(req.session.token,req.params.shop)
 
     res.render('contact', {
         title: 'contact',categories:categories,shopname: req.params.shop, url_base: urlBase,  username: userName,orderStat: orderStat
@@ -211,7 +236,7 @@ router.get('/contact',admin, async (req, res) => {
     const contact = await Contact.find({shop:req.shop.name})
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
-    const orderStat= orderStats(req,res)
+    const orderStat= orderStats(req.session.token, res.shop.name)
 
     res.render('contact', {   title: 'contact',contact:contact,shopname: req.shop.name,   username: userName})
 })

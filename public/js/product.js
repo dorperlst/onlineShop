@@ -33,6 +33,7 @@ function addToOrder(id){
     }).then((jsonData) => {   
         var cart_details = document.getElementById("cart_details"); 
         cart_details.innerHTML= jsonData.totalItems + " items <br>  <span class=border_cart></span> Total: <span class=price>"+jsonData.total+"$</span> </div>"
+    document.getElementById("msg").innerHTML="Item Added to cart"
     });
 
 

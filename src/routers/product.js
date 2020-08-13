@@ -42,15 +42,28 @@ router.get('/product/:id', async (req, res) => {
 
 
 
-async function orderStats(token, shop)
+async function orderStats(token, shop, productId)
 {
-    if(!token)
+    
+    try
+    {
+        if(!token)
         return {total:0,totalItems:0}
 
-    const jwt = require('jsonwebtoken')
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-    return await Order.orderStats(user._id, shop )
+        const jwt = require('jsonwebtoken')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+        const orderStats = await Order.orderStats(user._id, shop )
+        if(productId)
+            orderStats.productInOrder = await  Order.productInOrder(shop, user._id, productId );
+
+        return orderStats
+    
+    }
+    catch(e){
+        var t=e;
+    }
+    
 }
 
 router.get('/:shop/view',async (req, res) => {
@@ -87,60 +100,7 @@ router.get('/:shop/products', async (req, res) => {
         res.status(500).send(e)
     }
 })
-
-// async function getProducts(query, shop,promo=false)
-// {
-//     var params = [ {shop: shop }]
-
-//     var sort = { "timestamps": -1 }
-//     const pageNum =  query.pageNum? parseInt(query.pageNum) : 0
-//     const skip = pageNum * limit  
  
-//     if (query.category &&  query.category != 'All') 
-//     {
-//         var catName= query.category
-//         var cats =  await Cat.find( { tree: { $all: catName } },{_id:0,name:1}).select({_id:0,name:1}); //,
-//         var prodCat=[]
-//         cats.forEach((cat) => prodCat.push(cat.name))
-//         params.push( { category: { $in: prodCat } } )
-//     }
-
-//     if (query.name)  
-//         params.push(  { name: query.name  } )
-//     if (query.pricefrom)  
-//         params.push(  { price:{"$gte": query.pricefrom}  } )
-//     if (query.priceto)  
-//         params.push(  { price:{"$lte": query.priceto}  } )
-//     if (query.tag)  
-//             params.push( {  "tags":query.tag } )
-    
-//     if (query.attributes)  
-//     { 
-//         var att = JSON.parse(query.attributes)
-//         for(i=0; i <att.length; i++)
-//             params.push( {  "attributes.name":att[i][0], "attributes.value": att[i][1] } )
-//     }
-  
-//     const match = { $and: params } 
-//     if (query.sortBy) {
-//         const parts = query.sortBy.split(':')
-//         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
-//     }
-
-//     const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
-//     const totalRows = await  Product.find(match).count();
-    
-//     const promotionParams=[ {shop: shop },{  "promotion":true }] 
-//     const promotionMatch = { $and: promotionParams } 
-//     var promotion ={}
-//     if(promo)
-//           promotion =  await Product.find(promotionMatch).sort(sort).limit( promtionLimit)
-//     var pager =  parseInt(totalRows / limit);
-//     if(totalRows % limit >0)
-//         pager +=1; 
-
-//     return {products, totalRows, pager, promotion}
-// }
 
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
@@ -149,7 +109,9 @@ router.get('/:shop/view/:id', async (req, res) => {
     try {
             const product = await Product.findById(req.params.id)
             const categories = await  Cat.getCategoriesTree(req.query.category, shop);
-            const orderStat= await orderStats(req.session.token, shop)
+            const orderStat= await orderStats(req.session.token, shop, req.params.id)
+
+            
             const urlBase =`${shop}/view`
             res.render('product', { title: 'product',url_base:urlBase, tree:tree, product: product, categories: categories, shopname: shop, orderStat:orderStat, username: userName});
         } 

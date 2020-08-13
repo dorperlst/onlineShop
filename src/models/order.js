@@ -90,20 +90,35 @@ orderSchema.statics.userOrder = async (owner) => {
     return orders
 }
 
+orderSchema.statics.productInOrder = async function (shop, owner, productId ) {
+    try {
+        var params = [ {shop: shop, owner : owner, status:0 }]
+        const match = { $and: params } 
+        var order= await Order.findOne(match);
+    
+        if(!order)
+            return 0
+        var prod = order.products.find(x => x.product.toString() === productId)
+        if(prod)
+            return  prod.count
+        else
+            return  0
+    }
+   catch(e){}
+  
+}
+
 orderSchema.statics.orderStats = async (id, shop) => {
  
     var params = [ {shop: shop, owner : id, status:0 }]
     var limit = 10 
     var sort = { "timestamps": -1,"status":-1 }
- 
-      
     const match = { $and: params } 
    
     try {
         const stats = await Order.aggregate([
             { $match : match } ,
           { "$unwind": "$products" }, 
-
         {
            $lookup: {
             from: "products",
@@ -112,27 +127,24 @@ orderSchema.statics.orderStats = async (id, shop) => {
                 as: "items"
            }
         } 
-        ,   { "$unwind": "$items" }, 
-
-
+        ,{ "$unwind": "$items" }, 
            { "$project": { 
                "id": id,  
                "value": { "$multiply": [
                    { "$ifNull": [ "$products.count", 0 ] }, 
                    { "$ifNull": [ "$items.price", 0 ] } 
                ]},
-               "items": { $sum: "$products.count" }
+               "items": { $sum: "$products.count" },
+
+
            }}, 
            { "$group": { 
                "_id": "$id", 
                "total": { "$sum": "$value" } ,
                "totalItems": { "$sum": "$items" }
-   
            }}
        ])
        return stats.length >0 ? stats[0] : {total:0, totalItems:0}
-    
-
       
      } catch (e) {
         console.log(e)
@@ -141,58 +153,6 @@ orderSchema.statics.orderStats = async (id, shop) => {
     
 }
 
-// orderSchema.statics.orderStats = async (owner, shop) => {
-//     // var id =req.user._id ;
-//     var params = [ {shop: "yyyy", owner : "5f05e450187496164c500c16", status:0 }]
-//     var limit = 10 
-//     var sort = { "timestamps": -1,"status":-1 }
-    
- 
-//     const match = { $and: params } 
-   
-//     try {
-//         const orders = await Order.aggregate([
-//             { $match : match } ,
-//           { "$unwind": "$products" }, 
-
-//         {
-//            $lookup: {
-//             from: "products",
-//             localField: 'products.product',
-//             foreignField: "_id", 
-//                 as: "items"
-//            }
-//         } 
-//         ,   { "$unwind": "$items" }, 
-
-
-//            { "$project": { 
-//                "id": id,  
-//                "value": { "$multiply": [
-//                    { "$ifNull": [ "$products.count", 0 ] }, 
-//                    { "$ifNull": [ "$items.price", 0 ] } 
-//                ]},
-//                "items": { $sum: "$products.count" }
-//            }}, 
-//            { "$group": { 
-//                "_id": "$id", 
-//                "total": { "$sum": "$value" } ,
-//                "totalItems": { "$sum": "$items" }
-   
-//            }}
-//        ])
-//     }
-
-// catch(e)
-// {
-//     console.log(e);
-// }
-  
-//    return stat.length >0 ? stat[0] : {total:0,totalItems:0}
-// }
-
-
-
 const statusEnum = {
     OPEN: 0,
     PAID: 1,
@@ -200,12 +160,6 @@ const statusEnum = {
 }
  
 orderSchema.statics.statusEnum = statusEnum
- 
-
-
 const Order = mongoose.model('Order', orderSchema)
 const OrderProduct = mongoose.model('OrderProduct', orderProductSchema)
-
-
-
 module.exports = {Order,OrderProduct}

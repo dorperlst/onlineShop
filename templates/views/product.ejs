@@ -65,10 +65,6 @@
                               <label class="red">Out of stock</label>
                               <% } %>
                            </div>
-
-
-                     
-                         
         
                           <%  product.attributes.forEach(function(att) { %>
                           <div class=" flex-container">  
@@ -117,26 +113,25 @@
                                 </div>
                               <div class="cart_add">
                                 <input href="#" type="button" onclick = "addToOrder('<%= product._id %>')"  class="btn-cart"> 
-                              
 
                               </div>
-                             
+                              <div class="flex-container">
+                                <label id="msg">
+                                  <%  if ( orderStat.productInOrder  !="0") { %>
+                                    <%= orderStat.productInOrder %> Items in cart
+                                    <%  } %>
+
+                                </label>
+
+                              </div>
                           </div>
-                       
-        
                       </div>
                     </div>
-                    
-             
                 </div>
               </div>
-              
-            
             </article> 
-            
             <%- include('../partials/aside.ejs') %>
-
-                <%- include('../partials/login_aside.ejs') %>
+            <%- include('../partials/login_aside.ejs') %>
         </div>
           
         </article>

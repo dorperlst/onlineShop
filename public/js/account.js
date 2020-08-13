@@ -35,16 +35,12 @@ function payment(details, id) {
     var formdata = new FormData();
     formdata.append( 'id', id)
     formdata.append( 'status', 1)
-   // var t= JSON.stringify(details)
     formdata.append( 'details', JSON.stringify(details))
     fetch( `/${shopName}/orderStatus`,{ method: "PATCH", body: formdata}) 
-
-
-        
-        .then( function(res) {
-            if(res.status==200)
-                window.location.href=`/${shopName}/account`
-        } ) 
+    .then( function(res) {
+        if(res.status==200)
+            window.location.href=`/${shopName}/account`
+    } ) 
     
 }
 
@@ -61,7 +57,6 @@ function deleteProduct(productId, orderId) {
         if(res.status==200)
             window.location.href=`/${shopName}/account`
     } ) 
-  
 }
 
 function updateOrder(id)
@@ -70,12 +65,9 @@ function updateOrder(id)
     formdata.append( 'id', id)
     formdata.append( 'products', JSON.stringify(order_info))
     fetch('/orders',{ method: "PATCH", body: formdata}) 
-
-        .then((res) => { 
-            
-            var msg= res.status == 200 ? "Update succeed ":"Update Fail"
-            document.getElementById("updateMsg").innerHTML= msg
-        })
+    .then((res) => { 
         
-    
+        var msg= res.status == 200 ? "Update succeed ":"Update Fail"
+        document.getElementById("updateMsg").innerHTML= msg
+    })
 }

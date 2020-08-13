@@ -30,7 +30,7 @@
 .main    {flex: 25 0 0;}
 .aside-1 { order: 1; } 
 .main-center    {height: 800px;order: 2;height: 100%;background: #fff;flex-flow: column;padding-bottom: 30px;}
-.main  {order: 2;flex-flow: row;}
+.main  {overflow-y: scroll;order: 2;flex-flow: row;}
 .aside-2 { order: 3; }
 .footer  {display: flex;flex: 1 0 0;order: 3;}
  
@@ -137,7 +137,7 @@ a {
 .grid-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 25px;
+  grid-gap: 50px;
   background-color: #fff;
   margin-bottom: 15px;
 }
@@ -415,7 +415,10 @@ label {
  /* todo delete */
 .product-info {
   display: flex;
+  margin-top: 10px;
   flex-direction: column;
+  /* justify-content: center; */
+  text-align: center;
 }
  @media ( max-width: 920px ) {
         
@@ -539,6 +542,7 @@ label {
   }
   span.price{
   color: #ff8a00;
+  padding-bottom: 10px;
   }
  
    .field {
@@ -892,9 +896,9 @@ input.contact_input:hover,input.contact_input:focus {width: 253px;outline: none;
   width: 75px;
   height: 24px;
   display: block;
-  float: right;
+  /* float: right; */
   background: url(../../images/link_bg.gif) no-repeat center;
-  margin: 2px 5px 0 0;
+  margin: auto;
   text-align: center;
   line-height: 24px;
   text-decoration: none;

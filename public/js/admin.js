@@ -35,7 +35,8 @@ function resetForm(){
     ulimages.innerHTML = '';
     ultags.innerHTML = '';
     fileDiv.innerHTML = '';
-    
+    if(formcategories.length>0 && formcategories[0].value == 0)
+        formcategories.remove(0);
 }
 
 function addProduct(){
@@ -92,13 +93,13 @@ function editProduct(id){
         for(var ind in product.attributes)
         {
             var attribute =product.attributes[ind];
-            addAttributes(false, attribute.name, attribute.values)
+            addAttributes( attribute.name, attribute.values)
         }
 
         for(var ind in product.imgattributes)
         {
             var imgAttribute = product.imgattributes[ind];
-            addAttributes(true, imgAttribute.name, imgAttribute.values)
+            addImgAttributes( imgAttribute.name, imgAttribute.values)
         }
      
         for(var ind in product.details)
@@ -107,16 +108,14 @@ function editProduct(id){
         for(var ind in product.tags)
            addTags(product.tags[ind]);
 
-           if(product.images.length>0 && mainImg == undefined)
-                mainImg=product.images[0]
+        if(product.images.length>0 && mainImg == undefined)
+            mainImg=product.images[0]
         for(var ind in product.images)
         {
             ulimages.appendChild(createListItem(product.images[ind], product.images[ind]));
             if(product.images[ind]===mainImg)
                ulimages.lastElementChild.className="flex-item nested mainImg";
-         
         }
-        
     });
 }
 
@@ -146,7 +145,6 @@ function deleteCategory(id){
         else
             document.getElementById("err").textContent="Action Fail"
     })
-     
 }
 
 function addCategory(id){
@@ -162,7 +160,11 @@ function addCategory(id){
 
 function editCategory(id){
     formProductDisplay("cats","Edit Category")
-    formcategories.innerHTML = '<option value=0>none</option>'+ formcategories.innerHTML
+    const opt = document.createElement('option');
+    opt.value = 0
+    opt.text = 'none'
+    formcategories.insertBefore(opt, formcategories.firstChild);
+    
     fetch('/'+shopName+'/cats/'+id)
     .then((res) => { 
         if(res.status == 200)
@@ -190,16 +192,12 @@ function replay(parent, contact_id){
     fetch(  '/users/'+shopName+'/contact ',
     
     { method: "PATCH", body: formdata})
-    // .then(function(res) {   
-    
-    // return  ; 
-    // })
+   
 }
 
-function createImgAttListItem(parent, name,  img){
-    const imgVal = img ? img : ''
-    const nameVal = name ? name :''
-    parent.parentElement.getElementsByTagName("ul")[0].appendChild(createImgListItem(nameVal, imgVal));
+function createImgAttListItem(parent){
+
+    parent.parentElement.getElementsByTagName("ul")[0].appendChild(createImgListItem('', ''));
 }
 
 function deleteContact(parent, id){
@@ -219,73 +217,19 @@ function deleteContact(parent, id){
     })
 }
 
-function createAttListItem(parent, name){
-    const nameVal = name ? name :''
+function createAttListItem(parent){
     var ul  =parent.parentElement.getElementsByTagName("ul")[0]
-    ul.appendChild( createAtrributeListItem(nameVal));
-    ul.getElementsByTagName("input")[0].focus
- 
+    var li = nameListItem('',"value")
+    ul.appendChild(li );
+    li.getElementsByTagName("input")[0].focus
  }
-
-function addAttributes(isImg, name='', values){
-    var liAtrributes = document.createElement("li");
-    liAtrributes.className="flex-item"
     
-
-    var innerHTML  = '<div class="flex-container nested"><input type="text" value = "'+name +'" placeholder="name" required><a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
-    if(isImg == true)
-        innerHTML +=  '<a href="#" onclick="createImgAttListItem(parentNode)"><img src="../../images/add.png"></img></a></div>'
-    else
-        innerHTML +=  '<a href="#" onclick="createAttListItem(parentNode)"><img src="../../images/add.png"></img></a></div>'
-
-    liAtrributes.innerHTML  =innerHTML
-    var nestedUl = document.createElement("ul");
-    nestedUl.className="flex-item nested"
-    if(isImg == true )
-    {
-        attInnerHTML =''
-        if(!values || values.length ==0)
-        {
-            // attInnerHTML +=  '<div class="flex-container nested"> '
-             nestedUl.appendChild( createImgListItem("", ""));
-
-        }
-        else
-        {
-            for(var ind in values)
-                nestedUl.appendChild( createImgListItem(values[ind].value, values[ind].img));
-        }
-     }
-    else
-    {
-         if(!values || values.length ==0)
-        {
-            // attInnerHTML +=  '<div class="flex-container nested"> '
-
-             nestedUl.appendChild(createAtrributeListItem(""));
-        }
-        else
-        {
-            for(var ind in values)
-                nestedUl.appendChild(createAtrributeListItem(values[ind]));
-        }
-    }
-    liAtrributes.appendChild(nestedUl) 
-    if(isImg == true)
-        ulImgAttributes.appendChild (liAtrributes);
-    else
-        ulAttributes.appendChild (liAtrributes);
-        
-    liAtrributes.getElementsByTagName("input")[0].focus
-
-}
-
 function addDetails(name = ''){
-    uldetails.appendChild( createListItem(name));
+    uldetails.appendChild( nameListItem(name,"name"));
 }
 
 function addTags(name = ''){
-    ultags.appendChild( createListItem(name));
+    ultags.appendChild( nameListItem(name, "name"));
 }
 
 function selectAttImg(element){
@@ -300,13 +244,20 @@ function selectImage(parent, img){
         var input = currentAttributeDiv.getElementsByTagName("input")[1]
         if(input.value.trim()!='')
             ulimages.appendChild( createListItem( input.value.trim(),input.value.trim() ));
-        var curimg=currentAttributeDiv.getElementsByTagName("img")[0]
+        var curimg= currentAttributeDiv.getElementsByTagName("img")[0]
+        currentAttributeDiv.removeEventListener('mouseover', hover);
+
+        currentAttributeDiv.addEventListener("mouseover", event => {
+           hover(this, img)
+          });
+
         curimg.src = '../../uploads/'+ img
         curimg.style="display:block"
         if(mainImg==img)
            mainImg=undefined
         input.value = img
-        removeli(parent)
+        removeli(parent.parentNode)
+
         currentAttributeDiv = undefined
         isAttImg= false
         imagesDiv.style.display = "none"
@@ -333,39 +284,16 @@ function showImages(){
     form.style.display="none"
 }
 
-function attrListItem(val){
-
-    var innerHTML ="<li class= flex-item nested><div >  <input type='text' value = '"+name+"' placeholder='value' required> "
-    
-    innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"</a></div></li>'
-    innerHTML  += ' </div></li>'
-    return innerHTML 
-}
-
-function createAtrributeListItem(name){
-    var li = document.createElement("li");
-    var innerHTML =  '<div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
-    
-    innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
-    innerHTML +='</div>'
-    li.innerHTML= innerHTML
-    return li
-}
-
 function createImgListItem(name, img){
     var li = document.createElement("li");
-
-    var innerHTML =  '<div class="flex-container nested"><input type="text" value = "'+name +'"  placeholder="value" required >'
-    innerHTML +=  '<input  disabled="disabled" type="text" value = "'+img +'"  placeholder="value" required >'
-    innerHTML +=  "<div class=big-wrap><div class=big onmouseover=hover(this,'"+img +"')><img class=to-big"
-    if(!img || img=='')
-        innerHTML +=  ' style="display:none"'  
-    
-    innerHTML +=  ' src = "../../uploads/'+img +'" > </div></div>'
-    innerHTML +=  '<a href="#" onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>'
-    innerHTML += '<a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a> '
-    innerHTML +='</div>'
-    li.innerHTML = innerHTML
+    const template = document.querySelector('#img-li-template').innerHTML
+    const display =(!img || img=='')? "none" : "block"
+    const html = Mustache.render(template, {
+        name: name,
+        img: img,
+        display: display
+    })
+    li.innerHTML = html
     return li
 }
 
@@ -380,10 +308,6 @@ function showContacts(name, img){
     productsWrapper.style.display = "none"
 }
 function showOrders(name, img){
-
-  
-
-
     ordersSec.style.display="block"
     productsWrapper.style.display = "none"
 }
@@ -391,32 +315,28 @@ function showOrders(name, img){
  
 function closeContacts(name, img){
     contactSec.style.display="none"
-
     productsWrapper.style.display="block"
 }
 function closeOrders(name, img){
     ordersSec.style.display="none"
-
     productsWrapper.style.display="block"
 }
 
+function nameListItem(name, placeholder){
+    const li = document.createElement("li");
+    const template = document.querySelector('#li-value-template').innerHTML
+    const html = Mustache.render(template, { name: name, placeholder: placeholder })
+    li.innerHTML= html
+    li.className="flex-item nested"
+    return li
+}
+
+
 function createListItem(name, img){
-    var li = document.createElement("li");
-    var innerHTML  = ''
-    if(img != undefined)
-        innerHTML += "<div class=images><img onclick=selectImage(this,'"+img+"') src='../../uploads/"+img+"'></img></div> "
-    if(name != undefined && name != "" && img != undefined)
-        innerHTML +="<div >  <input type='text' disable='disable' value = '"+name+"' placeholder='name' required> "
-
-    else
-        innerHTML +="<div >  <input type='text' value = '"+name+"' placeholder='name' required> "
-    if(img != undefined)
-        innerHTML += "<a href='#' onclick=removeimgli(parentNode,'"+name.trim()+"')><img src='../../images/delete.png'></img></a></div></li>"
-    else
-        innerHTML += ' <a href="#" onclick="removeli(parentNode)"><img src="../../images/delete.png"></img></a></div></li>'
-
-    innerHTML  += ' </div>'
-    li.innerHTML= innerHTML
+    const li = document.createElement("li");
+    const template = document.querySelector('#images-li-template').innerHTML
+    const html = Mustache.render(template, { name: name , img: img})
+    li.innerHTML= html
     li.className="flex-item nested"
     return li
 }
@@ -483,10 +403,7 @@ form.addEventListener('submit', (e) => {
 
     .then(function(res) {
         if (res.redirected)  
-        {
             window.location.href = res.url;
-        }
-        
         else
             document.getElementById("err").textContent="Action Fail"
     })
@@ -568,4 +485,27 @@ function loadImageFileAsURL()
     }
    
 }
-        
+    
+
+function addAttributes(name, values){
+
+    if(!name)
+        values=['']
+    const template = document.querySelector('#attributes-li-template').innerHTML
+    const html = Mustache.render(template, { name: name, values: values })
+
+    ulAttributes.insertAdjacentHTML('beforeend', html)
+}
+
+
+function addImgAttributes(name, values){
+    if(!name)
+        values=['']
+    const template = document.querySelector('#img-attributes-li-template').innerHTML
+    const html = Mustache.render(template, { name: name, values: values })
+    ulImgAttributes.insertAdjacentHTML('beforeend', html)
+}
+
+
+
+

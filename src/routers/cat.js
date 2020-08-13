@@ -38,40 +38,7 @@ router.get('/:shop/cats/:id', async (req, res) => {
     }
 })
 
-
-// router.get('/:shop/cats', async (req, res) => {
-  
-//     var params = [ {tree: req.params.shop }]
-//     var sort = {  }
-//     var limit = !req.query.limit ? 50 : req.query.limit
-//     var skip = !req.query.skip ? 0 : req.query.skip
  
-//     if (req.query.category)  
-//         params.push( { tree: req.query.category } )
-
-//     if (req.query.parent|| req.query.mainCategories == 'true')  
-//         params.push( { parent: req.query.parent } )
-   
-//     if (req.query.name)  
-//         params.push(  { name: req.query.name  } )
-         
-//     const  match= { $and: params } 
- 
-//     if (req.query.sortBy) {
-//         const parts = req.query.sortBy.split(':')
-//         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
-//     }
-//     try {
-//         const cats = await Cat.find(match).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
-
-//        // const cats22 = await Cat.find(params).sort(sort).limit( parseInt(limit) ).skip(parseInt(skip))
-
-//         // const cats = await Cat.find({parent:null, tree: req.params.shop})
-//         res.send({ cats })
-//     } catch (e) {
-//         res.status(400).send(e)
-//     }
-// })
  
 router.delete('/cats/:id',admin, async (req, res) => {
      

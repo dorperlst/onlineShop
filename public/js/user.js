@@ -27,8 +27,7 @@ function logout(){
     fetch('/users/logout',//
         { method: 'POST', body: formdata})
     .then(function(res) {
-    //addshop("5e9f216829efa7242bd514c4")
-        window.location.href = res.url;
+         window.location.href = res.url;
     })
 }
 function logoutAll(){
@@ -38,7 +37,6 @@ formdata.append('currentUrl', window.location.href)
 fetch('/users/logoutAll',//
     { method: 'POST', body: formdata})
 .then(function(res) {
-//addshop("5e9f216829efa7242bd514c4")
     window.location.href = res.url;
 })
 }

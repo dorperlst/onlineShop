@@ -13,23 +13,21 @@ function replaceUrlParam(paramName, paramValue){
     url = url.replace(/[?#]$/,'');
     return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue;
 }
+
 function pagination(pager, current){
     var page = parseInt(pager)
-    if ( page <2)
+    if ( page < 2)
         return
     const  ulPager= document.getElementById("pager");
-    for (i=0;i< parseInt(pager) ;i++) { 
+    for (i=0;i< page ;i++) { 
         const li = document.createElement("li");
         const a = document.createElement("a");
 
         a.innerHTML= i+1 ;
-        var t=replaceUrlParam('pageNum', i+1) ; 
-        a.href= t;
+        var href=replaceUrlParam('pageNum', i+1) ; 
+        a.href= href;
         li.appendChild(a);
         ulPager.appendChild(li)
-
-    
-
     }
 }
 
