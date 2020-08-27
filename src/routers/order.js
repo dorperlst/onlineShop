@@ -85,7 +85,7 @@ var ord=await Order.find()
     }
 })
 async function orderst(id, shop){
-    var params = [ {shop: shop, owner : id, status:0 }]
+    var params = [ {shop: shop, owner : id, status: Order.statusEnum.OPEN }]
     var limit = 10 
     var sort = { "timestamps": -1,"status":-1 }
  

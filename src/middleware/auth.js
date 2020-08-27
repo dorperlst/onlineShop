@@ -5,20 +5,27 @@ const Shop = require('../models/shop')
 
 const auth = async (req, res, next) => {
     try {
+        var redirect_url = `/${req.params.shop}/view` ;
+        
         if (!req.session.token) {
-            res.redirect('/login');
+            res.redirect(redirect_url);
         }
-        const token = req.session.token;
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+        else
+        {
+            const token = req.session.token;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+    
+            if (!user)  
+                res.redirect(redirect_url);
+            else
+                req.user = user
 
-        if (!user) {
-            res.redirect('/login');
+            
         }
+       
 
-        req.user = user
-       // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3100');
-
+ 
         next()
     } catch (e) {
         console.log('----usersuth-----------', req.session.token)

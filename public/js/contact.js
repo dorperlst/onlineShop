@@ -16,7 +16,8 @@ contact_form.addEventListener('submit', (e) => {
         return null 
         }
     ).then((jsonData) => {   
-        document.getElementById("msg").innerHTML = jsonData.msg
+        
+        document.getElementById("usermsg").innerHTML = jsonData.msg
     });
 })  
 

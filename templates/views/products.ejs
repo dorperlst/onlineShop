@@ -1,24 +1,32 @@
 <header>
     
-  <!DOCTYPE html>
-  <html>
-      <%- include('../partials/head.ejs') %>
-    <body>
-    <body>
-      <div class="wrapper">
-        <%- include('../partials/header.ejs') %>
-        <article class="main">
-          <div class="main-wrapper">
-            <article id="secProducts" class="main-center">
-              <%- include('../partials/products.ejs') %>
-            </article> 
-              <div > 
-                <%- include('../partials/aside.ejs') %>
-              </div>
-                <%- include('../partials/login_aside.ejs') %>
-          </div>
-        </article>
-        <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
-      </div>
-  </body>
-</html>
+    <!DOCTYPE html>
+    <html>
+      <%- include('../partials/head.ejs') %> 
+ 
+    
+  <link rel="stylesheet" href="/css/products.css">
+  
+ 
+
+ 
+<title><%= title %></title> 
+      <body>
+      <body>
+        <div class="wrapper">
+          <%- include('../partials/header.ejs') %>
+          <article class="main">
+            <div class="main-wrapper">
+              <article id="secProducts" class="main-center">
+                <%- include('../partials/products.ejs') %>
+              </article> 
+                <div > 
+                  <%- include('../partials/aside.ejs') %>
+                </div>
+                  <%- include('../partials/login_aside.ejs') %>
+            </div>
+          </article>
+          <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
+        </div>
+    </body>
+  </html>

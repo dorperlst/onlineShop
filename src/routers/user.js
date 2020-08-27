@@ -196,7 +196,25 @@ router.patch('/users/:shop/contact', multer().none(), async (req, res) => {
     }
 })
 
-router.get('/:shop/contact', async (req, res) => {
+
+router.get('/:shop/signup', async (req, res) => {
+    const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
+    
+    const urlBase=`/${req.params.shop}/view`
+
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+
+    //const orderStat= await orderStats(req.session.token,req.params.shop)
+
+    res.render('signup', {
+        title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
+    })
+
+ 
+})
+
+
+router.get('/:shop/contact',auth, async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
     
     const urlBase=`/${req.params.shop}/view`
@@ -238,10 +256,10 @@ router.get('/contact',admin, async (req, res) => {
 
     const orderStat= orderStats(req.session.token, res.shop.name)
 
-    res.render('contact', {   title: 'contact',contact:contact,shopname: req.shop.name,   username: userName})
+    res.render('contact', {   title: 'contact', contact: contact, shopname: req.shop.name, username: userName})
 })
 
-router.post('/users', upload.single('avatar'), async function (req, res, next) {
+router.post('/:shop/users', upload.single('avatar'), async function (req, res, next) {
  //console.log(req.body)
     const user = new User(req.body)
     if(req.file!= undefined)
@@ -249,8 +267,9 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
     try {
         await user.save()
+        var href="/"+req.params.shop+"/view"
      //   sendWelcomeEmail(user.email, user.name)
-        redirectSession(req, res, user)
+        redirectSession(req, res, user, href)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -269,6 +288,8 @@ router.post('/users/login', multer().none(), async (req, res) => {
         res.status(400).send('Unable to login')
     }
 })
+
+
 
 async function redirectSession(req, res, user, href){
     const token = await user.generateAuthToken()   

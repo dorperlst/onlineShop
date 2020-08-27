@@ -2,11 +2,28 @@
     
   <!DOCTYPE html>
   <html>
+    <%- include('../partials/head.ejs') %> 
    
-      <%- include('../partials/head.ejs') %>
+      <link rel="stylesheet" href="/css/account.css">
+      
  
     <body>
 <body>
+
+  <%
+toEnum = function(value) {
+  switch (value) {
+    case 0:
+     return "Open";
+    case 1:
+     return "Payed";
+    case 2:
+     return "Closed";
+  }
+}
+%>
+
+
   <div class="wrapper static_wrapper">
       <%- include('../partials/header.ejs') %>
       
@@ -22,7 +39,7 @@
                     <% user.orders.forEach(function(order) { %>
                       <% var line='even-order' %> 
                       <div class="order-details">
-                        <span>    Status:  <%= order.status %> </span>
+                        <span>    Status:  <%= toEnum(order.status) %> </span>
                         <%  var create = order.createdAt.getDate() + "-" + (order.createdAt.getMonth() + 1) + "-" + order.createdAt.getFullYear()   %>
                         <%  var updated = order.updatedAt.getDate() + "-" + (order.updatedAt.getMonth() + 1) + "-" + order.updatedAt.getFullYear()   %>
                         <span>    Create:  <%= create %> </span>
@@ -74,7 +91,7 @@
                           <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
                              <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
                         </div>
-                        <div class="">
+                        <div class="paypal">
 
                           <div id="paypal-button-container"></div>
 
@@ -108,13 +125,6 @@
                               }).render('#paypal-button-container');
                           </script>
 
-  
-
-
-
-
-
-
                         </div>
                         <div class="order-details">
                           <label id ="orderMsg"></label>       
@@ -135,40 +145,40 @@
 
    
                 <div class="center_title_bar">My Account</div>
-                <div class="prod_box_big ">
-                  <div class="center_prod_box_big">
-                    
-                    <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/<%=shopname%>/account"  method="post">
+                 
+                <div class="center_prod_box_big">
+                  
+                  <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/<%=shopname%>/account"  method="post">
 
-                      <div class="form_row">
-                        <img id="mainImg" src="../../users/<%= user.image %>" alt="" border="0">
-                      </div>
-                      <div class="form_row">
-                        <label class="contact"><strong> First Name:</strong></label>
-                        <input type="text" placeholder="first name" value ="<%=user.name%>" name="name" tabindex="1"  class="contact_input" required >
-                      </div>
-                      <div class="form_row">
-                        <label class="contact"><strong> Last Name:</strong></label>
-                        <input type="text" placeholder="last name"  value ="<%=user.last%>" name="last" tabindex="2"  class="contact_input" required >
-                      </div>
-                      <div class="form_row">
-                        <label class="contact"><strong>Email:</strong></label>
-                        <input tabindex="3" placeholder="email" value ="<%=user.email%>" name="email" type="text" class="contact_input" >
-                      </div>
-                      <div class="form_row">
-                        <label class="contact"><strong>Phone:</strong></label>
-                        <input  name="phone" placeholder="phone"  value ="<%=user.phone%>" tabindex="5" type="text" class="contact_input">
-                      </div>
-                      <div class="form_row">
-                        <label class="contact"><strong>Address::</strong></label>
-                        <textarea  placeholder="Full Address" name="address" tabindex="6" class="contact_textarea"><%=user.address%></textarea>
-                      </div>
-                      <div class="form_row">
-                        <input class="prod_details" tabindex="8"  type="submit" value="Submit">  
-                      </div>
-                    </form>
+                    <div class="form_row">
+                      <img id="mainImg" src="../../users/<%= user.image %>" alt="" border="0">
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong> First Name:</strong></label>
+                      <input type="text" placeholder="first name" value ="<%=user.name%>" name="name" tabindex="1"  class="contact_input" required >
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong> Last Name:</strong></label>
+                      <input type="text" placeholder="last name"  value ="<%=user.last%>" name="last" tabindex="2"  class="contact_input" required >
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong>Email:</strong></label>
+                      <input tabindex="3" placeholder="email" value ="<%=user.email%>" name="email" type="text" class="contact_input" >
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong>Phone:</strong></label>
+                      <input  name="phone" placeholder="phone"  value ="<%=user.phone%>" tabindex="5" type="text" class="contact_input">
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong>Address::</strong></label>
+                      <textarea  placeholder="Full Address" name="address" tabindex="6" class="contact_textarea"><%=user.address%></textarea>
+                    </div>
+                    <div class="form_row">
+                      <input class="prod_details" tabindex="8"  type="submit" value="Submit">  
+                    </div>
+                  </form>
                 </div>
-              </div>
+             
           
             </div>
           </article>
