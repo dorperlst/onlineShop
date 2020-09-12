@@ -10,27 +10,44 @@ const shopSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    images: [{
+    images: [
+        {
         type: String,
         trim: true
+    }],
+
+    about: [{
+        value: { type: String,trim: true},  
+        title: {type: String, max: 50} 
     }],
     admin: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
         
+    },
+    address: {
+        type: String,
+        trim: true
+    },
+        
+    lat: {
+        type: String,
+        trim: true
+    },
+    lat: {
+        type: String,
+        trim: true
+    },
+    long: {
+        type: String,
+        trim: true
+        
     }
-    
-}, {
+},
+{
     timestamps: true
 })
- 
-// shopSchema.virtual('products', {
-//     ref: 'Product',
-//     localField: '_id',
-//     foreignField: 'owner'
-// })
-
  
 const Shop = mongoose.model('Shop', shopSchema)
 

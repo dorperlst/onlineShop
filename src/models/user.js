@@ -89,6 +89,19 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+userSchema.statics.findByToken = async (token) => {
+    if(!token)
+        return {total:0, totalItems:0}
+
+    const jwt = require('jsonwebtoken')
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token } , { _id: 1 ,tokens :1} )
+    if (!user) 
+        return null;
+    return user
+}
+
+        
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
 
@@ -116,7 +129,7 @@ userSchema.pre('save', async function (next) {
     next()
 })
  
-// Delete user tasks when user is removed
+ 
  
 
 const User = mongoose.model('User', userSchema)

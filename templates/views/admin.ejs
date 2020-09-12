@@ -14,22 +14,69 @@
     </head>
     <body>
 
-
-
       <div class="wrapper">
         <%- include('../partials/adheader.ejs') %>
         <article class="main">
+          <section id = "secShop" style="display: none;" >  
+            <a class="close" onclick="closePopUp(this)" ><img src="../../images/close.png"> </a>
+         
+            <form id="form_shop" class="form"  method="post">
+            
+              <h3>Edit Shop</h3>
+              
+              <div class="flex-container">
+                <label class="flex-item">  Name</label>
+                <input class="flex-item" placeholder="Name" id="shop_name" name="shopname" type="text" tabindex="1" required autofocus>
+              </div>
+              <div class="flex-container">
+                <label class="flex-item">  Lat</label>
+                <input class="flex-item" placeholder="Lat" id="lat" name="lat" type="text" tabindex="2" >
+              </div>
+              <div class="flex-container">
+                <label class="flex-item">  Long</label>
+                <input class="flex-item" placeholder="Long" id="long" name="long" type="text" tabindex="3" >
+              </div>
 
+              <div class="flex-container">
+                <label class="flex-item">  Address</label>
+                <textarea class="flex-item" id ="address" name="address" placeholder="address...." tabindex="4" required></textarea>
+              </div>
+
+              <div class="flex-container">
+                <label class="flex-item"> About </label> 
+                <a  onclick="addAbout()"> <img src="../../images/add.png"></a> 
+              </div>
+              <div class="flex-container"> 
+                <ul class="flex-item" id = "ulAbout"></ul>
+              </div>
+              <div class="flex-container">
+                <a onclick="showImages(this,'secShop')"> Images... </a> 
+              </div>
+              <div class="flex-container">
+                Select images: <input type="file" onchange="loadImageFileAsURL()" id="shopFiles" name="myFiles" multiple>
+            </div>
+              <div class="flex-container">
+                <button name="submit" type="submit"   data-submit="...Sending">Submit</button>
+
+              </div>
  
+            </form>
+      
+         
+          </section>
+
+
+          <div  style="display: none;" id ="imagesDiv">
+            <a class="close" onclick="closeImages()" ><img src="../../images/close.png"> </a>
+            <ul class="grid-wrapper" id ="images"></ul>
+            <div id ="fileDiv"></div>
+          </div>
 
 
           <div id = "popup" style="display: none;" >  
-            <a class="close" onclick="closePopUp()" ><img src="../../images/close.png"> </a>
-            <div  style="display: none;" id ="imagesDiv">
-              <a class="close" onclick="closeImages()" ><img src="../../images/close.png"> </a>
-              <ul class="grid-wrapper"id = "images"></ul>
-            </div>
-            <form id="contact"  method="post">
+            <a class="close" onclick="closePopUp(this)" ><img src="../../images/close.png"> </a>
+          
+            <form id="contact"  class="form"  method="post">
             
               <h3 id="action"></h3>
               
@@ -76,14 +123,14 @@
 
                   <div class="flex-container">
                     <label class="flex-item">  Attributes  </label> 
-                    <a   onclick="addAttributes2()"><img src="../../images/add.png"></a>
+                    <a   onclick="addAttributes()"><img src="../../images/add.png"></a>
                   </div>
                   <div class="flex-container">
                     <ul class="flex-item "  id = "ulAttributes"></ul>
                   </div>
                   <div class="flex-container">
                     <label class="flex-item"> Images Attributes  </label> 
-                    <a   onclick="addAttributes(true)"><img src="../../images/add.png"></a>
+                    <a   onclick="addImgAttributes()"><img src="../../images/add.png"></a>
                   </div>
                   <div class="flex-container"> 
                     <ul class="flex-item " id = "imgAttributes"></ul>
@@ -107,7 +154,7 @@
                   
               </div>
               <div class="flex-container">
-                <a onclick="showImages()"> Images... </a> 
+                <a onclick="showImages(this, 'popup')"> Images... </a> 
               </div>
             
               <div class="flex-container">
@@ -115,7 +162,7 @@
               </div>
             
               <div class="flex-container">
-                <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
+                <button name="submit" type="submit" data-submit="...Sending">Submit</button>
 
               </div>
     
@@ -127,13 +174,14 @@
               <input type="hidden" value = "" id="id"  name="id">
             </form>
       
-            <div id ="fileDiv"></div>
+            
             <input type="hidden" value ='<%= shopname %>' id=shopname>
       
           </div>
           <div   id="productsWrapper" >
 
             <div  class="flex-container add">
+              <a onclick="editShop()" href="#" class="prod_buy_big">Shop</a>
               <a onclick="addProduct()" href="#" class="prod_buy_big">Add Product</a>
               <a onclick="addCategory()" href="#" class="prod_buy_big">Add Category</a>
               <% if( categories.curId ) {%>
@@ -157,9 +205,9 @@
                 <div class="product-card">
                   <div class="product-image">   
                     <% if ( product.images[0]) { %>
-                      <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"></img> 
+                      <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"> 
                     <% } else  { %>
-                      <img  src="../../images/default.jpg"></img> 
+                      <img  src="../../images/default.jpg"> 
                     <% }  %>
                   </div>
               
@@ -178,7 +226,7 @@
           <section id="contacts" style="display: none;" class="flex-item">
             <div class="center_title_bar">Contacts</div>
 
-            <a class="close" onclick="closeContacts()" ><img src="../../images/close.png"> </a>
+            <a class="close" onclick="closePopUp(this)" ><img src="../../images/close.png"> </a>
             <% contacts.forEach(function(contact) { %>
               <div class="contact_form ">
                 <div>
@@ -213,7 +261,7 @@
 
           </section>
           <section id ="orders" style="display: none;" class="main-center">
-            <a class="close" onclick="closeOrders()" ><img src="../../images/close.png"> </a>
+            <a class="close" onclick="closePopUp(this)" ><img src="../../images/close.png"> </a>
 
             <% if(orders.length > 0) { %>
             <div class="center_content_fix">
@@ -345,76 +393,47 @@
       </li>
 
   </script>
-
-
-
-
-
-
-      
-      <script id="images-li-template" type="text/html">
-        <div class=images>
-          <img onclick="selectImage(this,'{{img}}')"   style="display:{{display}}"  src = "../../uploads/{{img}}" > 
-        </div> 
-        <div > 
-           <input type='text' disable='disable' value = '{{name}}' placeholder='name' required>
-          <a href='#' onclick=removeimgli(parentNode,{{name}})><img src='../../images/delete.png'></a></div></li>
-        </div>
-
-        <!-- <div class="images"><img onclick="selectImage(this,'61zT1SR09CL._AC_UL320_-1596379219516.jpg')" src="../../uploads/61zT1SR09CL._AC_UL320_-1596379219516.jpg"></div>
- -->
-    </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     
+  <script id="images-li-template" type="text/html">
+    <div class=images>
+      <img onclick="selectImage(this,'{{img}}')"   style="display:{{display}}"  src = "../../uploads/{{img}}" > 
+    </div> 
+    <div > 
+        <input type='text' disable='disable' value = '{{name}}' placeholder='name' required>
+        <a href='#' onclick= removeimgli(parentNode,'{{name}}')><img src='../../images/delete.png'></a> 
+    </div>
+  </script>
 
 
     
-      <script id="img-li-template" type="text/html">
-          <div class="flex-container nested">
-            <input type="text" value = "{{name}}"  placeholder="value" required >
-            <input  disabled="disabled" type="text" value = "{{img}}"  placeholder="Select Image.." required >
-            <div class="big-wrap">
-              <div class="big" onmouseover="hover(this,{{img}})">
-                 <img class="to-big"  style="display:{{display}}"  src = "../../uploads/{{img}}" > 
-              </div>
-            </div>
-           <a onclick="selectAttImg(this)"><img src="../../images/select.png"></img></a>
-           <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></img></a>
+  <script id="img-li-template" type="text/html">
+      <div class="flex-container nested">
+        <input type="text" value = "{{name}}"  placeholder="value" required >
+        <input  disabled="disabled" type="text" value = "{{img}}"  placeholder="Select Image.." required >
+        <div class="big-wrap">
+          <div class="big" onmouseover="hover(this,{{img}})">
+              <img class="to-big"  style="display:{{display}}"  src = "../../uploads/{{img}}" > 
           </div>
-      </script>
+        </div>
+        <a onclick="selectAttImg(this)"><img src="../../images/select.png"></a>
+        <a onclick="removeli(parentNode)"> <img src="../../images/delete.png"></a>
+      </div>
+  </script>
 
-      <script id="li-value-template" type="text/html">
-        <div> <input type='text' value = "{{name}}"  placeholder='{{placeholder}}' required>
-          <a onclick='removeli(parentNode)'><img src='../../images/delete.png'></img></a></div></li></div>
+  <script id="li-value-template" type="text/html">
+    <div> <input type='text' value = "{{name}}"  placeholder='{{placeholder}}' required>
+      <a onclick='removeli(parentNode)'><img src='../../images/delete.png'></a>            
+    </div>
+  </script>
 
+  <script id="li-texterea-template" type="text/html">
+    <div>
+      <input type='text' value = "{{title}}"  placeholder='Title' required>
+      <a onclick='removeli(parentNode)'><img src='../../images/delete.png'></a>
+      <textarea class="flex-item"   placeholder='About...' required>{{value}} </textarea>
 
-       
-    </script>
-
-
+    </div>
+  </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
      

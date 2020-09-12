@@ -1,11 +1,10 @@
 * {
- 
-  -moz-box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;
-  -o-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+ -moz-box-sizing: border-box;
+ -webkit-font-smoothing: antialiased;
+ -moz-font-smoothing: antialiased;
+ -o-font-smoothing: antialiased;
+ font-smoothing: antialiased;
+ /* text-rendering: optimizeLegibility; */
 }
 
 .wrapper, .main-wrapper {
@@ -93,7 +92,7 @@
     /* float:left; */
     padding:0px 8px 0px 8px;
     margin:0 14px 0 14px;
-      text-decoration:none;
+    text-decoration:none;
     color: #7c7c8c;
   }
     
@@ -421,7 +420,11 @@ form{
     list-style: none;
   }
   
-
+  .flex-container  > a {
+    margin: auto;
+    font-size: x-large;
+    text-decoration: none;
+  }
 
 
 .search-btn {
@@ -482,12 +485,7 @@ span.price{
 
 
 
- 
-.flex-container {
-  display: flex;
-  flex-flow: row;
-  list-style: none;
-}
+  
 
 .flex-container >select {
   height: 22px;
@@ -571,4 +569,44 @@ input.contact_input{
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   -o-border-radius: 5px;
+}
+
+#mapid {height: 400px;}
+
+.panel-heading {
+  position: relative;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  border-top-right-radius: 3px;
+  text-align: center;
+  border-top-left-radius: 3px;
+  color: #666;
+  font-weight: 500;
+  line-height: 2em;
+  /* white-space: pre-line; */
+}
+.flex-container > a,
+panel-heading >h3{
+  font-size: 24px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.map-wrapper{
+  height: 500px;
+}
+.about{
+  display: none;
+}
+.about_cur{
+  display: block;
+}
+.about_img-box
+{
+  height: 450px;
+  overflow: hidden;
 }

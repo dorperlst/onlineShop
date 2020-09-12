@@ -6,18 +6,18 @@ const contactSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    msg: {
+    } ,
+    msg:[{
         type: String,
         required: true,
         trim: true
-    },
-   
-    reply: {
-        type: String,
-        required: false,
-        trim: true
-    },
+    }]
+    ,   
+    // reply: {
+    //     type: String,
+    //     required: false,
+    //     trim: true
+    // },
     
     phone: {
         type: String,

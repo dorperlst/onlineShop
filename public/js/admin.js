@@ -1,11 +1,16 @@
 
 const form = document.getElementById("contact");
+const form_shop = document.getElementById("form_shop");
+
+
 var productsDiv = document.getElementById("productsDiv");   
 var contactSec = document.getElementById("contacts");    
 var ordersSec = document.getElementById("orders");    
-
+var shopSec = document.getElementById("secShop");    
+ 
 var productsWrapper = document.getElementById("productsWrapper");    
-var productFiles = document.getElementById("productFiles");    
+var productFiles = document.getElementById("productFiles");  
+var shopFiles = document.getElementById("shopFiles");  
 var categoriesDiv = document.getElementById("categoriesDiv");    
 var imagesDiv = document.getElementById("imagesDiv")
 const popup = document.getElementById("popup");    
@@ -13,6 +18,9 @@ var formcategories = form.elements['categories'];
 var ulAttributes = document.getElementById("ulAttributes");    
 var ulImgAttributes = document.getElementById("imgAttributes");    
 var ultags = document.getElementById("tags"); 
+var ulAbout = document.getElementById("ulAbout"); 
+
+
 var ulimages = document.getElementById("images"); 
 var uldetails = document.getElementById("details"); 
 var formAction='' 
@@ -20,9 +28,10 @@ var mainImg = undefined
 var currentAttributeDiv = undefined
 var isAttImg= false
 
-function closePopUp(){
+function closePopUp(parent){
     resetForm()
-    popup.style.display="none"
+    parent.parentElement.style.display="none"
+   
     productsWrapper.style.display="block"
 }
 
@@ -51,20 +60,20 @@ function deleteProduct(id){
         return
     var formdata = new FormData();
     formdata.append("currentUrl", window.location.href)
-//todo change redirect 
+ 
     fetch('/products/'+id,
     { method: 'delete', body: formdata})
     then(function(res) {
         if (res.redirected)  
-        {
             window.location.href = res.url;
-        }
-        
         else
             document.getElementById("err").textContent="Action Fail"
     })
 
 }
+
+ 
+
 
 function editProduct(id){
     formProductDisplay("products", "Edit Product")
@@ -110,6 +119,7 @@ function editProduct(id){
 
         if(product.images.length>0 && mainImg == undefined)
             mainImg=product.images[0]
+        
         for(var ind in product.images)
         {
             ulimages.appendChild(createListItem(product.images[ind], product.images[ind]));
@@ -231,7 +241,9 @@ function addDetails(name = ''){
 function addTags(name = ''){
     ultags.appendChild( nameListItem(name, "name"));
 }
-
+function addAbout(title='', value = ''){
+    ulAbout.appendChild( ListItemTextarea(title, value));
+}
 function selectAttImg(element){
     currentAttributeDiv = element.parentElement
     imagesDiv.style.display = "grid"
@@ -275,13 +287,19 @@ function selectImage(parent, img){
 function closeImages(){ 
      isAttImg= false
     imagesDiv.style.display="none"
-    form.style.display="block"
+   var cur = imagesDiv.getAttribute('current');
+   document.getElementById(cur).style.display = cur == "secShop" ? "flex" :"block"
+ 
 }
 
-function showImages(){ 
-     isAttImg= false
+function showImages(parent, src){ 
+    isAttImg= false
     imagesDiv.style.display="grid"
-    form.style.display="none"
+    imagesDiv.setAttribute('current',src);
+
+     
+    parent.parentElement.parentElement.parentElement.style.display = "none"
+
 }
 
 function createImgListItem(name, img){
@@ -302,6 +320,33 @@ function hover(div, img)
     div.style="  background: url(../../uploads/"+img+") left no-repeat;"
 }
 
+function editShop(){
+    shopSec.style.display="flex"
+    productsWrapper.style.display = "none"
+    ulAbout.innerHTML=""
+    fetch('/shop')
+
+    .then((res) => { 
+        if(res.status == 200)
+            return res.json() 
+        return null
+    })
+    .then((jsonData) => {
+        form_shop.elements['shopname'].value = jsonData.name
+       
+        for(var ind in jsonData.about)
+            addAbout(jsonData.about[ind].title, jsonData.about[ind].value);
+        form_shop.elements['address'].value = jsonData.address
+        form_shop.elements['lat'].value = jsonData.lat
+        form_shop.elements['long'].value = jsonData.long
+        for(var ind in jsonData.images)
+            ulimages.appendChild(createListItem(jsonData.images[ind], jsonData.images[ind]));
+             
+     
+    });
+
+}
+
 function showContacts(name, img){
     contactSec.style.display="flex"
 
@@ -313,15 +358,6 @@ function showOrders(name, img){
 }
 
  
-function closeContacts(name, img){
-    contactSec.style.display="none"
-    productsWrapper.style.display="block"
-}
-function closeOrders(name, img){
-    ordersSec.style.display="none"
-    productsWrapper.style.display="block"
-}
-
 function nameListItem(name, placeholder){
     const li = document.createElement("li");
     const template = document.querySelector('#li-value-template').innerHTML
@@ -331,6 +367,14 @@ function nameListItem(name, placeholder){
     return li
 }
 
+function ListItemTextarea(title, value){
+    const li = document.createElement("li");
+    const template = document.querySelector('#li-texterea-template').innerHTML
+    const html = Mustache.render(template, { title:title, value: value })
+    li.innerHTML= html
+    li.className="flex-item nested"
+    return li
+}
 
 function createListItem(name, img){
     const li = document.createElement("li");
@@ -410,6 +454,42 @@ form.addEventListener('submit', (e) => {
 
 })
  
+form_shop.addEventListener('submit', (e) => {
+    e.preventDefault()
+    var method ="post"
+    
+    var formdata = new FormData();
+   
+    formdata.append('name', form_shop.elements['shopname'].value)
+    formdata.append('address', form_shop.elements['address'].value)
+
+    formdata.append('lat', form_shop.elements['lat'].value)
+    formdata.append('long', form_shop.elements['long'].value)
+    var about = aboutToJsonArray(ulAbout)
+    formdata.append( 'about', about)
+
+    var ulImages = toJsonArray( ulimages ) 
+    formdata.append( 'images', ulImages)
+  
+
+    for (i=0 ; i < shopFiles.files.length; i++)
+        formdata.append('myFiles', shopFiles.files[i], shopFiles.files[i].name);
+
+    fetch('/shops' ,
+        { method: 'PATCH', body: formdata})
+
+    .then(function(res) {
+        if (res.redirected)  
+            window.location.href = res.url;
+        else
+            document.getElementById("err").textContent="Action Fail"
+    })
+
+})
+
+
+
+
 function toAttJsonArray(ul, isImg) {
     var array =[]
     for (var i = 0; i < ul.children.length; i++ ) {
@@ -436,6 +516,15 @@ function toAttJsonArray(ul, isImg) {
     }
     return JSON.stringify(array)
 
+}
+function aboutToJsonArray(ul) {
+    var array =[]
+    for (var i = 0; i < ul.children.length; i++ ) {
+        var value = ul.children[ i ].getElementsByTagName("textarea")[0].value;
+        var title = ul.children[ i ].getElementsByTagName("input")[0].value;
+        array.push( {title, value})
+    }
+    return JSON.stringify(array)
 }
 
 function toJsonArray(ul) {
@@ -478,7 +567,7 @@ function loadImageFileAsURL()
                 fileLoadedEvent.target
                 var imageLoaded = document.createElement("img");
                 imageLoaded.src = fileLoadedEvent.target.result;
-                document.getElementById("fileDiv").appendChild(imageLoaded);
+                fileDiv.appendChild(imageLoaded);
             };
             fileReader.readAsDataURL(fileToLoad);
         }
@@ -487,10 +576,9 @@ function loadImageFileAsURL()
 }
     
 
-function addAttributes(name, values){
+function addAttributes(name= '' , values= ['']){
 
-    if(!name)
-        values=['']
+   
     const template = document.querySelector('#attributes-li-template').innerHTML
     const html = Mustache.render(template, { name: name, values: values })
 

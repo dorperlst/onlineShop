@@ -2,7 +2,7 @@
 const mongoose = require('mongoose')
 const Cat = require('../models/cat')
 
-const limit = 13
+const limit = 5
 const promtionLimit = 5
 
 const productSchema = new mongoose.Schema({

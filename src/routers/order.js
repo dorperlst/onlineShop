@@ -69,7 +69,7 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
 // GET /orders?sortBy=createdAt:desc
 router.get('/orders', auth, async (req, res) => {
   
-var ord=await Order.find()
+var ord= await Order.find()
     try {
         await req.user.populate({
             path: 'orders',
@@ -84,63 +84,7 @@ var ord=await Order.find()
         res.status(500).send()
     }
 })
-async function orderst(id, shop){
-    var params = [ {shop: shop, owner : id, status: Order.statusEnum.OPEN }]
-    var limit = 10 
-    var sort = { "timestamps": -1,"status":-1 }
- 
-      
-    const match = { $and: params } 
-   
-    try {
-        const orders = await Order.aggregate([
-            { $match : match } ,
-          { "$unwind": "$products" }, 
 
-        {
-           $lookup: {
-            from: "products",
-            localField: 'products.product',
-            foreignField: "_id", 
-                as: "items"
-           }
-        } 
-        ,   { "$unwind": "$items" }, 
-
-
-           { "$project": { 
-               "id": id,  
-               "value": { "$multiply": [
-                   { "$ifNull": [ "$products.count", 0 ] }, 
-                   { "$ifNull": [ "$items.price", 0 ] } 
-               ]},
-               "items": { $sum: "$products.count" }
-           }}, 
-           { "$group": { 
-               "_id": "$id", 
-               "total": { "$sum": "$value" } ,
-               "totalItems": { "$sum": "$items" }
-   
-           }}
-       ])
- 
-    return orders
-
-      
-     } catch (e) {
-        console.log(e)
-       return null
-    }
-    
-}
-router.get('/orders2', auth, async (req, res) => {
-    
-    var id =req.user._id ;
-  
-   
-    res.send( await orderst(id,"yyyy"));
-   
-})
 
 router.get('/orders/:id', auth, async (req, res) => {
     const _id = req.params.id

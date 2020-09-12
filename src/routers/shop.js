@@ -4,6 +4,12 @@ const Shop = require('../models/shop')
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
 const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
+const User = require('../models/user')
+const Order = require('../models/order').Order
+const { admin } = require('../middleware/auth')
+const Cat = require('../models/cat')
+
+
 const router = new express.Router()
 
 
@@ -30,13 +36,50 @@ const upload = multer({
 })
 
 
+
+router.get('/:shop/about', async (req, res) => {
+    const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
+    const shop = await Shop.findOne({ name : req.params.shop })
+    
+    const urlBase=`/${req.params.shop}/view`
+
+    var userName = req.session.name != undefined ? req.session.name : 'Guest'
+
+    const orderStat= await orderStats(req.session.token,req.params.shop)
+
+    res.render('about', { title: 'About' , categories: categories, shopname: req.params.shop, shop: shop, url_base: urlBase,  username: userName,orderStat: orderStat  })
+})
+
+
+async function orderStats(token, shop)
+{
+    try
+    {
+        const user = await User.findByToken(token);
+        const orderStats = await Order.orderStats(user._id, shop )
+        return orderStats
+    
+    }
+    catch(e){
+       return {}
+    }
+    
+}
+ 
 router.get('/shops', async (req, res) => {
     const shops = await Shop.find()
     res.send({ shops})
     
 })
 
-router.post('/shops', upload.array('myFiles', 12),async  function (req, res, next) {
+router.get('/shop', admin, async (req, res) => {
+   
+    res.send(req.shop)
+
+    
+})
+
+router.post('/shops', upload.array('myFiles', 12), async  function (req, res, next) {
 
     const shop = new Shop(req.body)
     shop.images = req.files.map(x => x.filename)
@@ -51,18 +94,25 @@ router.post('/shops', upload.array('myFiles', 12),async  function (req, res, nex
 
 })
  
-router.patch('/shops/me', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password', 'age']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
 
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' })
-    }
+    shop = req.shop
+    const allowedUpdates = ['description', 'address','lat', 'long']
+    var newimages = req.files.map(x => x.filename)
+    var images = JSON.parse( req.body.images)
+    shop.images = images.concat(newimages)
 
+    allowedUpdates.forEach((update) => shop[update] = req.body[update])
+    var abouts =JSON.parse( req.body.about)
+
+
+    shop.about = JSON.parse(req.body.about);
+    
+    //shop.address = shop.address.trim();
+    //shop.address = shop.address.replace(/\n/g, "<br>");;
     try {
-        updates.forEach((update) => req.shop[update] = req.body[update])
-        await req.shop.save()
+         await req.shop.save()
+         res.redirect('/admin');
         res.send(req.shop)
     } catch (e) {
         res.status(400).send(e)

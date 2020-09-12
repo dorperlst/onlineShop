@@ -2,56 +2,40 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const Shop = require('../models/shop')
 
+async function getUser(req){
+  
+    try {    
+        req.user = req.session.token? await User.findByToken(req.session.token) : null
+    } catch (e) {
+        req.user = null
+    }
+}
+ 
+async function getShop(req){
+    await getUser(req)
+    try {    
+        req.shop = req.user ? await Shop.findOne({ admin : req.user._id }) :null
+    } catch (e) {
+        req.shop = null
+    }
+
+}
 
 const auth = async (req, res, next) => {
-    try {
-        var redirect_url = `/${req.params.shop}/view` ;
-        
-        if (!req.session.token) {
-            res.redirect(redirect_url);
-        }
-        else
-        {
-            const token = req.session.token;
-            const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-    
-            if (!user)  
-                res.redirect(redirect_url);
-            else
-                req.user = user
-
-            
-        }
-       
-
- 
-        next()
-    } catch (e) {
-        console.log('----usersuth-----------', req.session.token)
-        res.status(401).send({ error: req.session.token})
-    }
+    await getUser(req)
+    if (!req.user)  
+        res.redirect('/login');
+    next()
 }
 
 const admin = async (req, res, next) => {
     
-    try {
-        const token = req.session.token;
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-        if (!user)  
-            res.redirect('/login');
- 
-        req.user = user
-        const shop = await Shop.findOne({ admin : user._id })
-        if (!shop)  
-            res.redirect('/login');
-        req.shop = shop
-        next()
-    } catch (e) {
+    await getShop(req);
+    if (!req.user || !req.shop )  
         res.redirect('/login');
-
-    }
+    else
+        next()
+    
 }
 
 module.exports = {auth, admin}

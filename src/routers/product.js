@@ -39,20 +39,11 @@ router.get('/product/:id', async (req, res) => {
     }
 })
 
-
-
-
 async function orderStats(token, shop, productId)
 {
-    
     try
     {
-        if(!token)
-        return {total:0,totalItems:0}
-
-        const jwt = require('jsonwebtoken')
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+        const user = await User.findByToken(token);
         const orderStats = await Order.orderStats(user._id, shop )
         if(productId)
             orderStats.productInOrder = await  Order.productInOrder(shop, user._id, productId );
@@ -107,12 +98,12 @@ router.get('/:shop/view/:id', async (req, res) => {
     const shop = req.params.shop
     var tree=[]
     try {
-            const product = await Product.findById(req.params.id)
-            const categories = await  Cat.getCategoriesTree(req.query.category, shop);
-            const orderStat= await orderStats(req.session.token, shop, req.params.id)
-
+            const product = await Product.findById(req.params.id);
             
-            const urlBase =`${shop}/view`
+            const categories = await  Cat.getCategoriesTree(req.query.category, shop);
+            categories.tree = product.tree
+            const orderStat= await orderStats(req.session.token, shop, req.params.id);
+            const urlBase =`${shop}/view`;
             res.render('product', { title: 'product',url_base:urlBase, tree:tree, product: product, categories: categories, shopname: shop, orderStat:orderStat, username: userName});
         } 
     catch (e) {

@@ -8,6 +8,7 @@ const Order = require('../models/order').Order
 const User = require('../models/user')
 const Contact = require('../models/contact')
 const Cat = require('../models/cat')
+const Shop = require('../models/shop')
 
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
@@ -56,17 +57,10 @@ router.delete('/contact/:shop/', multer().none(), auth, async (req, res) => {
 
 async function orderStats(token, shop)
 {
-    
     try
     {
-        if(!token)
-        return {total:0,totalItems:0}
-
-        const jwt = require('jsonwebtoken')
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+        const user = await User.findByToken(token);
         const orderStats = await Order.orderStats(user._id, shop )
-      
         return orderStats
     
     }
@@ -75,18 +69,6 @@ async function orderStats(token, shop)
     }
     
 }
-
-
-// async function orderStats(token, shop)
-// {
-//     if(!token)
-//         return {total:0,totalItems:0}
-
-//     const jwt = require('jsonwebtoken')
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-//     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
-//     return await Order.orderStats(user._id, shop )
-// }
 
 router.get('/:shop/account', auth, async (req, res) => {
     const shop = req.params.shop
@@ -100,7 +82,7 @@ router.get('/:shop/account', auth, async (req, res) => {
         match:{shop: shop},
         options: {sort:{"status": 1}},
         populate: {
-            path: 'products.product',
+            path: 'products.product  name',
             model: 'Product'
           } 
     }).execPopulate()
@@ -182,9 +164,12 @@ router.post('/users/:shop/contact', multer().none(), async (req, res) => {
     }
 })
 
-router.patch('/users/:shop/contact', multer().none(), async (req, res) => {
+router.patch('/users/contact', admin, multer().none(), async (req, res) => {
     try {
         const contact = await Contact.findById(req.body.id)
+        if(req.query.shop != contact.shop)
+            return;
+
         contact.reply = req.body.reply
         sendContactEmail(contact.email, contact.name, contact.reply)
         await contact.save()
@@ -216,6 +201,7 @@ router.get('/:shop/signup', async (req, res) => {
 
 router.get('/:shop/contact',auth, async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
+    const shop = await Shop.findOne({ name : req.params.shop })
     
     const urlBase=`/${req.params.shop}/view`
 
@@ -224,7 +210,7 @@ router.get('/:shop/contact',auth, async (req, res) => {
     const orderStat= await orderStats(req.session.token,req.params.shop)
 
     res.render('contact', {
-        title: 'contact',categories:categories,shopname: req.params.shop, url_base: urlBase,  username: userName,orderStat: orderStat
+        title: 'contact',categories:categories,shopname: req.params.shop, address: shop.address, url_base: urlBase,  username: userName,orderStat: orderStat
     })
 })
 
