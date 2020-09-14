@@ -167,6 +167,23 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
     const totalRows = await  Product.find(match).count();
     
+    const product_att = await Product.aggregate([
+        { $match : match } 
+       ,{ "$unwind": "$attributes" }
+       , 
+       { "$group": { 
+           "_id": "$attributes.name", 
+           "entries":{
+            $push:{
+                values:"$attributes.values" ,
+                count :{ "$sum": 1 },
+                
+            }
+        },
+        
+        }}
+   ])
+
     const promotionParams=[ {shop: shop },{  "promotion":true }] 
     const promotionMatch = { $and: promotionParams } 
     var promotion ={}
@@ -176,7 +193,7 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     if(totalRows % limit >0)
         pager +=1; 
 
-    return {products, totalRows, pager, promotion}
+    return {products, totalRows, pager, promotion, product_att}
 }
 
 

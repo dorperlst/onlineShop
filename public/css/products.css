@@ -101,3 +101,38 @@ ul.pagination {
     color: white;
     border: 1px solid #4CAF50;
   }
+
+  .prod_details_tab {
+    width: 173px;
+    height: 31px;
+    background: url(../images/products_details_bg.gif) no-repeat center;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.prod_details_tab a{padding-top: 7px;padding-right: 5px;}
+
+a.details {
+  /* margin: 6px 0 0 35px; */
+  text-decoration: none;
+  color: #0fa0dd;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+}
+
+a.details::before {content: " ";background: url(../images/square-blue-add.gif) center no-repeat;padding-left: 20px;/* margin-bottom: 2px; */}
+a.attribute::before {content: " ";background: url(../images/arrow-down.png) center no-repeat;padding-left: 20px;/* margin-bottom: 2px; */}
+
+.att-values{
+  
+  padding-left: 10;
+}
+ 
+.att-ul{
+  padding-top: 5;
+}
+.att-text{
+  padding-bottom: 5;
+}
+

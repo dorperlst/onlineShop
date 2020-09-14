@@ -1,33 +1,66 @@
 <login_aside class="aside aside-2">
-    <% if(username == 'Guest' ){%>
-      <login>
+  <div>
+  <% if(username == 'Guest' ){%>
+    <login>
 
-        <div class="title_box">Login</div>
-        <form id= "loginForm" enctype="multipart/form-data" action="/"  method="post">
-            <label>Email</label>
-            <input type="text" name="email"  tabindex="1"  value="" id="email"  class="field" placeholder="email.." required title="email...">
-            <label>password</label>
-             <input type="text"  value = "onlinepass" required name="password" id="password"  class="field" placeholder="password.."    title="password...">
-            <div class="submit"> <input class="prod_buy" type="submit" value="Submit"> </div>
-            <div class="flex-container">
-              <span id="login_msg"></span>
-            </div>
-        </form>
-        <hr>
-        <script src="/js/login_aside.js"></script>
-    
-    </login>
-    
+      <div class="title_box">Login</div>
+      <form id= "loginForm" enctype="multipart/form-data" action="/"  method="post">
+          <label>Email</label>
+          <input type="text" name="email"  tabindex="1"  value="" id="email"  class="field" placeholder="email.." required title="email...">
+          <label>password</label>
+            <input type="text"  value = "onlinepass" required name="password" id="password"  class="field" placeholder="password.."    title="password...">
+          <div class="submit"> <input class="prod_buy" type="submit" value="Submit"> </div>
+          <div class="flex-container">
+            <span id="login_msg"></span>
+          </div>
+      </form>
+      <hr>
+      <script src="/js/login_aside.js"></script>
+  
+     </login>
     <% } else {   %>
-   
-
       <div class="shopping_cart">
         <div class="title_box">Shopping cart</div>
         <div class="cart_details" id="cart_details"> <%= orderStat.totalItems %> items <br>
           <span class="border_cart"></span> Total: <span class="price"><%= orderStat.total %>$</span> </div>
         <div class="cart_icon"><a href="#"><img src="../../images/shoppingcart.png" ></a></div>
       </div>
-       
     <% } %>
+  </div>
+
+  <div>
+    <div class="title_box">Filter</div>
+
     
+    <ul>
+      <% products.product_att.forEach(function(attribute) { %> 
+        <li> 
+         
+          <a class="attribute">
+            <%=attribute._id %>
+          </a>
+          <%var dis_att =[];%>
+
+          <% attribute.entries.forEach(function(att_values) { %> 
+            <ul class ="att-ul">
+            <% att_values.values.forEach(function(val) { %> 
+              
+              <% if(!dis_att.includes(val) ){%>
+                <% dis_att.push(val) %>
+                <li class ="att-values"> 
+                  
+                  <input class="magic-checkbox" type="checkbox" name="layout" id="1" value=" <%=val%>">
+                  <label class="att-text" for="1">
+                    <%=val%>
+                  </label>
+                </li>
+               
+              <% } %>
+            <% }); %>
+          </ul>
+          <% }); %>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
   </login_aside>

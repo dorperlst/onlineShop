@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="/css/products.css">
-
-
 <section  class="grid-wrapper">
     <% products.products.forEach(function(product) { %>
       <div class="product-card">
@@ -16,14 +13,16 @@
       </div>
     
       <div class="product-info">
-       
-          
-          <!-- <label><%= product.description %></label> -->
-          <span class="price"> <%= product.price %>$</span>
-          
-          <a  class="prod_details" href="/<%=shopname %>/view/<%= product._id %>" >details... </a>
+         
       </div>
-      
+
+      <div class="prod_details_tab"> 
+        <a href="#" title="header=[Add to cart] body=[&nbsp;] fade=[on]">
+          <img src="../../images/cart.gif" alt="" class="left_bt" border="0">
+        </a> 
+        <a class="price" href="#"> <%= product.price %>$</a>
+       <a href="/<%=shopname %>/view/<%= product._id %>"class="details">details</a> </div>
+
     </div>
 
   <% }); %>
