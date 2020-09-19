@@ -14,7 +14,7 @@
             <span id="login_msg"></span>
           </div>
       </form>
-      <hr>
+     
       <script src="/js/login_aside.js"></script>
   
      </login>
@@ -27,12 +27,13 @@
       </div>
     <% } %>
   </div>
-
+  <hr>
   <div>
-    <div class="title_box">Filter</div>
-
-    
-    <ul>
+  </br>
+ 
+    <% if(locals.products && products.product_att) { %> 
+      <div class="title_box">Filter</div> 
+    <ul class="ul-attributes">
       <% products.product_att.forEach(function(attribute) { %> 
         <li> 
          
@@ -40,27 +41,28 @@
             <%=attribute._id %>
           </a>
           <%var dis_att =[];%>
-
-          <% attribute.entries.forEach(function(att_values) { %> 
-            <ul class ="att-ul">
-            <% att_values.values.forEach(function(val) { %> 
+          <ul class ="att-ul">
+          <% attribute.att.forEach(function(val) { %> 
+              <li class ="att-values"> 
+                
+                <input class="magic-checkbox" type="checkbox" name="layout" id="1" value=" <%=val%>">
+                <label class="att-text" for="1">
+                  <%=val%>
+                </label>
+              </li>
               
-              <% if(!dis_att.includes(val) ){%>
-                <% dis_att.push(val) %>
-                <li class ="att-values"> 
-                  
-                  <input class="magic-checkbox" type="checkbox" name="layout" id="1" value=" <%=val%>">
-                  <label class="att-text" for="1">
-                    <%=val%>
-                  </label>
-                </li>
-               
-              <% } %>
-            <% }); %>
-          </ul>
+              
+            
+       
           <% }); %>
+        </ul>
         </li>
       <% }); %>
     </ul>
+   
+    <div class="submit">
+       <input class="prod_buy" onClick="refreshAttributes()" type="button" value="Refresh">
+     </div>
+     <% } %>
   </div>
   </login_aside>

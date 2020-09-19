@@ -44,6 +44,8 @@ async function orderStats(token, shop, productId)
     try
     {
         const user = await User.findByToken(token);
+        if(!user)
+            return {total:0, totalItems:0, productInOrder :0}
         const orderStats = await Order.orderStats(user._id, shop )
         if(productId)
             orderStats.productInOrder = await  Order.productInOrder(shop, user._id, productId );
@@ -56,6 +58,12 @@ async function orderStats(token, shop, productId)
     }
     
 }
+   
+
+ 
+ 
+// GET /products?sortBy=createdAt:desc
+// GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 
 router.get('/:shop/view',async (req, res) => {
     
@@ -72,18 +80,11 @@ router.get('/:shop/view',async (req, res) => {
                 username: userName, orderStat: orderStat});
         } 
     catch (e) {
-         res.render('products', { title: 'products', products: [] , categories: [],shopname: req.params.shop, url_base: urlBase, username: userName});   
-     }
+        res.status(500).send(e.message)     }
 })
  
-
-// GET /products?completed=true
-// GET /products?limit=10&skip=20
-// GET /products?sortBy=createdAt:desc
-// GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 router.get('/:shop/products', async (req, res) => {
     try {
-        
         const products = await Product.find();
         res.send({ products })
     } catch (e) {
@@ -91,20 +92,35 @@ router.get('/:shop/products', async (req, res) => {
         res.status(500).send(e)
     }
 })
- 
 
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
     const shop = req.params.shop
+    var params = [ {shop: shop }]
+  
+
     var tree=[]
     try {
             const product = await Product.findById(req.params.id);
-            
+            params.push( { _id: { $ne:product._id  } } )
+            const match = { $and: params } 
+
+            const products = await Product.aggregate(
+                [   
+                  { $match : match },
+                  { $project: {price:1, name:1, commonToBoth:{ $size:{ $setIntersection: [ "$tags", product.tags ] }} } },
+                  { "$sort": { "commonToBoth": -1  } },
+
+                ]
+             )
+
+
+
             const categories = await  Cat.getCategoriesTree(req.query.category, shop);
             categories.tree = product.tree
             const orderStat= await orderStats(req.session.token, shop, req.params.id);
             const urlBase =`${shop}/view`;
-            res.render('product', { title: 'product',url_base:urlBase, tree:tree, product: product, categories: categories, shopname: shop, orderStat:orderStat, username: userName});
+            res.render('product', { title: 'product', products:products, url_base:urlBase, tree:tree, product: product, categories: categories, shopname: shop, orderStat:orderStat, username: userName});
         } 
     catch (e) {
         const obj={} 
@@ -113,7 +129,7 @@ router.get('/:shop/view/:id', async (req, res) => {
  
 })
 
-router.delete('/products/:id', async (req, res) => {
+router.delete('/products/:id', admin, multer().none(), async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
         await product.remove()

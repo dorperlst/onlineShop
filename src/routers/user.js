@@ -54,29 +54,12 @@ router.delete('/contact/:shop/', multer().none(), auth, async (req, res) => {
     }
 })
 
-
-async function orderStats(token, shop)
-{
-    try
-    {
-        const user = await User.findByToken(token);
-        const orderStats = await Order.orderStats(user._id, shop )
-        return orderStats
-    
-    }
-    catch(e){
-        var t=e;
-    }
-    
-}
-
 router.get('/:shop/account', auth, async (req, res) => {
     const shop = req.params.shop
 
-    const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop) 
-    const orderStat= await orderStats(req.session.token, shop)
-
-     const urlBase=`/${shop}/view`
+    const categories = await  Cat.getCategoriesTree(req.query.category, shop) 
+    const orderStat=  await Order.orderStats(req.user._id, shop )
+    const urlBase=`/${shop}/view`
     await req.user.populate({
         path: 'orders',
         match:{shop: shop},
@@ -97,8 +80,6 @@ async function getShopOrders(shop, status)   {
     var params = [ {shop: shop }]
     var limit = 10 
     var sort = { "owner":-1,"status":1,"timestamps": -1 }
-    // const pageNum =  req.query.pageNum? parseInt(req.query.pageNum) : 0
-    // const skip = pageNum * limit  
  
     if (status)  
         params.push( { status: status } )
@@ -155,7 +136,7 @@ router.post('/users/:shop/contact', multer().none(), async (req, res) => {
         const contact = new Contact (req.body)
         contact.shop = req.params.shop
         await contact.save()
-        
+        // keep
       //  sendContactEmail(req.body.email, req.body.name,"Your msg is recived")
         res.send({ msg: "msessage send successfully" })
      } catch (e) {
@@ -189,25 +170,21 @@ router.get('/:shop/signup', async (req, res) => {
 
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
-    //const orderStat= await orderStats(req.session.token,req.params.shop)
-
     res.render('signup', {
         title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
     })
-
- 
 })
 
 
 router.get('/:shop/contact',auth, async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
-    const shop = await Shop.findOne({ name : req.params.shop })
+     const shop = await Shop.findOne({ name : req.params.shop })
     
     const urlBase=`/${req.params.shop}/view`
 
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
-    const orderStat= await orderStats(req.session.token,req.params.shop)
+    const orderStat=  await Order.orderStats(req.user._id,  req.params.shop )
 
     res.render('contact', {
         title: 'contact',categories:categories,shopname: req.params.shop, address: shop.address, url_base: urlBase,  username: userName,orderStat: orderStat
@@ -240,13 +217,10 @@ router.get('/contact',admin, async (req, res) => {
     const contact = await Contact.find({shop:req.shop.name})
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
-    const orderStat= orderStats(req.session.token, res.shop.name)
-
     res.render('contact', {   title: 'contact', contact: contact, shopname: req.shop.name, username: userName})
 })
 
 router.post('/:shop/users', upload.single('avatar'), async function (req, res, next) {
- //console.log(req.body)
     const user = new User(req.body)
     if(req.file!= undefined)
         user.image = req.file.filename
@@ -290,20 +264,15 @@ async function redirectSession(req, res, user, href){
 }
 
 router.post('/users/logout', multer().none(),  auth, async (req, res) => {
-  
     req.user.tokens = req.user.tokens.filter((token) => {
         return token.token !== req.session.token
     })
     logout(req, req.body.currentUrl, res)
-        
-            
-     
 })
 
 async function logout(req, href, res){
     req.session.token=''
     req.session.username = ''
-
     req.session.cookie.expires = new Date(Date.now())
     req.session.cookie.maxAge = 0
     try{
@@ -332,7 +301,6 @@ router.get('/users/me', auth, async (req, res) => {
 
 router.post('/:shop/account', auth,multer().none(), async (req, res) => {
     const updates = Object.keys(req.body)
- 
     const allowedUpdates = ['name', 'last', 'email', 'phone','address']
     allowedUpdates.forEach((update) => req.user[update] = req.body[update])
     
@@ -353,7 +321,6 @@ router.delete('/users/me', auth, async (req, res) => {
         res.status(500).send()
     }
 })
-
  
 
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {

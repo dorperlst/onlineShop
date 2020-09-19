@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
- 
+const Order = require('../models/order').Order
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -90,8 +91,27 @@ userSchema.methods.generateAuthToken = async function () {
 }
 
 userSchema.statics.findByToken = async (token) => {
+  return await getUserByToken(token)
+}
+
+userSchema.statics.orderStats = async (token, shop) => {
     if(!token)
         return {total:0, totalItems:0}
+    try
+    {
+        const user = await getUserByToken(token);
+        const orderStats = await Order.orderStats(user._id, shop )
+        return orderStats
+    }
+    catch(e){
+       console.log(e);
+    }
+    
+}
+
+async function getUserByToken(token){
+    if(!token)
+        return null;
 
     const jwt = require('jsonwebtoken')
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
@@ -100,7 +120,6 @@ userSchema.statics.findByToken = async (token) => {
         return null;
     return user
 }
-
         
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
@@ -128,10 +147,6 @@ userSchema.pre('save', async function (next) {
     }
     next()
 })
- 
- 
- 
 
 const User = mongoose.model('User', userSchema)
-
 module.exports = User

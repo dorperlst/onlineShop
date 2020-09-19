@@ -50,7 +50,8 @@ const productSchema = new mongoose.Schema({
         values: [{
             type:String,
             required: true,
-            trim: true }] }],
+            trim: true }] 
+    }],
     
     imgattributes:[  {
         name: {
@@ -105,11 +106,8 @@ productSchema.pre('remove', async function (next) {
     for (i=0 ; i < product.images.length; i++)
     {
         var filePath = 'public/uploads/'+product.images[i]; 
-        console.log(filePath)
- 
         try
         {
-             
             fs.unlink(filePath, (err) => {
                 if (err) throw err;
                 console.log('successfully deleted');
@@ -119,14 +117,11 @@ productSchema.pre('remove', async function (next) {
             
         }      
     }
-
     next()
 })
 
 productSchema.statics.getProducts = async (query, shop, promo=false) => {
-
     var params = [ {shop: shop }]
-
     var sort = { "timestamps": -1 }
     const pageNum =  query.pageNum? parseInt(query.pageNum) : 1
     if(pageNum < 1)
@@ -153,9 +148,10 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     
     if (query.attributes)  
     { 
-        var att = JSON.parse(query.attributes)
+       
+        var att = JSON.parse(query['attributes']);
         for(i=0; i <att.length; i++)
-            params.push( {  "attributes.name":att[i][0], "attributes.value": att[i][1] } )
+            params.push( {  "attributes.name":att[i][0], "attributes.values": { "$in":[att[i][1]]} } )
     }
   
     const match = { $and: params } 
@@ -166,24 +162,38 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
 
     const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
     const totalRows = await  Product.find(match).count();
-    
-    const product_att = await Product.aggregate([
-        { $match : match } 
-       ,{ "$unwind": "$attributes" }
-       , 
-       { "$group": { 
-           "_id": "$attributes.name", 
-           "entries":{
-            $push:{
-                values:"$attributes.values" ,
-                count :{ "$sum": 1 },
-                
-            }
-        },
-        
-        }}
-   ])
+   
 
+
+    const product_att = await Product.aggregate([
+        { $match : match },
+        { "$unwind": "$attributes" }, 
+        { "$group": { 
+                "_id": {
+                    "name": "$attributes.name", 
+                    "values": "$attributes.values"
+                } 
+        }},
+        { "$unwind": "$_id.values" },
+        { "$group": { 
+            "_id": "$_id.name", 
+            "att": { 
+                "$addToSet":  
+                    "$_id.values"
+            }, 
+            "values":{
+                         $push:{
+                             value:"$_id.values" ,
+                             count :{ "$sum": 1}
+                             
+                         }
+                     },
+                 
+         }},
+        { "$sort": { "value.name": 1 ,"values.count": 1 } },
+
+   ])
+     
     const promotionParams=[ {shop: shop },{  "promotion":true }] 
     const promotionMatch = { $and: promotionParams } 
     var promotion ={}
@@ -196,9 +206,5 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     return {products, totalRows, pager, promotion, product_att}
 }
 
-
-
-
 const Product = mongoose.model('Product', productSchema)
-
 module.exports = Product

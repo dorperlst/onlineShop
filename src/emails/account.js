@@ -29,12 +29,6 @@ const sendContactEmail = (email,name, msg) => {
         html:`<div>hello, ${name} ${msg}</div>`,
         subject: 'Online Shop!'
      })
-    // sgMail.send({
-    //     to: email,
-    //     from: process.env.EMAIL_ACCOUNT,
-    //     subject: 'Your Contact from Online Shop send !',
-    //     text: `<div>`hello, ${name} thank you for contact us </div>`
-    // })
 }
 
 module.exports = {

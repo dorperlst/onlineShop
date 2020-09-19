@@ -34,19 +34,19 @@
 			  <article class="main-center"> 
 				<div class="center_title_bar">About Us</div>
 
-				<% for (var i = 0; i <  shop.about.length; i++) { %>
+				<% for (var i = 0; i <  shop.abouts.length; i++) { %>
 					<div class="about">
 						<h3>
-							<%= shop.about[i].title%>  
+							<%= shop.abouts[i].title%>  
 						</h3>
 						<div class="flex-container">
-							<div class="col-md-6">
-								<p><%= shop.about[i].value%> </p>
+							<div class="col-md">
+								<p><%= shop.abouts[i].value%> </p>
 						
 							</div>
 							
 		
-							<div class="col-md-6">
+							<div class="col-md">
 								<div class="about_img-box">
 									<% if (shop.images.length > i) { %>
 									<img src="../uploads/<%=shop.images[i]%>" alt="">
@@ -58,7 +58,7 @@
 				 
 				<% }%> 
 				
-				<% if ( shop.about.length > 1 ) { %>
+				<% if ( shop.abouts.length > 1 ) { %>
 					<div class="flex-container ">
 						<a class="next" href="#" onclick="next(1)"> <  </a>
 						<a class="next" href="#" onclick="next(1)"> > </a>
@@ -72,7 +72,7 @@
 		 
 		  </article>
 		  <script src="/js/about.js"></script>
-		  <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
+		  <%- include('../partials/footer.ejs') %> 
 		</div>
 	</body>
   </html>

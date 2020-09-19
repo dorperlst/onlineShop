@@ -55,7 +55,7 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
         await user.save()
 
         await order.save()
-        const stats= await Order.orderStats(user._id,req.body.shop )
+        const stats= await Order.orderStats(user._id, req.body.shop )
         res.status(200).send(stats)
     } catch (e) {
         console.log(e)
@@ -63,10 +63,6 @@ router.post('/orders', multer().none(), auth , async function (req, res, next) {
     }
 })
  
-
-// GET /orders?status=true
-// GET /orders?limit=10&skip=20
-// GET /orders?sortBy=createdAt:desc
 router.get('/orders', auth, async (req, res) => {
   
 var ord= await Order.find()
@@ -151,9 +147,6 @@ router.get('/ordersAdmin',admin, async (req, res) => {
   { $sort: sort }
       ])
     res.render('orders', { title: 'orders', orders:orders, shopname: req.shop.name});
-
-      
-        // res.send(orders)
     } catch (e) {
         console.log(e)
         res.status(500).send()
@@ -176,6 +169,7 @@ router.patch('/:shop/orderStatus', auth, multer().none(), async (req, res) => {
         res.send(order)
 
     } catch (e) {
+        console.log(e)
         res.status(400).send(e)
     }
 })
@@ -196,6 +190,7 @@ router.patch('/orders', auth, multer().none(), async (req, res) => {
         res.send("update successfully")
 
     } catch (e) {
+        console.log(e);
         res.status(400).send(e)
     }
 })
@@ -209,20 +204,17 @@ router.delete('/orders/:id', admin, async (req, res) => {
 
         res.send(order)
     } catch (e) {
+        console.log(e)
         res.status(500).send()
     }
 })
 router.delete('/ordersProduct', auth, multer().none(), async (req, res) => {
     try {
         const orderId = req.body.orderId
-
         const ord = await Order.findById(orderId)
          var id= req.body.productId
         ord.products = ord.products.filter(function(el) { return el.product != id; }); 
         ord.save()
-      
- 
-
         res.send(ord)
     } catch (e) {
         res.status(500).send()

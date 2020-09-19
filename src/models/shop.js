@@ -15,8 +15,12 @@ const shopSchema = new mongoose.Schema({
         type: String,
         trim: true
     }],
-
-    about: [{
+    logos: [
+        {
+        type: String,
+        trim: true
+    }],
+    abouts: [{
         value: { type: String,trim: true},  
         title: {type: String, max: 50} 
     }],

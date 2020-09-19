@@ -1,7 +1,6 @@
 var express = require('express');
 const Cat = require('../models/cat')
 const Product = require('../models/product')
-const ejs= require("ejs");
 const router = new express.Router()
 var multer = require('multer'); 
 const authObj = require('../middleware/auth')
@@ -37,8 +36,6 @@ router.get('/:shop/cats/:id', async (req, res) => {
         res.status(400).send(e)
     }
 })
-
- 
  
 router.delete('/cats/:id',admin, async (req, res) => {
      

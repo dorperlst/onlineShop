@@ -7,6 +7,8 @@
 
     <ul class="left_menu" id ="ulcategories">
       <% var line='odd'; %> 
+      <% if(categories.categories.length > 0) { %> 
+
       <% categories.categories[0].entries.forEach(function(category) { %> 
         <% var selected= category.name ==  categories.cur? "selected" :""%> 
           <li class="<%= line %> <%= selected %>"><a href="<%= url_base %>?category=<%= category.name %>"  > <%= category.name %> </a>
@@ -20,6 +22,8 @@
           <% }   %>
           <%  line =line=='odd'? 'even' :'odd' %> 
        <% }); %>
+       <% }   %>
+
     </ul>
 </aside>
 

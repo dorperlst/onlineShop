@@ -5,13 +5,11 @@ const authObj = require('../middleware/auth')
 const auth = authObj.auth
 const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const User = require('../models/user')
+const Product = require('../models/product')
 const Order = require('../models/order').Order
 const { admin } = require('../middleware/auth')
 const Cat = require('../models/cat')
-
-
 const router = new express.Router()
-
 
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
@@ -35,8 +33,6 @@ const upload = multer({
     }
 })
 
-
-
 router.get('/:shop/about', async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
     const shop = await Shop.findOne({ name : req.params.shop })
@@ -45,26 +41,10 @@ router.get('/:shop/about', async (req, res) => {
 
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
 
-    const orderStat= await orderStats(req.session.token,req.params.shop)
+    const orderStat= await User.orderStats(req.session.token,req.params.shop)
 
     res.render('about', { title: 'About' , categories: categories, shopname: req.params.shop, shop: shop, url_base: urlBase,  username: userName,orderStat: orderStat  })
 })
-
-
-async function orderStats(token, shop)
-{
-    try
-    {
-        const user = await User.findByToken(token);
-        const orderStats = await Order.orderStats(user._id, shop )
-        return orderStats
-    
-    }
-    catch(e){
-       return {}
-    }
-    
-}
  
 router.get('/shops', async (req, res) => {
     const shops = await Shop.find()
@@ -101,17 +81,49 @@ router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
     var newimages = req.files.map(x => x.filename)
     var images = JSON.parse( req.body.images)
     shop.images = images.concat(newimages)
-
     allowedUpdates.forEach((update) => shop[update] = req.body[update])
-    var abouts =JSON.parse( req.body.about)
+ 
+    shop.abouts = JSON.parse(req.body.abouts);
+    if(req.body.name != shop.name)
+    {
+        var oldName = shop.name;
+        var newName = req.body.name;
+        try {
+            await Cat.updateMany(
+                { tree: { $in: [oldName] }},
+                { $set: { "tree.$[element]" : newName } },
+                { arrayFilters: [ { "element": oldName } ] }
+             )
+             await Order.updateMany(
+                { shop: oldName},
+                { $set: { shop : newName } }
+                 
+             )
+             
 
 
-    shop.about = JSON.parse(req.body.about);
-    
-    //shop.address = shop.address.trim();
-    //shop.address = shop.address.replace(/\n/g, "<br>");;
+         
+         } catch (e) {
+            print(e);
+         } 
+         try {
+            await Product.updateMany(
+                { tree: { $in: [oldName] }},
+                { $set: { "tree.$[element]" : newName,  "shop" : newName } },
+                { arrayFilters: [ { "element": oldName } ] }
+             )
+         
+         } catch (e) {
+
+            print(e);
+            res.status(400).send(e)
+
+         } 
+         shop.name = newName;
+    }
+
     try {
-         await req.shop.save()
+         await shop.save()
          res.redirect('/admin');
         res.send(req.shop)
     } catch (e) {
@@ -128,10 +140,6 @@ router.delete('/shops/me', auth, async (req, res) => {
         res.status(500).send()
     }
 })
-
- 
-
- 
 
 router.delete('/shops/me/avatar', auth, async (req, res) => {
     req.shop.avatar = undefined

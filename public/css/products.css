@@ -124,15 +124,8 @@ a.details {
 a.details::before {content: " ";background: url(../images/square-blue-add.gif) center no-repeat;padding-left: 20px;/* margin-bottom: 2px; */}
 a.attribute::before {content: " ";background: url(../images/arrow-down.png) center no-repeat;padding-left: 20px;/* margin-bottom: 2px; */}
 
-.att-values{
-  
-  padding-left: 10;
-}
+.att-values{  padding-left: 10;}
  
-.att-ul{
-  padding-top: 5;
-}
-.att-text{
-  padding-bottom: 5;
-}
+.att-ul{  padding-top: 5;}
+.att-text{  padding-bottom: 5;}
 

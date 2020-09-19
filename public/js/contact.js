@@ -1,5 +1,5 @@
 
- var address = document.getElementById("address") //= shopaddress.replace(/\n/g, "<br />")
+var address = document.getElementById("address") 
 address.innerHTML = address.innerHTML.trim().replace(/\n/g, "<br />")
 
 const contact_form = document.getElementById("contact_form");
@@ -16,17 +16,12 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(mymap);
 
 function onLocationFound(e) {
-
     var radius = e.accuracy / 2;
-
     L.marker(e.latlng).addTo(mymap)
-        //.bindPopup("You are within " + radius + " meters from this point").openPopup();
-
     L.circle(e.latlng, radius).addTo(mymap);
 }
 mymap.on('locationfound', onLocationFound);
 mymap.locate({setView: true, maxZoom: 16});
-
 
 contact_form.addEventListener('submit', (e) => {
     e.preventDefault()

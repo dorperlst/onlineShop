@@ -1,28 +1,7 @@
 const mongoose = require('mongoose')
 
-
-
-
-// create_time: "2020-08-10T14:21:09Z"
-// id: "6V045668P0492830T"
-// intent: "CAPTURE"
-// links: [{…}]
-// payer: {email_address: "sb-r7cjw2837407@personal.example.com", payer_id: "7YTE8U9N5YWP6", address: {…}, name: {…}}
-// purchase_units: [{…}]
-// status: "COMPLETED"
-// update_time: "2020-08-10T14:21:35Z"
-
-
-
-
-
-
-
-
-
 const orderProductSchema = new mongoose.Schema({
     product: {
-        
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
         required: true,
@@ -38,8 +17,6 @@ const orderProductSchema = new mongoose.Schema({
         type: Number,
         required: false
     }
-    
-
 } )
 
 const orderSchema = new mongoose.Schema({

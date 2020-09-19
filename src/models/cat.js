@@ -47,8 +47,6 @@ catSchema.statics.getCategoriesTree = async (category, shop) => {
         var name = "";
         var tree = []
     try {
-  
-    
         if (category && category != 'All') 
         {
             name = category
@@ -63,8 +61,11 @@ catSchema.statics.getCategoriesTree = async (category, shop) => {
     
         const params = [{parent: name},{parent: null}, {name: { $in: tree } }  ]
         const match = { $or: params } 
+        const params2 = [match, {tree: { $in: [shop] } }  ]
+        const match2 = { $and: params2 } 
+        
         const cats =  await Cat.aggregate( [
-            { $match : match } ,
+            { $match : match2 } ,
             {   
                 $project: 
                 {
@@ -105,7 +106,6 @@ catSchema.pre('remove', async function (next) {
    if(cat.image)
    {
         var filePath = 'public/uploads/'+cat.image; 
-      //  console.log(filePath)
         try
         {
              
@@ -118,10 +118,8 @@ catSchema.pre('remove', async function (next) {
             
         }      
     }
-
     next()
 })
 
 const Cat = mongoose.model('Cat', catSchema)
-
 module.exports = Cat

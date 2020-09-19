@@ -1,13 +1,10 @@
 
 const form = document.getElementById("contact");
 const form_shop = document.getElementById("form_shop");
-
-
 var productsDiv = document.getElementById("productsDiv");   
 var contactSec = document.getElementById("contacts");    
 var ordersSec = document.getElementById("orders");    
 var shopSec = document.getElementById("secShop");    
- 
 var productsWrapper = document.getElementById("productsWrapper");    
 var productFiles = document.getElementById("productFiles");  
 var shopFiles = document.getElementById("shopFiles");  
@@ -19,8 +16,6 @@ var ulAttributes = document.getElementById("ulAttributes");
 var ulImgAttributes = document.getElementById("imgAttributes");    
 var ultags = document.getElementById("tags"); 
 var ulAbout = document.getElementById("ulAbout"); 
-
-
 var ulimages = document.getElementById("images"); 
 var uldetails = document.getElementById("details"); 
 var formAction='' 
@@ -31,7 +26,6 @@ var isAttImg= false
 function closePopUp(parent){
     resetForm()
     parent.parentElement.style.display="none"
-   
     productsWrapper.style.display="block"
 }
 
@@ -54,7 +48,6 @@ function addProduct(){
 }
 
 function deleteProduct(id){
-
     var conf = confirm("Are you sure you want to delete this product!");
     if (conf != true) 
         return
@@ -63,7 +56,7 @@ function deleteProduct(id){
  
     fetch('/products/'+id,
     { method: 'delete', body: formdata})
-    then(function(res) {
+    .then(function(res) {
         if (res.redirected)  
             window.location.href = res.url;
         else
@@ -71,9 +64,6 @@ function deleteProduct(id){
     })
 
 }
-
- 
-
 
 function editProduct(id){
     formProductDisplay("products", "Edit Product")
@@ -206,7 +196,6 @@ function replay(parent, contact_id){
 }
 
 function createImgAttListItem(parent){
-
     parent.parentElement.getElementsByTagName("ul")[0].appendChild(createImgListItem('', ''));
 }
 
@@ -247,48 +236,49 @@ function addAbout(title='', value = ''){
 function selectAttImg(element){
     currentAttributeDiv = element.parentElement
     imagesDiv.style.display = "grid"
+    popup.style.display = "none"
     isAttImg= true
 }
 
 function selectImage(parent, img){
-    if(isAttImg == true)
-    {
-        var input = currentAttributeDiv.getElementsByTagName("input")[1]
-        if(input.value.trim()!='')
-            ulimages.appendChild( createListItem( input.value.trim(),input.value.trim() ));
-        var curimg= currentAttributeDiv.getElementsByTagName("img")[0]
-        currentAttributeDiv.removeEventListener('mouseover', hover);
 
-        currentAttributeDiv.addEventListener("mouseover", event => {
-           hover(this, img)
-          });
-
-        curimg.src = '../../uploads/'+ img
-        curimg.style="display:block"
-        if(mainImg==img)
-           mainImg=undefined
-        input.value = img
-        removeli(parent.parentNode)
-
-        currentAttributeDiv = undefined
-        isAttImg= false
-        imagesDiv.style.display = "none"
-    }
-    else
+    if(!isAttImg == true)
     {
         mainImg = img;
         var selected = document.getElementsByClassName("mainImg");
         if(selected.length>0)
              selected[0].className = "";
         parent.className="mainImg";
+        return;
     }
+    var input = currentAttributeDiv.getElementsByTagName("input")[1]
+    if(input.value.trim()!='')
+        ulimages.appendChild( createListItem( input.value.trim(),input.value.trim() ));
+    var curimg= currentAttributeDiv.getElementsByTagName("img")[0]
+    currentAttributeDiv.removeEventListener('mouseover', hover);
+
+    currentAttributeDiv.addEventListener("mouseover", event => {
+        hover(this, img)
+        });
+
+    curimg.src = '../../uploads/'+ img
+    curimg.style="display:block"
+    if(mainImg==img)
+        mainImg=undefined
+    input.value = img
+    removeli(parent.parentNode)
+
+    currentAttributeDiv = undefined
+    isAttImg= false
+    imagesDiv.style.display = "none"
+    popup.style.display = "block";    
 }
 
 function closeImages(){ 
-     isAttImg= false
+    isAttImg= false
     imagesDiv.style.display="none"
-   var cur = imagesDiv.getAttribute('current');
-   document.getElementById(cur).style.display = cur == "secShop" ? "flex" :"block"
+    var cur = imagesDiv.getAttribute('current');
+    document.getElementById(cur).style.display = cur == "secShop" ? "flex" :"block"
  
 }
 
@@ -296,8 +286,6 @@ function showImages(parent, src){
     isAttImg= false
     imagesDiv.style.display="grid"
     imagesDiv.setAttribute('current',src);
-
-     
     parent.parentElement.parentElement.parentElement.style.display = "none"
 
 }
@@ -341,22 +329,18 @@ function editShop(){
         form_shop.elements['long'].value = jsonData.long
         for(var ind in jsonData.images)
             ulimages.appendChild(createListItem(jsonData.images[ind], jsonData.images[ind]));
-             
-     
     });
-
 }
 
 function showContacts(name, img){
     contactSec.style.display="flex"
-
     productsWrapper.style.display = "none"
 }
+
 function showOrders(name, img){
     ordersSec.style.display="block"
     productsWrapper.style.display = "none"
 }
-
  
 function nameListItem(name, placeholder){
     const li = document.createElement("li");
@@ -462,11 +446,10 @@ form_shop.addEventListener('submit', (e) => {
    
     formdata.append('name', form_shop.elements['shopname'].value)
     formdata.append('address', form_shop.elements['address'].value)
-
     formdata.append('lat', form_shop.elements['lat'].value)
     formdata.append('long', form_shop.elements['long'].value)
     var about = aboutToJsonArray(ulAbout)
-    formdata.append( 'about', about)
+    formdata.append( 'abouts', about)
 
     var ulImages = toJsonArray( ulimages ) 
     formdata.append( 'images', ulImages)
@@ -484,10 +467,7 @@ form_shop.addEventListener('submit', (e) => {
         else
             document.getElementById("err").textContent="Action Fail"
     })
-
 })
-
-
 
 
 function toAttJsonArray(ul, isImg) {
@@ -517,6 +497,7 @@ function toAttJsonArray(ul, isImg) {
     return JSON.stringify(array)
 
 }
+
 function aboutToJsonArray(ul) {
     var array =[]
     for (var i = 0; i < ul.children.length; i++ ) {
@@ -572,19 +553,13 @@ function loadImageFileAsURL()
             fileReader.readAsDataURL(fileToLoad);
         }
     }
-   
 }
-    
 
 function addAttributes(name= '' , values= ['']){
-
-   
     const template = document.querySelector('#attributes-li-template').innerHTML
     const html = Mustache.render(template, { name: name, values: values })
-
     ulAttributes.insertAdjacentHTML('beforeend', html)
 }
-
 
 function addImgAttributes(name, values){
     if(!name)
@@ -593,7 +568,3 @@ function addImgAttributes(name, values){
     const html = Mustache.render(template, { name: name, values: values })
     ulImgAttributes.insertAdjacentHTML('beforeend', html)
 }
-
-
-
-

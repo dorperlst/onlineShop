@@ -16,14 +16,12 @@ function addCount(delta, parent ,id){
         return
     counter.innerHTML = newCount
     var new_total =  parseInt(price.innerHTML) * newCount
-
-  
+    
     order_total.innerHTML = new_total - parseInt(total.innerHTML) + parseInt(order_total.innerHTML)
     total.innerHTML = new_total
-
     order_total_item.innerHTML =   delta + parseInt(order_total_item.innerHTML)
+    
     const  ord = order_info.find(o => o.id === id);
-
     if (ord)
         ord.count= newCount 
     else

@@ -5,7 +5,7 @@ const userRouter = require('./routers/user')
 const orderRouter = require('./routers/order')
 const categoryRouter = require('./routers/cat')
 const shopRouter = require('./routers/shop')
-const paymentRouter = require('./routers/payment')
+//const paymentRouter = require('./routers/payment')
 const productRouter = require('./routers/product')
 const authObj = require('./middleware/auth')
 const admin = authObj.admin
@@ -32,7 +32,7 @@ app.use(userRouter)
 app.use(productRouter)
 app.use(orderRouter)
 app.use(categoryRouter)
-app.use(paymentRouter)
+//app.use(paymentRouter)
 
  
 app.get('/login', (req, res) => {
