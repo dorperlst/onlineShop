@@ -1,4 +1,6 @@
 <login_aside class="aside aside-2">
+  <link rel="stylesheet" href="/css/multirange.css">
+
   <div>
   <% if(username == 'Guest' ){%>
     <login>
@@ -59,10 +61,19 @@
         </li>
       <% }); %>
     </ul>
-   
+    <input id ="range" type="range" onchange="val(this)" multiple value="10,80" />
+
+
+
+    <script src="/js/multirange.js"></script>
+
+ 
+ 
     <div class="submit">
        <input class="prod_buy" onClick="refreshAttributes()" type="button" value="Refresh">
      </div>
      <% } %>
   </div>
   </login_aside>
+
+  

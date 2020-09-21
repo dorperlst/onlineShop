@@ -44,19 +44,18 @@ function pagination(pager, current){
     for (i=0;i< page ;i++)  
         createPagerLink(i+1, i+1)
     createPagerLink(page+1, ">")
-
-       
-     
 }
 
 function createPagerLink(ind, value){
-
     const li = document.createElement("li");
     const a = document.createElement("a");
-
     a.innerHTML= value ;
     var href = replaceUrlParam('pageNum', ind) ; 
     a.href= href;
     li.appendChild(a);
     ulPager.appendChild(li);
 }
+
+function val(parent){ 
+    console.log( parent.value 
+        );}

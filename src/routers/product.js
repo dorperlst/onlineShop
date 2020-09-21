@@ -58,11 +58,7 @@ async function orderStats(token, shop, productId)
     }
     
 }
-   
 
- 
- 
-// GET /products?sortBy=createdAt:desc
 // GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 
 router.get('/:shop/view',async (req, res) => {
@@ -105,7 +101,7 @@ router.get('/:shop/view/:id', async (req, res) => {
             params.push( { _id: { $ne:product._id  } } )
             const match = { $and: params } 
 
-            const products = await Product.aggregate(
+            const prod = await Product.aggregate(
                 [   
                   { $match : match },
                   { $project: {price:1, name:1, commonToBoth:{ $size:{ $setIntersection: [ "$tags", product.tags ] }} } },
@@ -114,7 +110,7 @@ router.get('/:shop/view/:id', async (req, res) => {
                 ]
              )
 
-
+             const products = {products:prod}
 
             const categories = await  Cat.getCategoriesTree(req.query.category, shop);
             categories.tree = product.tree

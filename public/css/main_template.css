@@ -35,7 +35,7 @@
     padding: 0;
     margin: 0;
   }
-  .aside {flex: 1 0 0;}
+  .aside {font-family: Arial, Helvetica, sans-serif;padding: 10px;/* padding-right: 5px; */flex: 1 0 0;}
     
   .main-center    {flex: 5 0 0;}
   .main    {flex: 25 0 0;}
@@ -153,7 +153,7 @@ body {
     margin: 0;
     background-color: #f6f6f6;
     padding:0;
-    font-family:Arial, Helvetica, sans-serif;
+    /* font-family:Arial, Helvetica, sans-serif; */
     font-size:13px;
  }
 
@@ -395,7 +395,7 @@ form >.field{   text-align-last: left;  }
 
 .price{
   color: #ff8a00;
-  padding-bottom: 10px;
+  /* padding-bottom: 10px; */
 }
 .nested-cat{
     display: flex;
@@ -421,8 +421,8 @@ form >.field{   text-align-last: left;  }
 
 .center_prod_box_big{  margin:0px;}
 
-.product_img_big{padding:10px 0 0 10px;height: inherit;display: flex;}
-.product_title_big{color:#ff8a00;padding:5px 0 5px 0;font-weight:bold;font-size: 14px;margin: auto;}
+.product_img_big{padding:10px 0 0 10px;height: inherit;display: flex;justify-content: space-around;}
+.product_title_big{color: #11136b;padding:5px 0 5px 0;font-weight:bold;font-size: 14px;margin: auto;}
 
 .flex-container >select {
   height: 22px;
@@ -519,7 +519,7 @@ input.contact_input{
 {
   margin: auto;
   text-decoration: none;
-  font-size: 24px;
+  font-size: 30px;
   margin-top: 20px;
   margin-bottom: 10px;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -533,7 +533,7 @@ input.contact_input{
 
 .col-md {
   -ms-flex: 0 0 50%;
-  flex: 0 0 50%;
+  flex: 0 0 45%;
   max-width: 50%;
 }
 
@@ -569,3 +569,37 @@ input.contact_input{
 #loginForm >label{
   padding-left: 5px;
 }
+
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 50px;
+  background-color: #fff;
+  margin-bottom: 15px;
+}
+
+.prod_details_tab {
+  width: 173px;
+  height: 31px;
+  background: url(../images/products_details_bg.gif) no-repeat center;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.prod_details_tab a{/* padding-top: 7px; */margin: auto 0 auto 0;padding-right: 5px;}
+
+.prod_details_tab a {
+
+text-decoration: none;
+
+font-family: Arial, Helvetica, sans-serif;
+font-size: 11px;
+}
+
+a.details {
+  color: #0fa0dd;
+
+}
+
+a.details::before {content: " ";background: url(../images/square-blue-add.gif) center no-repeat;padding-left: 20px;/* margin-bottom: 2px; */}

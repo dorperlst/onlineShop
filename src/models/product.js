@@ -161,9 +161,21 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     }
 
     const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
-    const totalRows = await  Product.find(match).count();
-   
+    
+    const info = await  Product.aggregate([
+        { "$group": {
+           "_id": null,
+           "max": { "$max": "$price" },
+           "min": { "$min": "$price" },
+           "count":{"$sum":1}
+        }}
+     ]);
 
+     var productInfo = {totalRows: info[0].count, max: info[0].max, min :info[0].min,}
+     var page =  parseInt(productInfo.totalRows / limit);
+     if(productInfo.totalRows % limit > 0)
+        page +=1; 
+    productInfo.pageNum = page
 
     const product_att = await Product.aggregate([
         { $match : match },
@@ -199,11 +211,10 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     var promotion ={}
     if(promo)
           promotion =  await Product.find(promotionMatch).sort(sort).limit( promtionLimit)
-    var pager =  parseInt(totalRows / limit);
-    if(totalRows % limit >0)
-        pager +=1; 
+   
 
-    return {products, totalRows, pager, promotion, product_att}
+//totalRows, pager
+    return {products, promotion, product_att, productInfo}
 }
 
 const Product = mongoose.model('Product', productSchema)

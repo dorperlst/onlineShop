@@ -5,7 +5,6 @@ var abouts = document.getElementsByClassName("about")
 if(abouts.length>0)
 {
     abouts[ind].classList.add("about_cur");
-
     interval = setInterval(function(){ 
         changeImg(1)
     }, 7000);

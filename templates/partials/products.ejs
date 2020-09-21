@@ -12,41 +12,38 @@
       <% }  %>
       </div>
     
-      <div class="product-info">
-         
-      </div>
-
+     
       <div class="prod_details_tab"> 
         <a href="#" title="header=[Add to cart] body=[&nbsp;] fade=[on]">
           <img src="../../images/cart.gif" alt="" class="left_bt" border="0">
         </a> 
         <a class="price" href="#"> <%= product.price %>$</a>
        <a href="/<%=shopname %>/view/<%= product._id %>"class="details">details</a> </div>
-
     </div>
 
   <% }); %>
 
   
   </section>  
-  
+  <% if (  products.productInfo && parseInt(products.productInfo.pageNum) > 1) { %>   
   <div class="center">
-    <% if ( parseInt(products.pager) > 1) { %>   
+    
       <ul id="pager" class="pagination"> 
-        <!-- <li><a href=" ">«</a></li>
-     
-        <li><a href=" ">»</a></li> -->
+ 
       </ul>
-    <% }  %>
   </div>
     <div class="center">
-      <label>showing  <%= products.products.length %>   out of   <%= products.totalRows %></label> 
+      <label>showing  <%= products.products.length %>   out of   <%= products.productInfo.totalRows %></label> 
 
     </div>
 
-  
+
   <script src="/js/products.js"></script>
   <script type="text/javascript">
-    pagination("<%= products.pager %>")
+  if (  products.productInfo )
+    pagination("<%= products.productInfo.pageNum %>")
   </script>
+    <% }  %>
+
+
  
