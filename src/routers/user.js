@@ -208,7 +208,7 @@ router.get('/admin', admin, async (req, res) => {
         } 
     catch (e) {
         
-        res.render('admin', { title: 'admin', products: [] ,shopname: req.shop.name, username: userName});   
+        res.send('Unable to load Page  '+ e.message)   
      }
 })
 

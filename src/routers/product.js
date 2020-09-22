@@ -58,7 +58,7 @@ async function orderStats(token, shop, productId)
     }
     
 }
-
+//                    attributes=[{%22values%22:[%22size%22,%22big%22]},{%22values%22:[%22Sleeves%22,%22long%22]}]
 // GET /products/yyyy?attributes=[["dsdsds","fsffssf"],["gggg","tttttt1"]]
 
 router.get('/:shop/view',async (req, res) => {

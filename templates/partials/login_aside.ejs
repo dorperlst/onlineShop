@@ -35,7 +35,7 @@
  
     <% if(locals.products && products.product_att) { %> 
       <div class="title_box">Filter</div> 
-    <ul class="ul-attributes">
+    <ul id ="ul-attributes" >
       <% products.product_att.forEach(function(attribute) { %> 
         <li> 
          
@@ -47,25 +47,55 @@
           <% attribute.att.forEach(function(val) { %> 
               <li class ="att-values"> 
                 
-                <input class="magic-checkbox" type="checkbox" name="layout" id="1" value=" <%=val%>">
-                <label class="att-text" for="1">
+                <input  type="checkbox"  value=" <%=val%>">
+                <label class="att-text" >
                   <%=val%>
                 </label>
               </li>
-              
-              
-            
-       
           <% }); %>
         </ul>
         </li>
       <% }); %>
     </ul>
-    <input id ="range" type="range" onchange="val(this)" multiple value="10,80" />
+    <a class="attribute">
+      Price
+      </a>
+  <div class='multi-range' data-lbound='10' data-ubound='50'>
+      <hr />
+      <input type='range' 
+            min='10' max='45' step='5' value='10' 
+            oninput= oninputLbound(this) ;
+      />
+      <input type='range' 
+            min='15' max='50' step='5' value='50' 
+            oninput= oninputUbound(this) ;
+      />
+  </div>
+  <div class="title_box">Sort</div> 
 
+  <!-- <a class="attribute">
+    Sort
+  </a> -->
 
+  <ul  id="ulSort" class="att-ul">
+           
+    <li class="att-values"> 
+      
+      <input type="checkbox" value="price">
+      <label class="att-text">
+        Price
+      </label>
+    </li>
+ 
+    <li class="att-values"> 
+      
+      <input type="checkbox" value="timestamps desc">
+      <label class="att-text">
+        Time
+      </label>
+    </li>
 
-    <script src="/js/multirange.js"></script>
+</ul>
 
  
  

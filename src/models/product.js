@@ -122,7 +122,7 @@ productSchema.pre('remove', async function (next) {
 
 productSchema.statics.getProducts = async (query, shop, promo=false) => {
     var params = [ {shop: shop }]
-    var sort = { "timestamps": -1 }
+    var sort = {  }
     const pageNum =  query.pageNum? parseInt(query.pageNum) : 1
     if(pageNum < 1)
         return
@@ -140,9 +140,9 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     if (query.name)  
         params.push(  { name: query.name  } )
     if (query.pricefrom)  
-        params.push(  { price:{"$gte": query.pricefrom}  } )
+        params.push(  { price:{"$gte":   parseInt(query.pricefrom)}  } )
     if (query.priceto)  
-        params.push(  { price:{"$lte": query.priceto}  } )
+        params.push(  { price:{"$lte":  parseInt( query.priceto)}  } )
     if (query.tag)  
             params.push( {  "tags":query.tag } )
     
@@ -159,10 +159,13 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
         const parts = query.sortBy.split(':')
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
-
+    else
+         sort = { "timestamps": -1 }
+    
     const products =  await Product.find(match).sort(sort).limit( parseInt(limit) ).skip( skip )
     
     const info = await  Product.aggregate([
+        { $match : match },
         { "$group": {
            "_id": null,
            "max": { "$max": "$price" },
@@ -170,8 +173,9 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
            "count":{"$sum":1}
         }}
      ]);
-
-     var productInfo = {totalRows: info[0].count, max: info[0].max, min :info[0].min,}
+  
+     var productInfo =info.length >0 ? {totalRows: info[0].count, max: info[0].max, min :info[0].min}:
+     {totalRows: 0, max: 0, min : 0}
      var page =  parseInt(productInfo.totalRows / limit);
      if(productInfo.totalRows % limit > 0)
         page +=1; 

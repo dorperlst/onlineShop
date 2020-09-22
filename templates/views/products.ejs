@@ -29,4 +29,10 @@
           <%- include('../partials/footer.ejs') %> 
         </div>
     </body>
-  </html>
+  </html >
+  <% if (  products.productInfo && parseInt(products.productInfo.pageNum) > 1) { %>   
+  <script src="/js/products.js"></script>
+  <script type="text/javascript">
+    pagination("<%= products.productInfo.pageNum %>")
+  </script>
+   <% }  %>

@@ -1,4 +1,5 @@
-var page = 0
+var page = 0, min=0, max=0;
+
 const  ulPager= document.getElementById("pager");
 
 function replaceUrlParam(paramName, paramValue){
@@ -17,13 +18,46 @@ function replaceUrlParam(paramName, paramValue){
     return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue;
 }
 
+function toAttArray() {
+    var ul = document.getElementById("ul-attributes");
+
+    var array =[]
+    for (var i = 0; i < ul.children.length; i++ ) {
+        var name = ul.children[i].children[0].text.trim();
+        var values_array =[]
+        for (var j = 0; j < ul.children[i].children[1].children.length; j++ ) {
+            var check=  ul.children[i].children[1].children[j].children[0]
+            if (check.checked)
+                values_array.push( name, check.value.trim());
+        }
+        if(values_array.length > 0)
+            array.push(values_array)
+        
+    }
+    return array.length > 0 ? JSON.stringify(array) : null;
+}
 
 function refreshAttributes(){
+    var att =  toAttArray(); 
+    var href = window.location.href;
+    if(att > 0)
+        href = updateQueryStringParameter(href,"attributes",att)
+    if(min > 0)
+        href = updateQueryStringParameter(href,"pricefrom", min)
+    if(max > 0)
+        href = updateQueryStringParameter(href,"priceto", max)
 
-  var att = '[["size","big"]], [["size","meduiom"]]'
-  var href = updateQueryStringParameter(window.location.href,"attributes",att)
-  window.location.href= href;
- 
+    var ulSort = document.getElementById("ulSort");
+
+    for (var i = 0; i <ulSort.children.length; i++ ) {
+        if ( ulSort.children[i].children[0].checked)
+            href = updateQueryStringParameter(href,"sortBy",  ulSort.children[i].children[0].value.trim()) ;
+    }
+
+    if(href !=  window.location.href)
+        window.location.href = href;
+
+
 }
 
 function updateQueryStringParameter(uri, key, value) {
@@ -56,6 +90,36 @@ function createPagerLink(ind, value){
     ulPager.appendChild(li);
 }
 
-function val(parent){ 
-    console.log( parent.value 
-        );}
+
+function modifyOffset(parent) {
+    var el, newPoint, newPlace, offset, siblings, k;
+    width    = this.offsetWidth;
+    newPoint = (this.value - this.getAttribute("min")) / (this.getAttribute("max") - this.getAttribute("min"));
+    offset   = -1;
+    if (newPoint < 0) { newPlace = 0;  }
+    else if (newPoint > 1) { newPlace = width; }
+    else { newPlace = width * newPoint + offset; offset -= newPoint;}
+    siblings = this.parentNode.childNodes;
+    for (var i = 0; i < siblings.length; i++) {
+        sibling = siblings[i];
+        if (sibling.id == this.id) { k = true; }
+        if ((k == true) && (sibling.nodeName == "OUTPUT")) {
+            outputTag = sibling;
+        }
+    }
+    outputTag.style.left       = newPlace - 10+ "px";
+   // outputTag.style.marginLeft = offset + "%";
+    outputTag.innerHTML        = this.value;
+} 
+
+function oninputUbound(parent) {
+    parent.parentNode.dataset.ubound = parent.value;
+    max= parent.value; 
+}
+
+function oninputLbound(parent) {
+    parent.parentNode.dataset.lbound = parent.value;
+    min= parent.value;
+
+
+}
