@@ -174,6 +174,14 @@ router.get('/:shop/signup', async (req, res) => {
         title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
     })
 })
+router.get('/login', async (req, res) => {
+   
+
+ 
+    res.render('login', {
+        title: 'Login'
+    })
+})
 
 
 router.get('/:shop/contact',auth, async (req, res) => {
