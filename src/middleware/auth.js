@@ -37,6 +37,8 @@ const auth = async (req, res, next) => {
 const admin = async (req, res, next) => {
     
     await getShop(req);
+    if (!req.user  )  
+    res.redirect('/login');
     if (!req.user || !req.shop )  
         res.redirect('/signup');
     else
