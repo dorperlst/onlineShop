@@ -18,8 +18,8 @@
   "license": "ISC",
   "dependencies": {
     "request": "^2.88.0",
-    "express":"*",
-    "body-parser":"*",
-    "bcrypt": "^0.8.5"
+    "express":"*"
+   
+     
   }
 }
