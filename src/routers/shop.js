@@ -78,6 +78,7 @@ router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, re
 router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
 
     res.send("rnewimages")
+    res.redirect('/admin');
     // shop = req.shop
     // const allowedUpdates = ['description', 'address','lat', 'long']
     // var newimages = req.files.map(x => x.filename)
