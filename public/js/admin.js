@@ -321,11 +321,11 @@ function editShop(){
     })
     .then((jsonData) => {
         form_shop.elements['shopname'].value = jsonData.name
-        console.log("-------66666666666--------"+ jsonData.about)
+       
 
         for(var ind in jsonData.abouts)
         {
-            console.log("---------------"+ jsonData.about[ind].value)
+            
             addAbout(jsonData.abouts[ind].title, jsonData.abouts[ind].value);
         }
            
