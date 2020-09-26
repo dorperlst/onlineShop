@@ -327,7 +327,7 @@ select:focus {
   cursor: default;
   height: 56px;
   display: block;
-  background: url(../../uploads/logo.png) no-repeat 0 0;
+  background: url(../../images/logo.png) no-repeat 0 0;
 }
 
 .navmap{
@@ -548,7 +548,7 @@ input.contact_input{
 
  
 .col-logo {
-  background: url(../../uploads/logo_text.png) no-repeat center;
+  background: url(../../images/logo_text.png) no-repeat center;
   justify-content: center;
   display: flex;
  
