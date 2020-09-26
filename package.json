@@ -1,25 +1,40 @@
 {
-  "name": "weather-app",
+  "name": "online-shop",
   "version": "1.0.0",
   "engines": {
     "node": "8.10.0",
     "npm": "3.*"
 
   },
+ 
   "description": "",
-  "main": "app.js",
-  
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon  src/index.js",
+    "dev": "env-cmd ./config/dev.env nodemon src/index.js",
+    "test": "env-cmd ./config/test.env jest --watch --runInBand"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.88.0",
-    "express":"*"
-   
-     
+    "@sendgrid/mail": "^6.3.1",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongodb": "^3.1.10",
+    "mongoose": "^5.3.16",
+    "multer": "^1.4.1",
+    "sharp": "^0.21.1",
+    "validator": "^10.9.0"
+  },
+  "devDependencies": {
+    "env-cmd": "^8.0.2",
+    "jest": "^23.6.0",
+    "nodemon": "^1.19.4",
+    "supertest": "^3.4.1"
   }
 }
