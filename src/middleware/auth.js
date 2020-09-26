@@ -21,9 +21,8 @@ async function getShop(req){
     try {    
         req.shop = req.user ? await Shop.findOne({ admin : req.user._id }) :null
     } catch (e) {
-        console.log(e);
-
-        req.shop = null
+        res.send(e);
+        // req.shop = null
     }
 
 }
