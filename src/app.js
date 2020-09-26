@@ -28,10 +28,9 @@ hbs.registerPartials(partialsPath)
 //app.use(categoryRouter)
 app.get('/', async (req, res) => {
     const categories = {tree:[],categories:[]  } 
-    
-    const urlBase=`/login`
+     
 
-    var userName =   'Guest'
+ 
 
     res.render('login', {
         title: 'login' 
