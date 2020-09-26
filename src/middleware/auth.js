@@ -5,8 +5,12 @@ const Shop = require('../models/shop')
 async function getUser(req){
   
     try {    
+
+        console.log(req.session.token);
+
         req.user = req.session.token? await User.findByToken(req.session.token) : null
     } catch (e) {
+        console.log(e);
         req.user = null
     }
 }
@@ -16,6 +20,8 @@ async function getShop(req){
     try {    
         req.shop = req.user ? await Shop.findOne({ admin : req.user._id }) :null
     } catch (e) {
+        console.log(e);
+
         req.shop = null
     }
 
