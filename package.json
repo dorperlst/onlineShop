@@ -2,8 +2,8 @@
   "name": "weather-app",
   "version": "1.0.0",
   "engines": {
-    "node": "8.x",
-    "npm": "3.x"
+    "node": "12.x",
+    "npm": "6.x"
 
   },
   "description": "",
