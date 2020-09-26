@@ -1,4 +1,4 @@
-//require('./db/mongoose')
+require('./db/mongoose')
 
 const express   = require('express');
 const userRouter = require('./routers/user')
@@ -22,7 +22,7 @@ app.use(express.static(publicDirectoryPath))
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
 //app.use(shopRouter)
-//app.use(userRouter)
+app.use(userRouter)
 //app.use(productRouter)
 //app.use(orderRouter)
 //app.use(categoryRouter)

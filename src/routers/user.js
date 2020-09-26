@@ -14,6 +14,7 @@ const authObj = require('../middleware/auth')
 const auth = authObj.auth
 const { sendWelcomeEmail, sendContactEmail, sendCancelationEmail } = require('../emails/account')
 const { admin } = require('../middleware/auth')
+const { send } = require('@sendgrid/mail')
 const router = new express.Router()
 
 
@@ -177,29 +178,11 @@ router.get('/:shop/signup', async (req, res) => {
         title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
     })
 })
-router.get('/', async (req, res) => {
-    const categories = {tree:[],categories:[]  } 
-    
-    const urlBase=`/login`
-
-    var userName =   'Guest'
-
-    res.render('login', {
-        title: 'login' 
-    })
-})
+ 
 
 
-
-
-router.get('/login', async (req, res) => {
-   
 
  
-    res.render('login', {
-        title: 'Login'
-    })
-})
 
 
 router.get('/:shop/contact',auth, async (req, res) => {
@@ -253,9 +236,10 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
     try {
         await user.save()
-        var href="/"+req.params.shop+"/view"
+        res.send("sucsses");
+        // var href="/"+req.params.shop+"/view"
      //   sendWelcomeEmail(user.email, user.name)
-        redirectSession(req, res, user, href)
+        // redirectSession(req, res, user, href)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
