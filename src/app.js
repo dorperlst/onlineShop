@@ -36,4 +36,16 @@ app.get('/', async (req, res) => {
         title: 'login' 
     })
 })
+
+
+
+app.get('/login', async (req, res) => {
+   
+
+ 
+    res.render('login', {
+        title: 'Login2'
+    })
+})
+
 module.exports = app
