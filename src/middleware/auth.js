@@ -6,12 +6,13 @@ async function getUser(req){
   
     try {    
 
-        console.log(req.session.token);
+        // console.log(req.session.token);
 
         req.user = req.session.token? await User.findByToken(req.session.token) : null
+        if (!req.user)  
+            res.redirect('/');
     } catch (e) {
-        console.log(e);
-        req.user = null
+        res.send(e);
     }
 }
  
