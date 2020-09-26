@@ -246,7 +246,7 @@ router.get('/contact',admin, async (req, res) => {
     res.render('contact', {   title: 'contact', contact: contact, shopname: req.shop.name, username: userName})
 })
 
-router.post('/:shop/users', upload.single('avatar'), async function (req, res, next) {
+router.post('/users', upload.single('avatar'), async function (req, res, next) {
     const user = new User(req.body)
     if(req.file!= undefined)
         user.image = req.file.filename
