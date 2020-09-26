@@ -26,16 +26,7 @@ hbs.registerPartials(partialsPath)
 //app.use(productRouter)
 //app.use(orderRouter)
 //app.use(categoryRouter)
-app.get('/', async (req, res) => {
-     
-     
 
- 
-
-    res.render('login', {
-        title: 'login' 
-    })
-})
 
 
 
@@ -45,6 +36,16 @@ app.get('/login', async (req, res) => {
  
     res.render('login', {
         title: 'Login2'
+    })
+})
+app.get('/', async (req, res) => {
+     
+     
+
+ 
+
+    res.render('login', {
+        title: 'login' 
     })
 })
 
