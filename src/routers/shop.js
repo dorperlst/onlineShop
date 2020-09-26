@@ -13,7 +13,7 @@ const router = new express.Router()
 
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
-      callback(null, '/public/uploads');
+      callback(null, 'public/uploads');
     },
     filename: function (req, file, callback) {
       callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
@@ -59,10 +59,9 @@ router.get('/shop', admin, async (req, res) => {
     
 })
 
-router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, res, next) {
+router.post('/shops', upload.array('myFiles', 12), async  function (req, res, next) {
 
     const shop = new Shop(req.body)
-    shop.admin=req.user._id;
     shop.images = req.files.map(x => x.filename)
 
     try {
@@ -70,19 +69,18 @@ router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, re
     }
     catch (e) {
         console.log(e)
-        res.status(400).send(e.messaage)
+        res.status(400).send(e)
     }
 
 })
  
-router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
+router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
 
     shop = req.shop
     const allowedUpdates = ['description', 'address','lat', 'long']
-   // var newimages = req.files.map(x => x.filename)
-    
+    var newimages = req.files.map(x => x.filename)
     var images = JSON.parse( req.body.images)
-   // shop.images = images.concat(newimages)
+    shop.images = images.concat(newimages)
     allowedUpdates.forEach((update) => shop[update] = req.body[update])
  
     shop.abouts = JSON.parse(req.body.abouts);
@@ -101,8 +99,12 @@ router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
                 { $set: { shop : newName } }
                  
              )
+             
+
+
+         
          } catch (e) {
-            res.send(e.messaage);
+            print(e);
          } 
          try {
             await Product.updateMany(
@@ -114,7 +116,7 @@ router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
          } catch (e) {
 
             print(e);
-            res.status(400).send(e.messaage)
+            res.status(400).send(e)
 
          } 
          shop.name = newName;
@@ -125,7 +127,7 @@ router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
          res.redirect('/admin');
         res.send(req.shop)
     } catch (e) {
-        res.status(400).send(e.messaage)
+        res.status(400).send(e)
     }
 })
 
