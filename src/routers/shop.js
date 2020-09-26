@@ -13,7 +13,7 @@ const router = new express.Router()
 
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
-      callback(null, 'public/uploads');
+      callback(null, '../../public/uploads');
     },
     filename: function (req, file, callback) {
       callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
@@ -75,7 +75,7 @@ router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, re
 
 })
  
-router.patch('/shops', admin, upload.array('myFiles', 12) , async (req, res) => {
+router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
 
     shop = req.shop
     const allowedUpdates = ['description', 'address','lat', 'long']
