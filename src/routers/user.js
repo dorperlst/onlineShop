@@ -177,7 +177,17 @@ router.get('/:shop/signup', async (req, res) => {
         title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
     })
 })
+router.get('/', async (req, res) => {
+    const categories = {tree:[],categories:[]  } 
+    
+    const urlBase=`/login`
 
+    var userName =   'Guest'
+
+    res.render('login', {
+        title: 'login' 
+    })
+})
 
 
 router.get('/signup', async (req, res) => {
