@@ -79,10 +79,10 @@ router.patch('/shops', admin, upload.array('myFiles', 12) , async (req, res) => 
 
     shop = req.shop
     const allowedUpdates = ['description', 'address','lat', 'long']
-    var newimages = req.files.map(x => x.filename)
+   // var newimages = req.files.map(x => x.filename)
     
     var images = JSON.parse( req.body.images)
-    shop.images = images.concat(newimages)
+   // shop.images = images.concat(newimages)
     allowedUpdates.forEach((update) => shop[update] = req.body[update])
  
     shop.abouts = JSON.parse(req.body.abouts);
