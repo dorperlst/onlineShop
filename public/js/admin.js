@@ -321,9 +321,14 @@ function editShop(){
     })
     .then((jsonData) => {
         form_shop.elements['shopname'].value = jsonData.name
-       
+        console.log("-------66666666666--------"+ jsonData.about)
+
         for(var ind in jsonData.about)
+        {
+            console.log("---------------"+ jsonData.about[ind].value)
             addAbout(jsonData.about[ind].title, jsonData.about[ind].value);
+        }
+           
         form_shop.elements['address'].value = jsonData.address
         form_shop.elements['lat'].value = jsonData.lat
         form_shop.elements['long'].value = jsonData.long
