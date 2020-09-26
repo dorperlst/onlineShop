@@ -70,7 +70,7 @@ router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, re
     }
     catch (e) {
         console.log(e)
-        res.status(400).send(e)
+        res.status(400).send(e.messaage)
     }
 
 })
@@ -117,7 +117,7 @@ router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
          } catch (e) {
 
             print(e);
-            res.status(400).send(e)
+            res.status(400).send(e.messaage)
 
          } 
          shop.name = newName;
@@ -128,7 +128,7 @@ router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
          res.redirect('/admin');
         res.send(req.shop)
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e.messaage)
     }
 })
 
