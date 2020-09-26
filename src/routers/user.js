@@ -163,6 +163,9 @@ router.patch('/users/contact', admin, multer().none(), async (req, res) => {
 })
 
 
+
+
+
 router.get('/:shop/signup', async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
     
@@ -174,6 +177,21 @@ router.get('/:shop/signup', async (req, res) => {
         title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
     })
 })
+
+
+
+router.get('/signup', async (req, res) => {
+    const categories = {tree:[],categories:[]  } 
+    
+    const urlBase=`/admin`
+
+    var userName =   'Guest'
+
+    res.render('signup', {
+        title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
+    })
+})
+
 router.get('/login', async (req, res) => {
    
 
