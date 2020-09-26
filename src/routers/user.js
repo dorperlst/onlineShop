@@ -188,7 +188,7 @@ router.get('/signup', async (req, res) => {
     var userName =   'Guest'
 
     res.render('signup', {
-        title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
+        title: 'signup' 
     })
 })
 
