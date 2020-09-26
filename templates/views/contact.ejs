@@ -1,0 +1,86 @@
+<header>
+    
+  <!DOCTYPE html>
+  <html>
+    <head>
+    
+      <link rel="stylesheet" href="/css/main_template.css">
+      <link rel="icon" href="/images/shop.png">
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+      <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    
+    
+  </head>
+   <title><%= title %></title> 
+     
+ 
+  
+    <body>
+      <div class="wrapper static_wrapper">
+        <%- include('../partials/header.ejs') %>
+        
+        <article class="main">
+          <div class="main-wrapper">
+            <article class="main-center">
+              <div class="center_title_bar">Contact Us</div>
+              <div class="map-wrapper">	
+              
+                  <div id="mapid"></div>
+              </div>
+              <div id="address" class="panel-heading">	
+
+              
+
+                
+                  <%= address %>
+                 
+              </div>
+
+              <form  id="contact_form" class="contact_form" enctype="multipart/form-data" action="/users/<%=shopname%>/contact"  method="post">
+               
+
+                <div >
+                  <label><strong>Name:</strong></label>
+                  <input type="text" value ="doron" name="name" tabindex="1" placeholder="name"  class="contact_input" required autofocus>
+                </div>
+                <div >
+                  <label><strong>Email:</strong></label>
+                  <input tabindex="2" placeholder="email"  value ="" name="email" type="text" class="contact_input" >
+                </div>
+                <div >
+                  <label><strong>Phone:</strong></label>
+                  <input  placeholder="phone" name="phone"value ="" tabindex="3" type="text" class="contact_input">
+                </div>
+                <div >
+                  <label><strong>Message:</strong></label>
+                  <textarea  placeholder="Your Message" value =""  name="msg" tabindex="5" class="contact_textarea"></textarea>
+                  
+
+                </div>
+                <div><span id="usermsg"><strong></strong></span></div>
+                <div >
+                  <input class="prod_details" type="submit" value="Send">  
+
+                  
+                  
+                </div>
+              </form>
+                
+            </article> 
+            <%- include('../partials/aside.ejs') %>
+            <%- include('../partials/login_aside.ejs') %>
+        </div>
+          
+        </article>
+        <script src="/js/product.js"></script>
+        <%- include('../partials/footer.ejs') %>       </div>
+  </body>
+</html>
+<script src="/js/contact.js"></script>
+   
+
+ 

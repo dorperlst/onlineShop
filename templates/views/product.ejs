@@ -1,0 +1,140 @@
+<header>
+    
+  <!DOCTYPE html>
+  <html>
+    <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+
+    <body>
+      <div class="wrapper static_wrapper">
+        <%- include('../partials/header.ejs') %>
+        
+        <article class="main">
+          <div class="main-wrapper">
+            <article class="main-center">
+                
+              <div class="product_img_big"> 
+                <% if( product.images.length >0) { %>
+
+                <div class="thumbs flex-grid ">
+                  <%  product.images.forEach(function(image) { %>
+
+                    <a href="#"   fade=[on]">  
+                      <img onclick='changeImg("<%=image%>")' onmouseover='changeImg("<%=image%>")' 
+                        src="../../uploads/<%= image%>" alt="" border="0">
+                    </a> 
+                  <% }); %>
+                </div>
+                <% } %>
+
+                <div class= "flex-container">
+                  <div class="productImg flex-item">
+                
+                    <% if (product.images && product.images.length > 0) { %>
+                      <img id="mainImg" src="../../uploads/<%= product.images[0] %>" alt="" border="0">
+                    <% }
+                    else  { %>
+                      <img  src="../../images/default.jpg"></img> 
+                    <% } %>
+                  </div>
+                </div>
+                <div class="details_big_box">
+                  <div class="product_title_big"><%= product.name %>
+                    </div>
+                  
+                  <div>
+                    <label  >  <%= product.description %>  </label><br>
+                  </div>
+                  <div class="specifications">
+                    <div class="flex-container">
+                      <label>Available:</label>
+                      <% if (product.isavailable) { %>
+                        <label class="blue">In stock</label>
+                        <% }
+                      else  { %>
+                        <label class="red">Out of stock</label>
+                        <% } %>
+                      </div>
+
+                    <%  product.attributes.forEach(function(att) { %>
+                    <div class="flex-container">  
+                      <label><%=att.name%></label>  <select>
+                        <%  att.values.forEach(function(val) { %>
+                        <option value="<%= val %>"><%= val %></option>
+    
+                          <% }); %>
+                      </select>
+                    </div> 
+                        <% }); %>
+
+                        <%  product.imgattributes.forEach(function(att) { %>
+                          <div class="flex-container">
+                            <label><%=att.name%> :</label>
+                            <%  if (att.values.length>0) { %>
+                              <label id="attValue"><%=att.values[0].value%></label>
+                            <% }; %>
+
+                            </div>
+                          <div class="flex-container">
+    
+                            <%  att.values.forEach(function(val) { %>
+                            <div class="thumbs flex-item">
+
+                            <a href="#"   fade=[on]">  
+                              <img onclick='changeImg("<%=val.img%>","<%=val.value%>")' onmouseover='changeImg("<%=val.img%>","<%=val.value%>")' 
+                                src="../../uploads/<%= val.img %>" alt="" border="0"></a> 
+                            </div>
+                            <% }); %>
+                          </div> 
+                        <% }); %>
+                        
+                       
+                        <ul class="details">
+                          <%  product.details.forEach(function(detail) { %>
+                            <li><%=detail%> </li> 
+                          <% }); %>
+        
+                          </ul>
+
+                          <div class="flex-container">
+                            <label class="price-label">Price:</label>
+                            <label class="price-label "><span class="price"> <%= product.price %>$</span></label>
+                            <input id="count"  type="number" class="product-counter" min="1"  placeholder="Qty.">
+                            <label class="required"></label>
+                          </div>
+                        <div class="cart_add">
+                          <input href="#" type="button" onclick = "addToOrder('<%= product._id %>')"  class="btn-cart"> 
+
+                        </div>
+                        <div class="flex-container">
+                          <label id="msg">
+                            <%  if ( orderStat.productInOrder ) { %>
+                              <%= orderStat.productInOrder %> Items in cart
+                              <%  } %>
+
+                          </label>
+
+                        </div>
+                    </div>
+                </div>
+              </div></br>
+              <article id="secProducts" class="main-center">
+
+
+                <div class="center_title_bar">Other Products</div>
+                <%- include('../partials/products.ejs') %>
+              </article> 
+            </article> 
+           
+            <%- include('../partials/aside.ejs') %>
+            <%- include('../partials/login_aside.ejs') %>
+        </div>
+     
+        </article>
+        <script src="/js/product.js"></script>
+        <%- include('../partials/footer.ejs') %> 
+      </div>
+  </body>
+</html>
+  
+    
