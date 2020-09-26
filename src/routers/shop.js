@@ -59,9 +59,10 @@ router.get('/shop', admin, async (req, res) => {
     
 })
 
-router.post('/shops', upload.array('myFiles', 12), async  function (req, res, next) {
+router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, res, next) {
 
     const shop = new Shop(req.body)
+    shop.admin=req.user._id;
     shop.images = req.files.map(x => x.filename)
 
     try {
