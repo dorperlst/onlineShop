@@ -75,12 +75,13 @@ router.post('/shops',auth, upload.array('myFiles', 12), async  function (req, re
 
 })
  
-router.patch('/shops', admin, upload.array('myFiles', 12) , async (req, res) => {
+router.patch('/shops', upload.array('myFiles', 12) , async (req, res) => {
 
-    shop = req.shop
-    const allowedUpdates = ['description', 'address','lat', 'long']
-    var newimages = req.files.map(x => x.filename)
-    res.send(rnewimages)
+    res.send("rnewimages")
+    // shop = req.shop
+    // const allowedUpdates = ['description', 'address','lat', 'long']
+    // var newimages = req.files.map(x => x.filename)
+    
     // var images = JSON.parse( req.body.images)
     // shop.images = images.concat(newimages)
     // allowedUpdates.forEach((update) => shop[update] = req.body[update])
