@@ -255,7 +255,7 @@ router.post('/login', multer().none(), async (req, res) => {
         else
            redirectSession(req, res, user, req.body.currentUrl)
     } catch (e) {
-        res.status(400).send('Unable to login')
+        res.status(400).send(e)
     }
 })
 
