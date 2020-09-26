@@ -236,10 +236,10 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
     try {
         await user.save()
-        res.send("sucsses");
+        //res.send("sucsses");
         // var href="/"+req.params.shop+"/view"
      //   sendWelcomeEmail(user.email, user.name)
-        // redirectSession(req, res, user, href)
+         redirectSession(req, res, user, href)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -253,8 +253,7 @@ router.post('/login', multer().none(), async (req, res) => {
         if(!user)
             res.send('Unable to login') 
         else
-        res.send("login")
-          //  redirectSession(req, res, user, req.body.currentUrl)
+           redirectSession(req, res, user, req.body.currentUrl)
     } catch (e) {
         res.status(400).send('Unable to login')
     }
@@ -271,7 +270,8 @@ async function redirectSession(req, res, user, href){
     var hour = 360000000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
-    res.redirect(href);
+    res.send("login")
+
 }
 
 router.post('/users/logout', multer().none(),  auth, async (req, res) => {
