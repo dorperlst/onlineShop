@@ -247,18 +247,18 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
 })
  // todo confermation mail
-router.post('/login', multer().none(), async (req, res) => {
-    try {
-        const user = await User.findByCredentials(req.body.email, req.body.password)
-        if(!user)
-            res.send('Unable to login') 
-        else
-        res.send("login")
-          //  redirectSession(req, res, user, req.body.currentUrl)
-    } catch (e) {
-        res.status(400).send('Unable to login')
-    }
-})
+// router.post('/login', multer().none(), async (req, res) => {
+//     try {
+//         const user = await User.findByCredentials(req.body.email, req.body.password)
+//         if(!user)
+//             res.send('Unable to login') 
+//         else
+//         res.send("login")
+//           //  redirectSession(req, res, user, req.body.currentUrl)
+//     } catch (e) {
+//         res.status(400).send('Unable to login')
+//     }
+// })
 
 
 
