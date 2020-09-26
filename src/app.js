@@ -27,7 +27,7 @@ app.use(userRouter)
 //app.use(orderRouter)
 //app.use(categoryRouter)
 
-router.post('/login', multer().none(), async (req, res) => {
+app.post('/login', multer().none(), async (req, res) => {
     try {
         // const user = await User.findByCredentials(req.body.email, req.body.password)
         // if(!user)
