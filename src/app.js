@@ -27,7 +27,7 @@ hbs.registerPartials(partialsPath)
 //app.use(orderRouter)
 //app.use(categoryRouter)
 app.get('/', async (req, res) => {
-    const categories = {tree:[],categories:[]  } 
+     
      
 
  
