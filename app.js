@@ -32,9 +32,7 @@ app.get('/', async (req, res) => {
     app.get('/signup', async (req, res) => {
      
     
-        res.render('signup', {
-            title: 'signup' 
-        })
+        res.send('signup' )
     })
  
 
