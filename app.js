@@ -29,15 +29,17 @@ app.use(categoryRouter)
 app.get('/', async (req, res) => {
      
      
-    app.get('/signup', async (req, res) => {
-     
-    
-        res.send('signup' )
-    })
+   
  
 
     res.render('signup', {
         title: 'signup' 
     })
+})
+
+app.get('/signup', async (req, res) => {
+     
+    
+    res.send('signup' )
 })
 module.exports = app
