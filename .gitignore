@@ -8,3 +8,4 @@ public/uploads/
 public/users/
 public/img/
 .vscode/launch.json
+/package-lock.json/
