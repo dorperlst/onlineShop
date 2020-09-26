@@ -32,8 +32,8 @@ app.get('/', async (req, res) => {
 
  
 
-    res.render('login', {
-        title: 'login' 
+    res.render('signup', {
+        title: 'signup' 
     })
 })
 module.exports = app
