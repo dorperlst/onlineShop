@@ -21,13 +21,20 @@ app.set('view engine', 'ejs')
 app.use(express.static(publicDirectoryPath))
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
-//app.use(shopRouter)
+app.use(shopRouter)
 app.use(userRouter)
 //app.use(productRouter)
 //app.use(orderRouter)
 //app.use(categoryRouter)
 
+app.get('/signup', async (req, res) => {
+   
 
+ 
+    res.render('signup', {
+        title: 'signup2'
+    })
+})
 
 
 app.get('/login', async (req, res) => {
