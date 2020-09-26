@@ -2,7 +2,7 @@
   "name": "online-shop",
   "version": "1.0.0", "engines": {
     "node": "12.*",
-    "npm": "6.*"
+    "npm": "5.*"
   },
  
   "description": "",
