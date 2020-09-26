@@ -3,9 +3,9 @@ require('./db/mongoose')
 const express   = require('express');
 const userRouter = require('./routers/user')
 const orderRouter = require('./routers/order')
-// const categoryRouter = require('./routers/cat')
+ const categoryRouter = require('./routers/cat')
  const shopRouter = require('./routers/shop')
-// const productRouter = require('./routers/product')
+ const productRouter = require('./routers/product')
 require('ejs')
 const path = require('path')
 const hbs = require('hbs')
@@ -23,9 +23,9 @@ app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
 app.use(shopRouter)
 app.use(userRouter)
-//app.use(productRouter)
+app.use(productRouter)
 app.use(orderRouter)
-//app.use(categoryRouter)
+app.use(categoryRouter)
 
 app.get('/signup', async (req, res) => {
    
