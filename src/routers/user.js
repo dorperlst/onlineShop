@@ -190,17 +190,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.get('/signup', async (req, res) => {
-    const categories = {tree:[],categories:[]  } 
-    
-    const urlBase=`/admin`
 
-    var userName =   'Guest'
-
-    res.render('signup', {
-        title: 'signup' 
-    })
-})
 
 router.get('/login', async (req, res) => {
    

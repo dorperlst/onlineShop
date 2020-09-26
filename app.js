@@ -29,7 +29,13 @@ app.use(categoryRouter)
 app.get('/', async (req, res) => {
      
      
-
+    router.get('/signup', async (req, res) => {
+     
+    
+        res.render('signup', {
+            title: 'signup' 
+        })
+    })
  
 
     res.render('signup', {
