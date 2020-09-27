@@ -422,7 +422,7 @@ form >.field{   text-align-last: left;  }
 .center_prod_box_big{  margin:0px;}
 
 .product_img_big{padding:10px 0 0 10px;height: inherit;display: flex;justify-content: space-around;}
-.product_title_big{color: #11136b;text-align: center;padding:5px 0 5px 0;font-weight:bold;font-size: 14px;margin: auto;}
+.product_title_big{color: #11136b;padding:5px 0 5px 0;font-weight:bold;font-size: 14px;margin: auto;}
 
 .flex-container >select {
   height: 22px;
@@ -526,11 +526,7 @@ input.contact_input{
   font-weight: 500;
   line-height: 1.1;
 }
-
-.map-wrapper{
-  /* height: 500px; */
-}
-
+ 
 .col-md {
   -ms-flex: 0 0 50%;
   flex: 0 0 45%;

@@ -99,9 +99,11 @@ router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
                 { $set: { shop : newName } }
                  
              )
-             
-
-
+             await Product.updateMany(
+                { tree: { $in: [oldName] }},
+                { $set: { "tree.$[element]" : newName } },
+                { arrayFilters: [ { "element": oldName } ] }
+             )
          
          } catch (e) {
             print(e);

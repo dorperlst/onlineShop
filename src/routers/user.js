@@ -236,13 +236,17 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
  // todo confermation mail
 router.post('/login', multer().none(), async (req, res) => {
     try {
-        var shop = Shop.findOne().name;
-        const url=`/${shop}/view`
+        var shop = await Shop.findOne();
+        const url=`/${shop.name}/view`
         const user = await User.findByCredentials(req.body.email, req.body.password)
         if(!user)
             res.redirect(url);
         else
-           redirectSession(req, res, user, req.body.currentUrl)
+        {
+            const redirect =  req.body.currentUrl?  req.body.currentUrl : url;
+            redirectSession(req, res, user,redirect)
+        }
+          
     } catch (e) {
         res.status(400).send(e)
     }
@@ -256,7 +260,7 @@ async function redirectSession(req, res, user, href){
     var hour = 360000000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
-    res.send(token)
+    res.redirect(href);
 }
 
 router.post('/users/logout', multer().none(),  auth, async (req, res) => {
