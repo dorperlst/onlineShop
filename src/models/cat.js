@@ -4,7 +4,8 @@ const mongoose = require('mongoose')
 const catSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     description: {
         type: String,
@@ -49,7 +50,7 @@ catSchema.statics.getCategoriesTree = async (category, shop) => {
     try {
         if (category && category != 'All') 
         {
-            name = category
+            name = category.replace("%26","&").trim()
             const selectedCat = await Cat.findOne({name:name, tree: { $in: [shop] } })
             tree = selectedCat.tree
             categories.cur = selectedCat.name

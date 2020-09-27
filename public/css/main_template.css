@@ -39,7 +39,8 @@
     
   .main-center    {flex: 5 0 0;}
   .main    {flex: 25 0 0;}
-  .aside-1 { order: 1; } 
+  .aside-1 {    margin-left: 15px;
+    order: 1; } 
   .main-center    {
     order: 2;
     display: flex;
@@ -209,21 +210,16 @@ label {
   }
   ul.left_menu li {
     margin: 0px;
+    height: 46px;
     list-style: none;
     text-align: left;
+    margin: 0;
   }
    
   ul.left_menu li.even a{
-    font-size: 14px;
-    width: 166px;
-    height: 25px;
-    display: block;
+  
     border-bottom: 1px #e4e4e4 dashed;
-    background-color: #f0f4f5;
-    text-decoration: none;
-    color: #504b4b;
-    padding: 10 0 10 14px;
-    line-height: 25px;
+    background-color: #f5f0f1;
   }
   
    li.cur a{
@@ -237,24 +233,21 @@ label {
   
    
     ul.left_menu li.tree a,
-  ul.left_menu li.sub a,
-  ul.left_menu li.even a,
-  ul.left_menu li.odd a{
+    ul.left_menu li.sub a,
+    ul.left_menu li.even a,
+    ul.left_menu li.odd a{
     font-size: 14px;
     width:166px;
-    height:25px;
+    /* height:25px; */
     display:block;
     text-decoration:none;
     color:#504b4b;
     padding: 10 0 10 14px;
     line-height:25px;
   }
-  ul.left_menu li.odd a{
-    border-bottom:1px #e4e4e4 dashed;
-  }
-
+ 
   ul.left_menu li.even a{
-  
+    /* height: 46px; */
     border-bottom:1px #e4e4e4 dashed;
     background-color:#f0f4f5;
   }

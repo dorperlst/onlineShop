@@ -130,7 +130,7 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
  
     if (query.category &&  query.category != 'All') 
     {
-        var catName= query.category
+        var catName= query.category.replace("%26","&").trim()
         var cats =  await Cat.find( { tree: { $all: catName } },{_id:0,name:1}).select({_id:0,name:1}); //,
         var prodCat=[]
         cats.forEach((cat) => prodCat.push(cat.name))
