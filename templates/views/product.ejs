@@ -120,9 +120,11 @@
               </div></br>
               <article id="secProducts" class="main-center">
 
-
+                <% if(products.products.length >0 ) { %>
                 <div class="center_title_bar">Other Products</div>
                 <%- include('../partials/products.ejs') %>
+                <% } %>
+
               </article> 
             </article> 
            

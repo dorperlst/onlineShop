@@ -54,22 +54,6 @@
 div.center {display: flex;justify-content: center;}
  
 
-.product-image  {
-    height: 260px;
-    display: grid;
-    overflow: hidden;
-    justify-content: center;
-  }
-
-
- /* todo delete */
-.product-image img {
-    width: 100%;
-    border: none;
-    max-width: 200px;
-    margin: auto;
-  }
-
   .product-info {
     display: flex;
     margin-top: 10px;

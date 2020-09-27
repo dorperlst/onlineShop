@@ -422,7 +422,7 @@ form >.field{   text-align-last: left;  }
 .center_prod_box_big{  margin:0px;}
 
 .product_img_big{padding:10px 0 0 10px;height: inherit;display: flex;justify-content: space-around;}
-.product_title_big{color: #11136b;padding:5px 0 5px 0;font-weight:bold;font-size: 14px;margin: auto;}
+.product_title_big{color: #11136b;text-align: center;padding:5px 0 5px 0;font-weight:bold;font-size: 14px;margin: auto;}
 
 .flex-container >select {
   height: 22px;
@@ -528,7 +528,7 @@ input.contact_input{
 }
 
 .map-wrapper{
-  height: 500px;
+  /* height: 500px; */
 }
 
 .col-md {
@@ -678,4 +678,23 @@ output:after {
     display: block; padding: 0px 4px; margin: -1px 2px;
     height: 26px; width: auto; border: 1px solid #ddd; 
     font-size: 13px; line-height: 26px;
+}
+
+
+
+.product-image  {
+  height: 260px;
+  display: grid;
+  overflow: hidden;
+  justify-content: center;
+}
+
+ 
+.product-image img {
+  width: 100%;
+  border: none;
+  max-width: 250px;
+  min-width: 200px;
+
+  margin: auto;
 }

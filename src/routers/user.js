@@ -163,10 +163,6 @@ router.patch('/users/contact', admin, multer().none(), async (req, res) => {
     }
 })
 
-
-
-
-
 router.get('/:shop/signup', async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
     
@@ -178,12 +174,6 @@ router.get('/:shop/signup', async (req, res) => {
         title: 'signup', categories:categories, shopname: req.params.shop, url_base: urlBase,  username: userName 
     })
 })
- 
-
-
-
- 
-
 
 router.get('/:shop/contact',auth, async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
@@ -216,8 +206,7 @@ router.get('/admin', admin, async (req, res) => {
             res.render('admin', { title: 'admin', orders: orders, url_base: urlBase, products: products, contacts: contacts, categories: categories, shopname: shopName, tree:tree, username: userName});
         } 
     catch (e) {
-        
-        res.send('Unable to load Page  '+ e.message)   
+        res.redirect('/login');
      }
 })
 
@@ -236,10 +225,8 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
     try {
         await user.save()
-        //res.send("sucsses");
-        // var href="/"+req.params.shop+"/view"
-     //   sendWelcomeEmail(user.email, user.name)
-         redirectSession(req, res, user, href)
+        sendWelcomeEmail(user.email, user.name)
+        redirectSession(req, res, user, href)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
@@ -249,9 +236,11 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
  // todo confermation mail
 router.post('/login', multer().none(), async (req, res) => {
     try {
+        var shop = Shop.findOne().name;
+        const url=`/${shop}/view`
         const user = await User.findByCredentials(req.body.email, req.body.password)
         if(!user)
-            res.send('Unable to login') 
+            res.redirect(url);
         else
            redirectSession(req, res, user, req.body.currentUrl)
     } catch (e) {
@@ -259,19 +248,15 @@ router.post('/login', multer().none(), async (req, res) => {
     }
 })
 
-
-
 async function redirectSession(req, res, user, href){
     const token = await user.generateAuthToken()   
     var sess = req.session;
     sess.token = token
     sess.name = user.name
-
     var hour = 360000000
     req.session.cookie.expires = new Date(Date.now() + hour)
     req.session.cookie.maxAge = hour
     res.send(token)
-
 }
 
 router.post('/users/logout', multer().none(),  auth, async (req, res) => {

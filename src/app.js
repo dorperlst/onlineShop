@@ -28,29 +28,19 @@ app.use(orderRouter)
 app.use(categoryRouter)
 
 app.get('/signup', async (req, res) => {
-   
-
- 
     res.render('/signup', {
-        title: 'signup2'
+        title: 'signup'
     })
 })
 
 
 app.get('/login', async (req, res) => {
-   
-
- 
     res.render('login', {
-        title: 'Login2'
+        title: 'Login'
     })
 })
+
 app.get('/', async (req, res) => {
-     
-     
-
- 
-
     res.render('login', {
         title: 'login' 
     })

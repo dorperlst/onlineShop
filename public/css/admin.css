@@ -150,3 +150,8 @@ a {
     color: red;
     margin-left: 30px;
 }
+         
+.images img{
+    max-width: 250px;
+    min-width: 200px;
+}
