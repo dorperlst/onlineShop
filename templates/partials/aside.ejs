@@ -11,7 +11,8 @@
 
       <% categories.categories[0].entries.forEach(function(category) { %> 
         <% var selected= category.name ==  categories.cur? "selected" :""%> 
-          <li class="<%= line %> <%= selected %>"><a href="<%= url_base %>?category=<%= category.name %>"  > <%= category.name %> </a>
+          <li class="<%= line %> <%= selected %>">
+            <a "#" onclick= "selectCategory(<%= url_base %>,<%= category.name %>)" > <%= category.name %> </a>
           </li>
           <% if(curCategory ==  category.name && categories.categories.length > 1){ %> 
             <% categories.categories[1].entries.forEach(function(sub) { %> 

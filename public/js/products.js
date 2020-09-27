@@ -120,6 +120,11 @@ function oninputUbound(parent) {
 function oninputLbound(parent) {
     parent.parentNode.dataset.lbound = parent.value;
     min= parent.value;
-
-
 }
+
+function selectCategory(url, cat ) {
+    var cat=encodeURIComponent(category)
+    var href = `/${url}?category=${cat} `
+    window.location.href = href;
+}
+
