@@ -1,7 +1,6 @@
 const express = require('express')
 const multer = require('multer')
 const sharp = require('sharp')
-
 const Product = require('../models/product')
 const Order = require('../models/order').Order
 
@@ -234,8 +233,31 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
 
 })
  // todo confermation mail
+ 
+
 router.post('/login', multer().none(), async (req, res) => {
     try {
+
+
+         
+        // var t = 
+        //     cloudinary.uploader.upload(
+        //         "public/uploads/81FGKa8IdRL._AC_UL320_.jpg", 
+        //         {public_id: 'mind_19472-min'}, 
+        //         function(error, result) { 
+        //           console.log(result) 
+        //         }
+        //       );
+         
+       
+        
+        
+        // var rr=cloudinary.url("mind_19472-min.jpg");
+
+       // cloudinary.uploader.destroy('zombie', function(result) { console.log(result) });
+
+
+
         var shop = await Shop.findOne();
         const url=`/${shop.name}/view`
         const user = await User.findByCredentials(req.body.email, req.body.password)

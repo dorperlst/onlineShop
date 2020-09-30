@@ -5,7 +5,7 @@
         </div>
         <div class="product-image">   
     <% if ( product.mainimage) { %>
-          <img alt="" border="0"  src="../../uploads/<%= product.mainimage %>"></img> 
+          <img alt="" border="0"  src="<%= product.mainimage %>"></img> 
 
     <% } else  { %>
       <img  src="../../images/default.jpg"></img> 

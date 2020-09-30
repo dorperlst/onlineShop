@@ -14,14 +14,14 @@
             <article class="main-center">
                 
               <div class="product_img_big"> 
-                <% if( product.images.length >0) { %>
+                <% if( product.images_url.length >0) { %>
 
                 <div class="thumbs flex-grid ">
-                  <%  product.images.forEach(function(image) { %>
+                  <%  product.images_url.forEach(function(image) { %>
 
                     <a href="#"   fade=[on]">  
                       <img onclick='changeImg("<%=image%>")' onmouseover='changeImg("<%=image%>")' 
-                        src="../../uploads/<%= image%>" alt="" border="0">
+                        src="<%= image%>" alt="" border="0">
                     </a> 
                   <% }); %>
                 </div>
@@ -30,8 +30,8 @@
                 <div class= "flex-container">
                   <div class="productImg flex-item">
                 
-                    <% if (product.images && product.images.length > 0) { %>
-                      <img id="mainImg" src="../../uploads/<%= product.images[0] %>" alt="" border="0">
+                    <% if (product.images_url && product.images_url.length > 0) { %>
+                      <img id="mainImg" src="<%= product.images_url[0] %>" alt="" border="0">
                     <% }
                     else  { %>
                       <img  src="../../images/default.jpg"></img> 

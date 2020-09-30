@@ -22,6 +22,7 @@ var formAction=''
 var mainImg = undefined
 var currentAttributeDiv = undefined
 var isAttImg= false
+const  ulPager= document.getElementById("pager");
 
 function closePopUp(parent){
     resetForm()
@@ -107,8 +108,8 @@ function editProduct(id){
         for(var ind in product.tags)
            addTags(product.tags[ind]);
 
-        if(product.images.length>0 && mainImg == undefined)
-            mainImg=product.images[0]
+        if(product.images_url.length>0 && mainImg == undefined)
+            mainImg=product.images_url[0]
         
         for(var ind in product.images)
         {
@@ -572,4 +573,42 @@ function addImgAttributes(name, values){
     const template = document.querySelector('#img-attributes-li-template').innerHTML
     const html = Mustache.render(template, { name: name, values: values })
     ulImgAttributes.insertAdjacentHTML('beforeend', html)
+}
+
+
+function replaceUrlParam(paramName, paramValue){
+    var url = window.location.href;
+
+    if (paramValue == null) {
+        paramValue = '';
+    }
+
+    var pattern = new RegExp('\\b('+paramName+'=).*?(&|#|$)');
+    if (url.search(pattern)>=0) {
+        return url.replace(pattern,'$1' + paramValue + '$2');
+    }
+
+    url = url.replace(/[?#]$/,'');
+    return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue;
+}
+
+function pagination(pager, current){
+    page = parseInt(pager)
+    if ( page < 2)
+        return
+    
+    createPagerLink(page+1, "<")
+    for (i=0;i< page ;i++)  
+        createPagerLink(i+1, i+1)
+    createPagerLink(page+1, ">")
+}
+
+function createPagerLink(ind, value){
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.innerHTML= value ;
+    var href = replaceUrlParam('pageNum', ind) ; 
+    a.href= href;
+    li.appendChild(a);
+    ulPager.appendChild(li);
 }

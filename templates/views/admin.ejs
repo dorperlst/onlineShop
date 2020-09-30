@@ -223,11 +223,20 @@
                       </div>
               </div>
                   <% }); %>
-                  </section>
-    
-             
-                
+
+               
+
+              </section>
+              <% if (  products.productInfo && parseInt(products.productInfo.pageNum) > 1) { %>   
+                <div class="center">
+                    <ul id="pager" class="pagination">  </ul>
+                </div>
+                  <div class="center">
+                    <label>showing  <%= products.products.length %>   out of   <%= products.productInfo.totalRows %></label> 
+                  </div>
+              <% }  %>
               </div>
+
               <section id="contacts" style="display: none;" class="flex-item">
                 <div class="center_title_bar">Contacts</div>
     
@@ -256,14 +265,8 @@
                       <input class="prod_details"  onclick = replay(this, "<%= contact._id %>") type="button" value="Send">  
                       <input class="prod_details_red"  onclick = deleteContact(this,"<%= contact._id %>") type="button" value="Delete">  
                     </div>  
-                    
-    
-               
-    
                   </div>
-      
                   <% })  %>
-    
               </section>
               <section id ="orders" style="display: none;" class="main-center">
                 <a class="close" onclick="closePopUp(this)" ><img src="../../images/close.png"> </a>
@@ -325,13 +328,6 @@
         <%- include('../partials/footer.ejs') %> 
             </div>
 
-
- 
-
-       
-
-
-
       <script id="attributes-li-template" type="text/html">
       <li class="flex-item">
         <div class="flex-container nested">
@@ -342,12 +338,7 @@
           </a>
         </div>
 
-
-
-        
         <ul class="flex-item nested">
-
-
           {{#values}}
           <li><div class="flex-container nested"> 
             <input type="text" value="{{.}}" placeholder="value" required="">
@@ -356,14 +347,7 @@
             </a>
            </div>
           </li>
-       {{/values}}
-
-
-
-         
-
-
-
+         {{/values}}
         </ul>
       </li>
 
@@ -443,56 +427,19 @@
 
     </div>
   </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-     
+ 
+      
+  
+    
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
  
   <script src="/js/admin.js"></script>
  
-
+<script type="text/javascript">
+        pagination("<%= products.productInfo.pageNum %>")
+      </script>
      
  
       
