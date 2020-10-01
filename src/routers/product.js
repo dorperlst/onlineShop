@@ -228,7 +228,7 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
    // product.images_url = [];
     
     newimages.forEach(function (image){
-        cloudinary.upload(image);
+       // cloudinary.upload(image);
         product.images_url.push( cloudinary.url(image));
 
     })
