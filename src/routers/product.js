@@ -87,15 +87,14 @@ router.get('/:shop/products22', async (req, res) => {
 
         const products = await Product.find();
         var cloudinary2 = require('cloudinary').v2;
-        const path = require('path');
-        
+         
         cloudinary2.config({ 
             cloud_name: process.env.CLOUDINARY_NAME, 
             api_key:process.env.CLOUDINARY_API_KEY, 
             api_secret: process.env.CLOUDINARY_API_SECRET 
             });
             cloudinary2.uploader.upload(
-                "public/uploads/41IBs9FWfTL._AC_UL320_-1601494392612.jpg" , 
+                "public/images/shop.png" , 
                 {public_id: "41IBs9FWfTL._AC_UL320_-1601494392612"}, 
                 function(error, result) { 
                    return error 
@@ -104,7 +103,7 @@ router.get('/:shop/products22', async (req, res) => {
 
  
  
-    cloudinary.upload("../../uploads/41IBs9FWfTL._AC_UL320_-1601494392612.jpg");
+    cloudinary.upload("../../images/shop.png");
 
 
         res.send({ products})
