@@ -103,7 +103,7 @@ router.get('/:shop/products22', async (req, res) => {
 
  
  
-    cloudinary.upload("../../images/shop.png");
+    //cloudinary.upload("../../images/shop.png");
 
 
         res.send({ products})
