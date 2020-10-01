@@ -214,24 +214,24 @@ router.post('/products', admin, multer.upload.array('myFiles', 12) , async  func
 
 router.patch('/products',admin, multer.upload.array('myFiles', 12), async function (req, res, next) {
     const allowedUpdates = ['name', 'description', 'price','mainimage',"isavailable","promotion"]
-    const newimages = req.files.map(x => x.filename)
+    // const newimages = req.files.map(x => x.filename)
     const images = JSON.parse( req.body.images)
     const product = await Product.findById(req.body.id)
     allowedUpdates.forEach((update) => product[update] = req.body[update])
     var cat = await Cat.findById(req.body.category)
     product.category= cat.name
     product.tree = cat.tree  
-    var old_images = product.images.slice();
-    product.images = images.concat(newimages) ;
+    // var old_images = product.images.slice();
+    // product.images = images.concat(newimages) ;
 
 
    // product.images_url = [];
     
-    newimages.forEach(function (image){
-       // cloudinary.upload(image);
-        product.images_url.push( cloudinary.url(image));
+    // newimages.forEach(function (image){
+    //    // cloudinary.upload(image);
+    //     product.images_url.push( cloudinary.url(image));
 
-    })
+    // })
     // const removed = old_images.filter(element => !product.images.includes(element));
 
     // removed.forEach(function (image){
