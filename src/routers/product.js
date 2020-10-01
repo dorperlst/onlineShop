@@ -105,7 +105,8 @@ router.get('/:shop/view/:id', async (req, res) => {
 router.delete('/products/:id', admin, multer.multer().none(), async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
-        await product.remove()
+        if(product)
+            await product.remove()
         res.redirect(req.body.currentUrl);
     } catch (e) {
         console.log(e)
@@ -166,7 +167,7 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
    // product.images_url = [];
     
     newimages.forEach(function (image){
-        cloudinary.upload();
+        cloudinary.upload(image);
         product.images_url.push( cloudinary.url(image));
 
     })
@@ -177,8 +178,6 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
         const index = product.images_url.indexOf(cloudinary.url(image));
         if (index > -1) {
             product.images_url.splice(index, 1);
-        }
-        if (index > -1) {
             product.images.splice(index, 1);
         }
 

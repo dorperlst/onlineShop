@@ -114,7 +114,7 @@ productSchema.pre('remove', async function (next) {
         try
         {
             fs.unlink(filePath, (err) => {
-                if (err) throw err;
+                if (!err) 
                 console.log('successfully deleted');
               });
         }

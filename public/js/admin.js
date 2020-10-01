@@ -113,7 +113,7 @@ function editProduct(id){
         
         for(var ind in product.images)
         {
-            ulimages.appendChild(createListItem(product.images[ind], product.images[ind]));
+            ulimages.appendChild(createListItem(product.images[ind], product.images_url[ind]));
             if(product.images[ind]===mainImg)
                ulimages.lastElementChild.className="flex-item nested mainImg";
         }

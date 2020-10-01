@@ -11,6 +11,8 @@ cloudinary.config({
    
     module.exports = {
         upload: (image) => {
+            if(!image)
+                return
             cloudinary.uploader.upload(
                 "public/uploads/"+image , 
                 {public_id: path.parse(image).name}, 
