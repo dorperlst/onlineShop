@@ -41,12 +41,12 @@
 								<p><%= shop.abouts[i].value%> </p>
 						
 							</div>
-							
+							<!-- ../uploads/ -->
 		
 							<div class="col-md">
 								<div class="about_img-box">
-									<% if (shop.images.length > i) { %>
-									<img src="../uploads/<%=shop.images[i]%>" alt="">
+									<% if (shop.images_url.length > i) { %>
+									<img src="<%=shop.images_url[i]%>" alt="">
 									<% }%> 
 								</div>
 							</div>

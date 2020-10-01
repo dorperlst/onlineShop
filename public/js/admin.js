@@ -262,7 +262,7 @@ function selectImage(parent, img){
         hover(this, img)
         });
 
-    curimg.src = '../../uploads/'+ img
+    curimg.src = img // '../../uploads/'+
     curimg.style="display:block"
     if(mainImg==img)
         mainImg=undefined
@@ -303,10 +303,10 @@ function createImgListItem(name, img){
     li.innerHTML = html
     return li
 }
-
+//../../uploads/"
 function hover(div, img)
 {
-    div.style="  background: url(../../uploads/"+img+") left no-repeat;"
+    div.style="  background: url(img) left no-repeat;"
 }
 
 function editShop(){
@@ -333,8 +333,8 @@ function editShop(){
         form_shop.elements['address'].value = jsonData.address
         form_shop.elements['lat'].value = jsonData.lat
         form_shop.elements['long'].value = jsonData.long
-        for(var ind in jsonData.images)
-            ulimages.appendChild(createListItem(jsonData.images[ind], jsonData.images[ind]));
+        for(var ind in jsonData.images_url)
+            ulimages.appendChild(createListItem(jsonData.images[ind], jsonData.images_url[ind]));
     });
 }
 

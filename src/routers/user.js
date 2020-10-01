@@ -1,43 +1,19 @@
 const express = require('express')
-const multer = require('multer')
+const multer = require('../multer/multer')
 const sharp = require('sharp')
 const Product = require('../models/product')
 const Order = require('../models/order').Order
-
 const User = require('../models/user')
 const Contact = require('../models/contact')
 const Cat = require('../models/cat')
 const Shop = require('../models/shop')
-
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
 const { sendWelcomeEmail, sendContactEmail, sendCancelationEmail } = require('../emails/account')
 const { admin } = require('../middleware/auth')
 const { send } = require('@sendgrid/mail')
 const router = new express.Router()
-
-
-var storage =   multer.diskStorage({
-    destination: function (req, file, callback) {
-      callback(null, 'public/users');
-    },
-    filename: function (req, file, callback) {
-      callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
-    }
-  });
-   
-  const upload = multer({
-    storage: storage ,
-    limits: {
-        fileSize: 10000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-        cb(undefined, true)
-    }
-  })
+const cloudinary = require('../cloudinary/cloudinary')
 
 
 router.get('/users', async (req, res) => {
@@ -45,7 +21,7 @@ router.get('/users', async (req, res) => {
     res.send({ user })
     
 })
-router.delete('/contact/:shop/', multer().none(), auth, async (req, res) => {
+router.delete('/contact/:shop/', multer. multer().none(), auth, async (req, res) => {
     try {
         var contact = await Contact.findByIdAndDelete(req.body.id)
         res.send(contact)
@@ -70,7 +46,8 @@ router.get('/:shop/account', auth, async (req, res) => {
           } 
     }).execPopulate()
     res.render('account', {
-        title: 'Account', categories:categories, url_base: urlBase, sb: process.env.CLIENT_ID, shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
+        title: 'Account', categories:categories, url_base: urlBase, sb: process.env.CLIENT_ID,
+         shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
         user: req.user
  
     })
@@ -131,7 +108,7 @@ async function getShopOrders(shop, status)   {
     }
 }
 
-router.post('/users/:shop/contact', multer().none(), async (req, res) => {
+router.post('/users/:shop/contact', multer. multer().none(), async (req, res) => {
     try {
         const contact = new Contact (req.body)
         contact.shop = req.params.shop
@@ -145,7 +122,7 @@ router.post('/users/:shop/contact', multer().none(), async (req, res) => {
     }
 })
 
-router.patch('/users/contact', admin, multer().none(), async (req, res) => {
+router.patch('/users/contact', admin,  multer.multer().none(), async (req, res) => {
     try {
         const contact = await Contact.findById(req.body.id)
         if(req.query.shop != contact.shop)
@@ -217,10 +194,14 @@ router.get('/contact',admin, async (req, res) => {
     res.render('contact', {   title: 'contact', contact: contact, shopname: req.shop.name, username: userName})
 })
 
-router.post('/users', upload.single('avatar'), async function (req, res, next) {
+router.post('/users', multer.upload.single('avatar'), async function (req, res, next) {
     const user = new User(req.body)
     if(req.file!= undefined)
-        user.image = req.file.filename
+    {
+        var image = req.file.filenam;        
+        cloudinary.upload(image);
+        user.image = cloudinary.url(image)  //req.file.filename
+    }
 
     try {
         await user.save()
@@ -235,28 +216,8 @@ router.post('/users', upload.single('avatar'), async function (req, res, next) {
  // todo confermation mail
  
 
-router.post('/login', multer().none(), async (req, res) => {
+router.post('/login', multer.multer().none(), async (req, res) => {
     try {
-
-
-         
-        // var t = 
-        //     cloudinary.uploader.upload(
-        //         "public/uploads/81FGKa8IdRL._AC_UL320_.jpg", 
-        //         {public_id: 'mind_19472-min'}, 
-        //         function(error, result) { 
-        //           console.log(result) 
-        //         }
-        //       );
-         
-       
-        
-        
-        // var rr=cloudinary.url("mind_19472-min.jpg");
-
-       // cloudinary.uploader.destroy('zombie', function(result) { console.log(result) });
-
-
 
         var shop = await Shop.findOne();
         const url=`/${shop.name}/view`
@@ -285,7 +246,7 @@ async function redirectSession(req, res, user, href){
     res.redirect(href);
 }
 
-router.post('/users/logout', multer().none(),  auth, async (req, res) => {
+router.post('/users/logout', multer.multer().none(),  auth, async (req, res) => {
     req.user.tokens = req.user.tokens.filter((token) => {
         return token.token !== req.session.token
     })
@@ -310,7 +271,7 @@ async function logout(req, href, res){
 
 
 
-router.post('/users/logoutAll', multer().none(), auth, async (req, res) => {
+router.post('/users/logoutAll', multer. multer().none(), auth, async (req, res) => {
    
     req.user.tokens = []
     logout(req, req.body.currentUrl, res)
@@ -321,15 +282,26 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
-router.post('/:shop/account', auth,multer().none(), async (req, res) => {
+router.post('/:shop/account', auth, multer.upload.single('avatar'), async (req, res) => {
     const updates = Object.keys(req.body)
+    const user = req.user
     const allowedUpdates = ['name', 'last', 'email', 'phone','address']
-    allowedUpdates.forEach((update) => req.user[update] = req.body[update])
-    
+    allowedUpdates.forEach((update) =>user[update] = req.body[update])
+    if(req.file!= undefined)
+    {
+
+        cloudinary.destroy(user.image );
+        var image = req.file.filename;        
+        cloudinary.upload(image);
+        user.image = cloudinary.url(image)  
+
+    }
+   
     try {
-        
+        await user.save()
         res.redirect("/"+req.params.shop+"/account")
     } catch (e) {
+        console.log(e)
         res.status(400).send(e)
     }
 })
@@ -345,7 +317,7 @@ router.delete('/users/me', auth, async (req, res) => {
 })
  
 
-router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+router.post('/users/me/avatar', auth, multer.upload.single('avatar'), async (req, res) => {
     const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
     req.user.avatar = buffer
     await req.user.save()

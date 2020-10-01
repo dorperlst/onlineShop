@@ -1,5 +1,5 @@
 const express = require('express')
-const multer = require('multer')
+const multer = require('../multer/multer')
 const Shop = require('../models/shop')
 const authObj = require('../middleware/auth')
 const auth = authObj.auth
@@ -10,28 +10,10 @@ const Order = require('../models/order').Order
 const { admin } = require('../middleware/auth')
 const Cat = require('../models/cat')
 const router = new express.Router()
-
-var storage =   multer.diskStorage({
-    destination: function (req, file, callback) {
-      callback(null, 'public/uploads');
-    },
-    filename: function (req, file, callback) {
-      callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
-    }
-  });
-   
-const upload = multer({
-    storage: storage ,
-    limits: {
-        fileSize: 10000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-        cb(undefined, true)
-    }
-})
+ 
+const cloudinary = require('../cloudinary/cloudinary')
+ 
+  
 
 router.get('/:shop/about', async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, req.params.shop)
@@ -59,7 +41,7 @@ router.get('/shop', admin, async (req, res) => {
     
 })
 
-router.post('/shops', upload.array('myFiles', 12), async  function (req, res, next) {
+router.post('/shops', multer.upload.array('myFiles', 12), async  function (req, res, next) {
 
     const shop = new Shop(req.body)
     shop.images = req.files.map(x => x.filename)
@@ -74,13 +56,36 @@ router.post('/shops', upload.array('myFiles', 12), async  function (req, res, ne
 
 })
  
-router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
+
+router.patch('/shops', admin, multer.upload.array('myFiles', 12) ,async (req, res) => {
 
     shop = req.shop
     const allowedUpdates = ['description', 'address','lat', 'long']
     var newimages = req.files.map(x => x.filename)
     var images = JSON.parse( req.body.images)
+    var old_images = shop.images.slice();
     shop.images = images.concat(newimages)
+
+    newimages.forEach(function (image){
+        
+        cloudinary.upload(image);
+        shop.images_url.push( cloudinary.url(image));
+
+    })
+
+    const removed = old_images.filter(element => !shop.images.includes(element));
+
+    removed.forEach(function (image){
+
+        const index = shop.images_url.indexOf(cloudinary.url(image));
+        if (index > -1) {
+            shop.images_url.splice(index, 1);
+            shop.images.splice(index, 1);
+
+        }
+        cloudinary.destroy(image);
+    })
+
     allowedUpdates.forEach((update) => shop[update] = req.body[update])
  
     shop.abouts = JSON.parse(req.body.abouts);
@@ -127,7 +132,7 @@ router.patch('/shops', admin, upload.array('myFiles', 12) ,async (req, res) => {
     try {
          await shop.save()
          res.redirect('/admin');
-        res.send(req.shop)
+       
     } catch (e) {
         res.status(400).send(e)
     }

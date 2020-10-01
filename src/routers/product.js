@@ -7,14 +7,9 @@ const router = new express.Router()
 const ejs = require('ejs'); 
 const admin = require('../middleware/auth').admin;
 const multer =require('../multer/multer')
-var cloudinary = require('cloudinary').v2;
 const path = require('path');
+const cloudinary = require('../cloudinary/cloudinary')
 
-cloudinary.config({ 
-    cloud_name: process.env.CLOUDINARY_NAME, 
-    api_key:process.env.CLOUDINARY_API_KEY, 
-    api_secret: process.env.CLOUDINARY_API_SECRET 
-    });
  
 router.get('/product/:id', async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id}) 
@@ -131,16 +126,10 @@ router.post('/products', admin, multer.upload.array('myFiles', 12) , async  func
     var images = req.files.map(x => x.filename)
     product.images= images;
     product.images_url=   [];
-  
+
     product.images.forEach(function (image){
         product.images_url.push( cloudinary.url(image));
-        cloudinary.uploader.upload(
-            "public/uploads/"+image , 
-            {public_id: path.parse(image).name}, 
-            function(error, result) { 
-                console.log(result) 
-            }
-            );
+        cloudinary.upload(image);
     })
 
     if((!req.body.mainimage || req.body.mainimage == "") && product.images_url.length >0)
@@ -174,17 +163,10 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
     product.images = images.concat(newimages) ;
 
 
-    product.images_url = [];
+   // product.images_url = [];
     
     newimages.forEach(function (image){
-        
-        cloudinary.uploader.upload(
-            "public/uploads/"+image , 
-            {public_id: path.parse(image).name}, 
-            function(error, result) { 
-                console.log(result) 
-            }
-            );
+        cloudinary.upload();
         product.images_url.push( cloudinary.url(image));
 
     })
@@ -196,9 +178,11 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
         if (index > -1) {
             product.images_url.splice(index, 1);
         }
+        if (index > -1) {
+            product.images.splice(index, 1);
+        }
 
-
-        cloudinary.uploader.destroy(path.parse(image).name, function(result) { console.log(result) });
+        cloudinary.destroy(image);
     })
 
     product.imgattributes = JSON.parse(req.body.imgattributes)

@@ -79,10 +79,10 @@
     
                             <%  att.values.forEach(function(val) { %>
                             <div class="thumbs flex-item">
-
+                              <!-- ../../uploads/ -->
                             <a href="#"   fade=[on]">  
                               <img onclick='changeImg("<%=val.img%>","<%=val.value%>")' onmouseover='changeImg("<%=val.img%>","<%=val.value%>")' 
-                                src="../../uploads/<%= val.img %>" alt="" border="0"></a> 
+                                src="<%= val.img %>" alt="" border="0"></a> 
                             </div>
                             <% }); %>
                           </div> 
