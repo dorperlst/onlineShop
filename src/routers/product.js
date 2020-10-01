@@ -63,13 +63,75 @@ router.get('/:shop/view',async (req, res) => {
 router.get('/:shop/products', async (req, res) => {
     try {
         const products = await Product.find();
-        res.send({ products })
+        var cloudinary2 = require('cloudinary').v2;
+
+
+ 
+var con =cloudinary2.config({ 
+    cloud_name: process.env.CLOUDINARY_NAME, 
+    api_key:process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET 
+    });
+
+
+
+        res.send({ con})
     } catch (e) {
-        console.log(e)
-        res.status(500).send(e)
+        
+        res.send(e)
+    }
+})
+router.get('/:shop/products22', async (req, res) => {
+    try {
+        var cloudinary2= require('cloudinary').v2;
+
+        const products = await Product.find();
+        var cloudinary2 = require('cloudinary').v2;
+        const path = require('path');
+        
+        cloudinary2.config({ 
+            cloud_name: process.env.CLOUDINARY_NAME, 
+            api_key:process.env.CLOUDINARY_API_KEY, 
+            api_secret: process.env.CLOUDINARY_API_SECRET 
+            });
+            cloudinary2.uploader.upload(
+                "public/uploads/41IBs9FWfTL._AC_UL320_-1601494392612.jpg" , 
+                {public_id: "41IBs9FWfTL._AC_UL320_-1601494392612"}, 
+                function(error, result) { 
+                   return error 
+                }
+                );        
+
+ 
+ 
+    cloudinary.upload("../../uploads/41IBs9FWfTL._AC_UL320_-1601494392612.jpg");
+
+
+        res.send({ products})
+    } catch (e) {
+       
+        res.send(e)
     }
 })
 
+router.get('/:shop/products2', async (req, res) => {
+    try {
+
+        const products = await Product.find();
+
+
+        
+
+ 
+    cloudinary.upload("41IBs9FWfTL._AC_UL320_-1601494392612.jpg");
+
+
+        res.send({ products})
+    } catch (e) {
+        console.log(e)
+        res.send(e)
+    }
+})
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
     const shop = req.params.shop
@@ -130,15 +192,8 @@ router.post('/products', admin, multer.upload.array('myFiles', 12) , async  func
 
     product.images.forEach(function (image){
         product.images_url.push( cloudinary.url(image));
-        var err=  cloudinary.upload(image);
-        if(err)
-        {
-          res.send({ err:err ,   cloud_name: process.env.CLOUDINARY_NAME, 
-            api_key:process.env.CLOUDINARY_API_KEY, 
-            api_secret: process.env.CLOUDINARY_API_SECRET })
-          return
-        }
-     })
+        cloudinary.upload(image);
+    })
 
     if((!req.body.mainimage || req.body.mainimage == "") && product.images_url.length >0)
         product.mainimage = product.images_url[0]
@@ -174,15 +229,7 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
    // product.images_url = [];
     
     newimages.forEach(function (image){
-      var err=  cloudinary.upload(image);
-      if(err)
-      {
-        res.send({ err:err ,   cloud_name: process.env.CLOUDINARY_NAME, 
-            api_key:process.env.CLOUDINARY_API_KEY, 
-            api_secret: process.env.CLOUDINARY_API_SECRET })
-        return
-      }
-    
+        cloudinary.upload(image);
         product.images_url.push( cloudinary.url(image));
 
     })
