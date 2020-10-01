@@ -213,50 +213,50 @@ router.post('/products', admin, multer.upload.array('myFiles', 12) , async  func
 })
 
 router.patch('/products',admin, multer.upload.array('myFiles', 12), async function (req, res, next) {
-    const allowedUpdates = ['name', 'description', 'price','mainimage',"isavailable","promotion"]
-    // const newimages = req.files.map(x => x.filename)
-    const images = JSON.parse( req.body.images)
-    const product = await Product.findById(req.body.id)
-    allowedUpdates.forEach((update) => product[update] = req.body[update])
-    var cat = await Cat.findById(req.body.category)
-    product.category= cat.name
-    product.tree = cat.tree  
-    // var old_images = product.images.slice();
-    // product.images = images.concat(newimages) ;
+//     const allowedUpdates = ['name', 'description', 'price','mainimage',"isavailable","promotion"]
+//     // const newimages = req.files.map(x => x.filename)
+//     const images = JSON.parse( req.body.images)
+//     const product = await Product.findById(req.body.id)
+//     allowedUpdates.forEach((update) => product[update] = req.body[update])
+//     var cat = await Cat.findById(req.body.category)
+//     product.category= cat.name
+//     product.tree = cat.tree  
+//     // var old_images = product.images.slice();
+//     // product.images = images.concat(newimages) ;
 
 
-   // product.images_url = [];
+//    // product.images_url = [];
     
-    // newimages.forEach(function (image){
-    //    // cloudinary.upload(image);
-    //     product.images_url.push( cloudinary.url(image));
+//     // newimages.forEach(function (image){
+//     //    // cloudinary.upload(image);
+//     //     product.images_url.push( cloudinary.url(image));
 
-    // })
-    // const removed = old_images.filter(element => !product.images.includes(element));
+//     // })
+//     // const removed = old_images.filter(element => !product.images.includes(element));
 
-    // removed.forEach(function (image){
+//     // removed.forEach(function (image){
 
-    //     const index = product.images_url.indexOf(cloudinary.url(image));
-    //     if (index > -1) {
-    //         product.images_url.splice(index, 1);
-    //         product.images.splice(index, 1);
-    //     }
+//     //     const index = product.images_url.indexOf(cloudinary.url(image));
+//     //     if (index > -1) {
+//     //         product.images_url.splice(index, 1);
+//     //         product.images.splice(index, 1);
+//     //     }
 
-    //     cloudinary.destroy(image);
-    // })
+//     //     cloudinary.destroy(image);
+//     // })
 
-    product.imgattributes = JSON.parse(req.body.imgattributes)
-    product.attributes = JSON.parse(req.body.attributes)
-    product.details = JSON.parse(req.body.details)
-    product.tags = JSON.parse(req.body.tags)
-    if((!req.body.mainimage || req.body.mainimage == "")&& product.images_url.length >0)
-        product.mainimage=product.images_url[0]
+//     product.imgattributes = JSON.parse(req.body.imgattributes)
+//     product.attributes = JSON.parse(req.body.attributes)
+//     product.details = JSON.parse(req.body.details)
+//     product.tags = JSON.parse(req.body.tags)
+//     if((!req.body.mainimage || req.body.mainimage == "")&& product.images_url.length >0)
+//         product.mainimage=product.images_url[0]
     try
     {
-        await product.save()
-        res.redirect(req.body.currentUrl);    }
+       
+        res.send(req.body.currentUrl);    }
     catch (e) {
-         res.status(400).send(e)
+         res.send(e)
     }
 })
   
