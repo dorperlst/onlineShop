@@ -130,8 +130,15 @@ router.post('/products', admin, multer.upload.array('myFiles', 12) , async  func
 
     product.images.forEach(function (image){
         product.images_url.push( cloudinary.url(image));
-        cloudinary.upload(image);
-    })
+        var err=  cloudinary.upload(image);
+        if(err)
+        {
+          res.send({ err:err ,   cloud_name: process.env.CLOUDINARY_NAME, 
+            api_key:process.env.CLOUDINARY_API_KEY, 
+            api_secret: process.env.CLOUDINARY_API_SECRET })
+          return
+        }
+     })
 
     if((!req.body.mainimage || req.body.mainimage == "") && product.images_url.length >0)
         product.mainimage = product.images_url[0]
@@ -167,7 +174,15 @@ router.patch('/products',admin, multer.upload.array('myFiles', 12), async functi
    // product.images_url = [];
     
     newimages.forEach(function (image){
-        cloudinary.upload(image);
+      var err=  cloudinary.upload(image);
+      if(err)
+      {
+        res.send({ err:err ,   cloud_name: process.env.CLOUDINARY_NAME, 
+            api_key:process.env.CLOUDINARY_API_KEY, 
+            api_secret: process.env.CLOUDINARY_API_SECRET })
+        return
+      }
+    
         product.images_url.push( cloudinary.url(image));
 
     })

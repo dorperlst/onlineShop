@@ -17,7 +17,7 @@ cloudinary.config({
                 "public/uploads/"+image , 
                 {public_id: path.parse(image).name}, 
                 function(error, result) { 
-                    console.log(error) 
+                   return error 
                 }
                 );
         },
