@@ -14,7 +14,7 @@ cloudinary.config({
             if(!image)
                 return
             cloudinary.uploader.upload(
-                "public/uploads/"+image , 
+                "public/images/"+image , 
                 {public_id: path.parse(image).name}, 
                 function(error, result) { 
                    if ( error) throw error

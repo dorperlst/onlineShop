@@ -95,7 +95,7 @@ router.get('/:shop/products22', async (req, res) => {
             });
             cloudinary2.uploader.upload(
                 "public/images/shop.png" , 
-                {public_id: "41IBs9FWfTL._AC_UL320_-1601494392612"}, 
+                {public_id: "shodddp"}, 
                 function(error, result) { 
                    return error 
                 }
@@ -122,7 +122,7 @@ router.get('/:shop/products2', async (req, res) => {
         
 
  
-    cloudinary.upload("41IBs9FWfTL._AC_UL320_-1601494392612.jpg");
+    cloudinary.upload("shop.png");
 
 
         res.send({ products})
