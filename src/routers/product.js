@@ -7,8 +7,8 @@ const router = new express.Router()
 const ejs = require('ejs'); 
 const admin = require('../middleware/auth').admin;
 const multer =require('multer')
-//const path = require('path');
-//const cloudinary = require('../cloudinary/cloudinary')
+// const path = require('path');
+const cloudinary = require('../cloudinary/cloudinary')
 
  
 var storage =   multer.diskStorage({
@@ -248,23 +248,23 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
 
 
      
-    // newimages.forEach(function (image){
-    //    // cloudinary.upload(image);
-    //   //  product.images_url.push( cloudinary.url(image));
+    newimages.forEach(function (image){
+       cloudinary.upload(image);
+       product.images_url.push( cloudinary.url(image));
 
-    // })
-    // const removed = old_images.filter(element => !product.images.includes(element));
+    })
+    const removed = old_images.filter(element => !product.images.includes(element));
 
-    // removed.forEach(function (image){
+    removed.forEach(function (image){
 
-    //     const index = product.images_url.indexOf(cloudinary.url(image));
-    //     if (index > -1) {
-    //         product.images_url.splice(index, 1);
-    //         product.images.splice(index, 1);
-    //     }
+        const index = product.images_url.indexOf(cloudinary.url(image));
+        if (index > -1) {
+            product.images_url.splice(index, 1);
+            product.images.splice(index, 1);
+        }
 
-    //     cloudinary.destroy(image);
-    // })
+        cloudinary.destroy(image);
+    })
 
     product.imgattributes = JSON.parse(req.body.imgattributes)
     product.attributes = JSON.parse(req.body.attributes)
