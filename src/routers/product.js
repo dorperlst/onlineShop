@@ -189,7 +189,7 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
         newimages.forEach(function (image){
             
  
-            cloudinary.upload(image);
+            // cloudinary.upload(image);
             product.images_url.push( cloudinary.url(image));
     
         })
