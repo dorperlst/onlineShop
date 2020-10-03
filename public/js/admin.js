@@ -218,7 +218,7 @@ function deleteContact(parent, id){
 }
 
 function createAttListItem(parent){
-    var ul  =parent.parentElement.getElementsByTagName("ul")[0]
+    var ul= parent.parentElement.getElementsByTagName("ul")[0]
     var li = nameListItem('',"value")
     ul.appendChild(li );
     li.getElementsByTagName("input")[0].focus
@@ -436,10 +436,23 @@ form.addEventListener('submit', (e) => {
 
     .then(function(res) {
         if (res.redirected)  
+        {
             window.location.href = res.url;
+            return null;
+        }
+           
         else
-            document.getElementById("err").textContent=res ;
+            return res.json()
     })
+
+    .then((jsonData) => {   
+        if(jsonData)
+            document.getElementById("err").innerHTML = jsonData.err
+    });
+
+
+
+    
 
 })
  

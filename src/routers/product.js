@@ -187,6 +187,8 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
     {
  
         newimages.forEach(function (image){
+            
+ 
             cloudinary.upload(image);
             product.images_url.push( cloudinary.url(image));
     
@@ -221,7 +223,7 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
         res.redirect(req.body.currentUrl);
     }
     catch (e) {
-         res.send(e)
+         res.status(400).send({err:e.message})
     }
 })
  
