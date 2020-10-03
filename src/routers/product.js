@@ -223,7 +223,7 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
         res.redirect(req.body.currentUrl);
     }
     catch (e) {
-         res.status(400).send({err:e.message})
+         res.status(400).send({err:"message"})
     }
 })
  
