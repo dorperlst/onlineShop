@@ -434,12 +434,11 @@ form.addEventListener('submit', (e) => {
     fetch('/' + formAction,
         { method: method, body: formdata})
 
-
     .then(function(res) {
         if (res.redirected)  
             window.location.href = res.url;
         else
-            document.getElementById("err").textContent="Action Fail"
+            document.getElementById("err").textContent=res ;
     })
 
 })

@@ -110,6 +110,7 @@ productSchema.pre('remove', async function (next) {
     const fs = require('fs');
     for (i=0 ; i < product.images.length; i++)
     {
+        
         var filePath = 'public/uploads/'+ product.images[i]; 
         try
         {

@@ -14,7 +14,7 @@ cloudinary.config({
             if(!image)
                 return
             cloudinary.uploader.upload(
-                "public/images/"+image , 
+                "public/uploads/"+image , 
                 {public_id: path.parse(image).name}, 
                 function(error, result) { 
                    if ( error) throw error
@@ -23,7 +23,7 @@ cloudinary.config({
         },
       
         url: (image) => {
-          return cloudinary.url(path.parse(image).name);
+          return cloudinary.url(image);
         },
         destroy: (image) => {
             cloudinary.uploader.destroy(path.parse( image ).name, function(result) { console.log(result) });

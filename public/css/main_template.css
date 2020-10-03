@@ -420,6 +420,7 @@ form >.field{   text-align-last: left;  }
 .flex-container >select {
   height: 22px;
   margin-left: 5px;
+  padding-top: 2px;
   background-color: #fff;
   color: #999999;
   border: 1px #DFDFDF solid;
