@@ -6,32 +6,9 @@ const Cat = require('../models/cat')
 const router = new express.Router()
 const ejs = require('ejs'); 
 const admin = require('../middleware/auth').admin;
-const multer =require('multer')
+const multer = require('../multer/multer')
 // const path = require('path');
 const cloudinary = require('../cloudinary/cloudinary')
-
- 
-var storage =   multer.diskStorage({
-    destination: function (req, file, callback) {
-      callback(null, 'public/uploads');
-    },
-    filename: function (req, file, callback) {
-      callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
-    }
-  });
-   
-  const upload = multer({
-    storage: storage ,
-    limits: {
-        fileSize: 10000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-        cb(undefined, true)
-    }
-  })
 
 router.get('/product/:id', async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id}) 
@@ -185,7 +162,7 @@ router.get('/:shop/view/:id', async (req, res) => {
  
 })
 
-router.delete('/products/:id', admin, multer().none(), async (req, res) => {
+router.delete('/products/:id', admin, multer.multer().none(), async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
         if(product)
@@ -197,7 +174,7 @@ router.delete('/products/:id', admin, multer().none(), async (req, res) => {
     }
 })
 
-router.post('/products', admin, upload.array('myFiles', 12) , async  function (req, res, next) {
+router.post('/products', admin,  multer.upload.array('myFiles', 12) , async  function (req, res, next) {
      const product = new Product({
         ...req.body,
         shop: req.shop.name,
@@ -234,7 +211,7 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
     }
 })
 
-router.patch('/products',admin, upload.array('myFiles', 12), async function (req, res, next) {
+router.patch('/products',admin,  multer.upload.array('myFiles', 12), async function (req, res, next) {
    const allowedUpdates = ['name', 'description', 'price','mainimage',"isavailable","promotion"]
     const newimages = req.files.map(x => x.filename)
     const images = JSON.parse( req.body.images)
