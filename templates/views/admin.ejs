@@ -202,15 +202,16 @@
                 </div>
     
              
-    
+                <!-- ../../uploads/ -->
     
     
                 <section id="productsDiv" class="grid-wrapper">
                   <% products.products.forEach(function(product) { %>
+                    
                     <div class="product-card">
                       <div class="product-image">   
-                        <% if ( product.images[0]) { %>
-                          <img alt="" border="0"  src="../../uploads/<%= product.images[0] %>"> 
+                        <% if ( product.images_url[0]) { %>
+                          <img alt="" border="0"  src="<%= product.images_url[0] %>"> 
                         <% } else  { %>
                           <img  src="../../images/default.jpg"> 
                         <% }  %>
@@ -223,11 +224,20 @@
                       </div>
               </div>
                   <% }); %>
-                  </section>
-    
-             
-                
+
+               
+
+              </section>
+              <% if (  products.productInfo && parseInt(products.productInfo.pageNum) > 1) { %>   
+                <div class="center">
+                    <ul id="pager" class="pagination">  </ul>
+                </div>
+                  <div class="center">
+                    <label>showing  <%= products.products.length %>   out of   <%= products.productInfo.totalRows %></label> 
+                  </div>
+              <% }  %>
               </div>
+
               <section id="contacts" style="display: none;" class="flex-item">
                 <div class="center_title_bar">Contacts</div>
     
@@ -256,14 +266,8 @@
                       <input class="prod_details"  onclick = replay(this, "<%= contact._id %>") type="button" value="Send">  
                       <input class="prod_details_red"  onclick = deleteContact(this,"<%= contact._id %>") type="button" value="Delete">  
                     </div>  
-                    
-    
-               
-    
                   </div>
-      
                   <% })  %>
-    
               </section>
               <section id ="orders" style="display: none;" class="main-center">
                 <a class="close" onclick="closePopUp(this)" ><img src="../../images/close.png"> </a>
@@ -325,13 +329,6 @@
         <%- include('../partials/footer.ejs') %> 
             </div>
 
-
- 
-
-       
-
-
-
       <script id="attributes-li-template" type="text/html">
       <li class="flex-item">
         <div class="flex-container nested">
@@ -342,12 +339,7 @@
           </a>
         </div>
 
-
-
-        
         <ul class="flex-item nested">
-
-
           {{#values}}
           <li><div class="flex-container nested"> 
             <input type="text" value="{{.}}" placeholder="value" required="">
@@ -356,14 +348,7 @@
             </a>
            </div>
           </li>
-       {{/values}}
-
-
-
-         
-
-
-
+         {{/values}}
         </ul>
       </li>
 
@@ -389,7 +374,8 @@
               <input disabled type="text" value="{{img}}" placeholder="Select Image.." required="">
               <div class="big-wrap">
                 <div class="big" onmouseover="hover(this,'{{img}}')">
-                  <img class="to-big" style="display:block" src="../../uploads/{{img}}"> 
+                  <!-- ../../uploads/ -->
+                  <img class="to-big" style="display:block" src="{{img}}"> 
                 </div>
               </div>
               <a onclick="selectAttImg(this)"><img src="../../images/select.png"></a>
@@ -402,10 +388,10 @@
       </li>
 
   </script>
-     
+  <!-- ../../uploads/ -->
   <script id="images-li-template" type="text/html">
     <div class=images>
-      <img onclick="selectImage(this,'{{img}}')"   style="display:{{display}}"  src = "../../uploads/{{img}}" > 
+      <img onclick="selectImage(this,'{{img}}')"   style="display:{{display}}"  src = "{{img}}" > 
     </div> 
     <div > 
         <input type='text' disabled value = '{{name}}' placeholder='name' required>
@@ -421,7 +407,7 @@
         <input disabled type="text" value = "{{img}}"  placeholder="Select Image.." required >
         <div class="big-wrap">
           <div class="big" onmouseover="hover(this,{{img}})">
-              <img class="to-big"  style="display:{{display}}"  src = "../../uploads/{{img}}" > 
+              <img class="to-big"  style="display:{{display}}"  src = "{{img}}" > 
           </div>
         </div>
         <a onclick="selectAttImg(this)"><img src="../../images/select.png"></a>
@@ -443,56 +429,19 @@
 
     </div>
   </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-     
+ 
+      
+  
+    
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
  
   <script src="/js/admin.js"></script>
  
-
+<script type="text/javascript">
+        pagination("<%= products.productInfo.pageNum %>")
+      </script>
      
  
       

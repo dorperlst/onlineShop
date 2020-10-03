@@ -4,7 +4,7 @@ const attributeValue= document.getElementById("attValue")
 function changeImg(img, value ){
     if(value)
        attributeValue.innerHTML = value;
-    mainImg.src = "../../uploads/"+img;  
+    mainImg.src = img;  //"../../uploads/"+
 }
  
 function addToOrder(id){

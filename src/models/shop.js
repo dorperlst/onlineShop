@@ -15,6 +15,10 @@ const shopSchema = new mongoose.Schema({
         type: String,
         trim: true
     }],
+      images_url: [{
+        type: String,
+         trim: true
+    }],
     logos: [
         {
         type: String,

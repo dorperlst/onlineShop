@@ -12,13 +12,10 @@
            <article class="main">
             <div class="main-wrapper">
               <article class="main-center">
-                  
                 <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/login"  method="post">
                   <div class="flex-container">
                     <div class="center_title_bar">Login</div>
-   
                   </div>
-                 
                   <div>
                     <label class="contact"><strong>Email:</strong></label>
                     <input tabindex="3" placeholder="email" value ="" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" class="contact_input"  required >
@@ -31,15 +28,11 @@
                     <input class="prod_details" tabindex="8"  type="submit" value="Sign Up">  
                   </div>
                 </form>
-                  
               </article> 
-               
-             
           </div>
-            
           </article>
          
-          <footer class="footer"> <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p></footer>
+          <%- include('../partials/footer.ejs') %> 
         </div>
     </body>
   </html>

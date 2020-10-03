@@ -1,11 +1,9 @@
 {
   "name": "online-shop",
   "version": "1.0.0",
-
   "engines": {
     "node": "8.10.0",
-    "npm": "3.*"
-
+    "npm": "6.*"
   },
   "description": "",
   "main": "index.js",
@@ -21,23 +19,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ejs": "^3.1.5",
-    "hbs": "^4.1.1",
-   
-    "express-session": "^1.17.1",
     "@sendgrid/mail": "^6.3.1",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.23.0",
+    "ejs": "^3.1.5",
     "express": "^4.16.4",
+    "express-session": "^1.17.1",
+    "hbs": "^4.1.1",
     "jsonwebtoken": "^8.4.0",
-    "mongodb": "^3.1.10",
-    "mongoose": "^5.3.16",
+    "mongodb": "^3.6.2",
+    "mongoose": "^5.10.7",
     "multer": "^1.4.1",
     "sharp": "^0.21.1",
     "validator": "^10.9.0"
   },
   "devDependencies": {
     "env-cmd": "^8.0.2",
-    "jest": "^23.6.0",
+    "jest": "^26.4.2",
     "nodemon": "^1.19.4",
     "supertest": "^3.4.1"
   }

@@ -4,7 +4,7 @@
   <html>
     <%- include('../partials/head.ejs') %> 
    
-      <link rel="stylesheet" href="/css/account.css">
+     
       
  
     <body>
@@ -141,9 +141,9 @@ toEnum = function(value) {
                     
                 
              
-              <% } %>
+              <% } %> 
 
-   
+           
                 <div class="center_title_bar">My Account</div>
                  
                 <div class="center_prod_box_big">
@@ -151,7 +151,7 @@ toEnum = function(value) {
                   <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/<%=shopname%>/account"  method="post">
 
                     <div class="form_row">
-                      <img id="mainImg" src="../../users/<%= user.image %>" alt="" border="0">
+                      <img id="mainImg" src="<%= user.image %>" alt="" border="0">
                     </div>
                     <div class="form_row">
                       <label class="contact"><strong> First Name:</strong></label>
@@ -170,9 +170,17 @@ toEnum = function(value) {
                       <input  name="phone" placeholder="phone"  value ="<%=user.phone%>" tabindex="5" type="text" class="contact_input">
                     </div>
                     <div class="form_row">
+                      <input tabindex="7"  type="file" id="productFiles" name="avatar" >
+                    </div>
+
+                    <div class="form_row">
                       <label class="contact"><strong>Address::</strong></label>
                       <textarea  placeholder="Full Address" name="address" tabindex="6" class="contact_textarea"><%=user.address%></textarea>
                     </div>
+
+
+
+
                     <div class="form_row">
                       <input class="prod_details" tabindex="8"  type="submit" value="Submit">  
                     </div>

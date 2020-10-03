@@ -1,33 +1,11 @@
-var express = require('express');
+const express = require('express');
 const Cat = require('../models/cat')
 const Product = require('../models/product')
 const router = new express.Router()
-var multer = require('multer'); 
+const multer = require('../multer/multer')
 const authObj = require('../middleware/auth')
 const admin = authObj.admin
- 
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, 'public/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
-  }
-});
- 
-const upload = multer({
-  storage: storage ,
-  limits: {
-      fileSize: 10000000
-  },
-  fileFilter(req, file, cb) {
-      if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-          return cb(new Error('Please upload an image'))
-      }
-      cb(undefined, true)
-  }
-})
- 
+   
 router.get('/:shop/cats/:id', async (req, res) => {
     const cat = await Cat.findById(req.params.id)
     try {
@@ -68,7 +46,7 @@ router.delete('/cats/:id',admin, async (req, res) => {
     }
 })
 
-router.post('/cats', admin, upload.single('avatar'), async function (req, res, next) {
+router.post('/cats', admin, multer.upload.single('avatar'), async function (req, res, next) {
     const cat = new Cat(req.body)
     cat.owner = req.shop._id
   
@@ -94,7 +72,7 @@ router.post('/cats', admin, upload.single('avatar'), async function (req, res, n
     }
 })
 
-router.patch('/cats', admin, upload.array('myFiles', 12), async function (req, res, next) {
+router.patch('/cats', admin, multer.upload.array('myFiles', 12), async function (req, res, next) {
     images = req.files.map(x => x.filename)
 
     const cat = await Cat.findById(req.body.id)
