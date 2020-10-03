@@ -190,7 +190,7 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
             
  
             // cloudinary.upload(image);
-            product.images_url.push( cloudinary.url(image));
+            // product.images_url.push( cloudinary.url(image));
     
         })
         const removed = old_images.filter(element => !product.images.includes(element));
