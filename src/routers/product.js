@@ -4,33 +4,34 @@ const User = require('../models/user')
 const Order = require('../models/order').Order
 const Cat = require('../models/cat')
 const router = new express.Router()
-const multer = require('multer'); 
 const ejs = require('ejs'); 
 const admin = require('../middleware/auth').admin;
-// const cloudinary = require('../cloudinary/cloudinary')
-
+//const multer =require('../multer/multer')
+const path = require('path');
+const cloudinary = require('../cloudinary/cloudinary')
+const multer = require('multer'); 
 var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, 'public/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
-  }
-});
- 
-const upload = multer({
-  storage: storage ,
-  limits: {
-      fileSize: 10000000
-  },
-  fileFilter(req, file, cb) {
-      if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-          return cb(new Error('Please upload an image'))
-      }
-      cb(undefined, true)
-  }
-})
- 
+    destination: function (req, file, callback) {
+      callback(null, 'public/uploads');
+    },
+    filename: function (req, file, callback) {
+      callback(null, file.originalname.substring(0,file.originalname.lastIndexOf('.')) + '-' + Date.now() + file.originalname.substring(file.originalname.lastIndexOf('.'),file.originalname.length));
+    }
+  });
+   
+  const upload = multer({
+    storage: storage ,
+    limits: {
+        fileSize: 10000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image'))
+        }
+        cb(undefined, true)
+    }
+  })
+
 router.get('/product/:id', async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id}) 
     try {
@@ -83,25 +84,83 @@ router.get('/:shop/view',async (req, res) => {
 router.get('/:shop/products', async (req, res) => {
     try {
         const products = await Product.find();
-        res.send({ products })
+        var cloudinary2 = require('cloudinary').v2;
+
+
+ 
+var con =cloudinary2.config({ 
+    cloud_name: process.env.CLOUDINARY_NAME, 
+    api_key:process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET 
+    });
+
+
+
+        res.send({ con})
     } catch (e) {
-        console.log(e)
-        res.status(500).send(e)
+        
+        res.send(e)
+    }
+})
+router.get('/:shop/products22', async (req, res) => {
+    try {
+        var cloudinary2= require('cloudinary').v2;
+
+        const products = await Product.find();
+        var cloudinary2 = require('cloudinary').v2;
+         
+        cloudinary2.config({ 
+            cloud_name: process.env.CLOUDINARY_NAME, 
+            api_key:process.env.CLOUDINARY_API_KEY, 
+            api_secret: process.env.CLOUDINARY_API_SECRET 
+            });
+            cloudinary2.uploader.upload(
+                "public/images/shop.png" , 
+                {public_id: "shodddp"}, 
+                function(error, result) { 
+                   return error 
+                }
+                );        
+
+ 
+ 
+    //cloudinary.upload("../../images/shop.png");
+
+
+        res.send({ products})
+    } catch (e) {
+       
+        res.send(e)
     }
 })
 
+router.get('/:shop/products2', async (req, res) => {
+    try {
+
+        const products = await Product.find();
+
+
+        
+
+ 
+    cloudinary.upload("shop.png");
+
+
+        res.send({ products})
+    } catch (e) {
+        console.log(e)
+        res.send(e)
+    }
+})
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
     const shop = req.params.shop
     var params = [ {shop: shop }]
-  
-
     var tree=[]
     try {
             const product = await Product.findById(req.params.id);
             params.push( { _id: { $ne:product._id  } } )
             const match = { $and: params } 
-
             const prod = await Product.aggregate(
                 [   
                   { $match : match },
@@ -111,8 +170,7 @@ router.get('/:shop/view/:id', async (req, res) => {
                 ]
              )
 
-             const products = {products:prod}
-
+            const products = {products:prod}
             const categories = await  Cat.getCategoriesTree(req.query.category, shop);
             categories.tree = product.tree
             const orderStat= await orderStats(req.session.token, shop, req.params.id);
@@ -129,7 +187,8 @@ router.get('/:shop/view/:id', async (req, res) => {
 router.delete('/products/:id', admin, multer().none(), async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
-        await product.remove()
+        if(product)
+            await product.remove()
         res.redirect(req.body.currentUrl);
     } catch (e) {
         console.log(e)
@@ -144,12 +203,22 @@ router.post('/products', admin, upload.array('myFiles', 12) , async  function (r
         attributes: JSON.parse(req.body.attributes),
         imgattributes: JSON.parse(req.body.imgattributes),
         tags: JSON.parse(req.body.tags),
-        details: JSON.parse(req.body.details),
-        images : req.files.map(x => x.filename)
+        details: JSON.parse(req.body.details)
+        
     })
-    if((!req.body.mainimage || req.body.mainimage == "") && product.images.length >0)
-        product.mainimage = product.images[0]
+    var images = req.files.map(x => x.filename)
+    product.images= images;
+    product.images_url=   [];
 
+    product.images.forEach(function (image){
+        product.images_url.push( cloudinary.url(image));
+        cloudinary.upload(image);
+    })
+
+    if((!req.body.mainimage || req.body.mainimage == "") && product.images_url.length >0)
+        product.mainimage = product.images_url[0]
+ 
+        
     const cat = await Cat.findOne({ _id: req.body.category}) 
     product.category = cat.name
     product.tree = cat.tree
@@ -177,56 +246,41 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
     product.images = images.concat(newimages) ;
 
 
+   product.images_url = [];
+    
+    newimages.forEach(function (image){
+       // cloudinary.upload(image);
+        product.images_url.push( cloudinary.url(image));
+
+    })
+    const removed = old_images.filter(element => !product.images.includes(element));
+
+    removed.forEach(function (image){
+
+        const index = product.images_url.indexOf(cloudinary.url(image));
+        if (index > -1) {
+            product.images_url.splice(index, 1);
+            product.images.splice(index, 1);
+        }
+
+        cloudinary.destroy(image);
+    })
 
     product.imgattributes = JSON.parse(req.body.imgattributes)
     product.attributes = JSON.parse(req.body.attributes)
     product.details = JSON.parse(req.body.details)
     product.tags = JSON.parse(req.body.tags)
-   
+    if((!req.body.mainimage || req.body.mainimage == "")&& product.images_url.length >0)
+        product.mainimage=product.images_url[0]
     try
     {
- 
-        newimages.forEach(function (image){
-            
- 
-            // cloudinary.upload(image);
-            // product.images_url.push( cloudinary.url(image));
-    
-        })
-        const removed = old_images.filter(element => !product.images.includes(element));
-    
-        removed.forEach(function (image){
-    
-            const index = product.images_url.indexOf(cloudinary.url(image));
-            if (index > -1) {
-                product.images_url.splice(index, 1);
-                product.images.splice(index, 1);
-            }
-            try
-            {
-                var filePath = 'public/uploads/'+ product.images[i]; 
-                const fs = require('fs');
-
-                fs.unlink(filePath, (err) => {
-                    if (!err) 
-                    console.log('successfully deleted');
-                  });
-            }
-            catch(e){
-                
-            }      
-          //  cloudinary.destroy(image);
-        })
-        if((!req.body.mainimage || req.body.mainimage == "")&& product.images_url.length >0)
-            product.mainimage = product.images_url[0]
-        await product.save();
-        res.redirect(req.body.currentUrl);
-    }
+       
+        res.send(req.body.currentUrl);    }
     catch (e) {
-         res.status(400).send({err:"message"})
+         res.send(e)
     }
 })
- 
+  
 module.exports = router
 
  
