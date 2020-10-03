@@ -435,13 +435,21 @@ form.addEventListener('submit', (e) => {
         { method: method, body: formdata})
 
 
-    .then(function(res) {
-        if (res.redirected)  
-            window.location.href = res.url;
-        else
-            document.getElementById("err").textContent=res ;
-    })
-
+        .then(function(res) {
+            if (res.redirected)  
+            {
+                window.location.href = res.url;
+                return null;
+            }
+               
+            else
+                return res.json()
+        })
+    
+        .then((jsonData) => {   
+            if(jsonData)
+                document.getElementById("err").innerHTML = jsonData.err
+        });
 })
  
 form_shop.addEventListener('submit', (e) => {
