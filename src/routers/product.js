@@ -7,7 +7,7 @@ const router = new express.Router()
 const multer = require('multer'); 
 const ejs = require('ejs'); 
 const admin = require('../middleware/auth').admin;
-const cloudinary = require('../cloudinary/cloudinary')
+// const cloudinary = require('../cloudinary/cloudinary')
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -215,7 +215,7 @@ router.patch('/products',admin, upload.array('myFiles', 12), async function (req
             catch(e){
                 
             }      
-            cloudinary.destroy(image);
+          //  cloudinary.destroy(image);
         })
         if((!req.body.mainimage || req.body.mainimage == "")&& product.images_url.length >0)
             product.mainimage = product.images_url[0]
