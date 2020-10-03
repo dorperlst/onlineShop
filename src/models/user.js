@@ -115,7 +115,7 @@ async function getUserByToken(token){
 
     const jwt = require('jsonwebtoken')
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }   )
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token } , { _id: 1 ,tokens :1} )
     if (!user) 
         return null;
     return user

@@ -22,7 +22,6 @@ var formAction=''
 var mainImg = undefined
 var currentAttributeDiv = undefined
 var isAttImg= false
-const  ulPager= document.getElementById("pager");
 
 function closePopUp(parent){
     resetForm()
@@ -108,12 +107,12 @@ function editProduct(id){
         for(var ind in product.tags)
            addTags(product.tags[ind]);
 
-        if(product.images_url.length>0 && mainImg == undefined)
-            mainImg=product.images_url[0]
+        if(product.images.length>0 && mainImg == undefined)
+            mainImg=product.images[0]
         
         for(var ind in product.images)
         {
-            ulimages.appendChild(createListItem(product.images[ind], product.images_url[ind]));
+            ulimages.appendChild(createListItem(product.images[ind], product.images[ind]));
             if(product.images[ind]===mainImg)
                ulimages.lastElementChild.className="flex-item nested mainImg";
         }
@@ -218,7 +217,7 @@ function deleteContact(parent, id){
 }
 
 function createAttListItem(parent){
-    var ul= parent.parentElement.getElementsByTagName("ul")[0]
+    var ul  =parent.parentElement.getElementsByTagName("ul")[0]
     var li = nameListItem('',"value")
     ul.appendChild(li );
     li.getElementsByTagName("input")[0].focus
@@ -262,7 +261,7 @@ function selectImage(parent, img){
         hover(this, img)
         });
 
-    curimg.src = img // '../../uploads/'+
+    curimg.src = '../../uploads/'+ img
     curimg.style="display:block"
     if(mainImg==img)
         mainImg=undefined
@@ -303,10 +302,10 @@ function createImgListItem(name, img){
     li.innerHTML = html
     return li
 }
-//../../uploads/"
+
 function hover(div, img)
 {
-    div.style="  background: url(img) left no-repeat;"
+    div.style="  background: url(../../uploads/"+img+") left no-repeat;"
 }
 
 function editShop(){
@@ -333,8 +332,8 @@ function editShop(){
         form_shop.elements['address'].value = jsonData.address
         form_shop.elements['lat'].value = jsonData.lat
         form_shop.elements['long'].value = jsonData.long
-        for(var ind in jsonData.images_url)
-            ulimages.appendChild(createListItem(jsonData.images[ind], jsonData.images_url[ind]));
+        for(var ind in jsonData.images)
+            ulimages.appendChild(createListItem(jsonData.images[ind], jsonData.images[ind]));
     });
 }
 
@@ -434,25 +433,13 @@ form.addEventListener('submit', (e) => {
     fetch('/' + formAction,
         { method: method, body: formdata})
 
+
     .then(function(res) {
         if (res.redirected)  
-        {
             window.location.href = res.url;
-            return null;
-        }
-           
         else
-            return res.json()
+            document.getElementById("err").textContent="Action Fail"
     })
-
-    .then((jsonData) => {   
-        if(jsonData)
-            document.getElementById("err").innerHTML = jsonData.err
-    });
-
-
-
-    
 
 })
  
@@ -585,42 +572,4 @@ function addImgAttributes(name, values){
     const template = document.querySelector('#img-attributes-li-template').innerHTML
     const html = Mustache.render(template, { name: name, values: values })
     ulImgAttributes.insertAdjacentHTML('beforeend', html)
-}
-
-
-function replaceUrlParam(paramName, paramValue){
-    var url = window.location.href;
-
-    if (paramValue == null) {
-        paramValue = '';
-    }
-
-    var pattern = new RegExp('\\b('+paramName+'=).*?(&|#|$)');
-    if (url.search(pattern)>=0) {
-        return url.replace(pattern,'$1' + paramValue + '$2');
-    }
-
-    url = url.replace(/[?#]$/,'');
-    return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue;
-}
-
-function pagination(pager, current){
-    page = parseInt(pager)
-    if ( page < 2)
-        return
-    
-    createPagerLink(page+1, "<")
-    for (i=0;i< page ;i++)  
-        createPagerLink(i+1, i+1)
-    createPagerLink(page+1, ">")
-}
-
-function createPagerLink(ind, value){
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-    a.innerHTML= value ;
-    var href = replaceUrlParam('pageNum', ind) ; 
-    a.href= href;
-    li.appendChild(a);
-    ulPager.appendChild(li);
 }

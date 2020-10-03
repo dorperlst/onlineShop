@@ -9,10 +9,10 @@ const auth = authObj.auth
 const admin = authObj.admin
 
 const router = new express.Router()
-const multer = require('../multer/multer')
+var multer = require('multer'); 
 
 
-router.post('/orders', multer.multer().none(), auth , async function (req, res, next) {
+router.post('/orders', multer().none(), auth , async function (req, res, next) {
  
     var product = await Product.findById(req.body.product)
     if (!product)
@@ -153,7 +153,7 @@ router.get('/ordersAdmin',admin, async (req, res) => {
     }
 })
 
-router.patch('/:shop/orderStatus', auth, multer.multer().none(), async (req, res) => {
+router.patch('/:shop/orderStatus', auth, multer().none(), async (req, res) => {
     try {
         const stats= await Order.orderStats(req.user._id, req.params.shop )
         
@@ -175,7 +175,7 @@ router.patch('/:shop/orderStatus', auth, multer.multer().none(), async (req, res
 })
 
  
-router.patch('/orders', auth, multer.multer().none(), async (req, res) => {
+router.patch('/orders', auth, multer().none(), async (req, res) => {
     try {
         var products = JSON.parse(req.body.products)
         var order = await  Order.findById( req.body.id)
@@ -208,7 +208,7 @@ router.delete('/orders/:id', admin, async (req, res) => {
         res.status(500).send()
     }
 })
-router.delete('/ordersProduct', auth, multer.multer().none(), async (req, res) => {
+router.delete('/ordersProduct', auth, multer().none(), async (req, res) => {
     try {
         const orderId = req.body.orderId
         const ord = await Order.findById(orderId)

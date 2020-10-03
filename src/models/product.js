@@ -36,13 +36,9 @@ const productSchema = new mongoose.Schema({
     mainimage: {
         type: String,
         trim: true
-    },
+    }
+    ,
     images: [{
-        type: String,
-        required: true,
-        trim: true
-    }],
-    images_url: [{
         type: String,
         required: true,
         trim: true
@@ -110,12 +106,11 @@ productSchema.pre('remove', async function (next) {
     const fs = require('fs');
     for (i=0 ; i < product.images.length; i++)
     {
-        
-        var filePath = 'public/uploads/'+ product.images[i]; 
+        var filePath = 'public/uploads/'+product.images[i]; 
         try
         {
             fs.unlink(filePath, (err) => {
-                if (!err) 
+                if (err) throw err;
                 console.log('successfully deleted');
               });
         }
@@ -222,6 +217,8 @@ productSchema.statics.getProducts = async (query, shop, promo=false) => {
     if(promo)
           promotion =  await Product.find(promotionMatch).sort(sort).limit( promtionLimit)
    
+
+//totalRows, pager
     return {products, promotion, product_att, productInfo}
 }
 
