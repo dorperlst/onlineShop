@@ -55,38 +55,49 @@ toEnum = function(value) {
                   
             
                       <% order.products.forEach(function(product) { %>
+                        
                         <div class=" <%= line %> order-details">
-                          <span> <%= product.product.name %> </span><span> <label class="calc"><%= product.product.price %> </label></span>  
-                          <span  >  
-                        </div>
-                        <div class=" <%= line %> order-details">
+                          <span> <%= product.product.name %> </span>
+                          <span> <label class="calc"><%= product.product.price %> </label></span>  
+                          <%if( order.status == 0){ %> 
+                     
 
-                          <span  > 
-                            <%if( order.status == 0){ %> 
-                              <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
-                              <%} %> 
-                              <label class="calc"><%= product.count %></label>  
-                            <%if( order.status == 0){ %> 
-                              <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
-                              <%} %> 
-                          </span> 
+                            <span> 
+                               <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
+                               <label class="calc"><%= product.count %></label>  
+                               <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
+                           </span> 
 
+                           <span class="calc" > <%= product.count * product.product.price %></span>
+                            <span>
+                              <button class="btn-danger" onclick="deleteProduct('<%= product.product._id %>', '<%= order._id %>')" type="button">&nbsp </button>
+                              <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" type="button">&nbsp    </button>
+                            </span>
+                            
+                            <%} else {%> 
+                              <span> 
+                                 <label class="calc"><%= product.count %></label>  
+                             </span> 
+ 
                             <span class="calc" > <%= product.count * product.product.price %></span>
-                            <%if( order.status == 0) {%> 
-                              <span>
-                                <button class="btn-danger" onclick="deleteProduct('<%= product.product._id %>', '<%= order._id %>')" type="button">&nbsp </button>
-                                <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" type="button">&nbsp    </button>
-                              </span>
-                            <%}%> 
+                           
+                              <%} %> 
+
+                         
                         </div>
+                        <hr>
                           <%  line =line=='odd'? 'even-order' :'odd' %> 
-
+                          <div class="total order-details">
+                            <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
+                               <span id="order_total" ><%= orderStat.total %> </span>  
+                                <span id ="updateMsg">&nbsp;</span>    
+                          </div>
+                      
+                          <div class="order-details">
+                            <label id ="orderMsg"></label>       
+                          </div>
                         <% }); %> 
-
-
-
                         <%if( order.status == 0) {%> 
-
                           <div class="paypal">
 
                             <div id="paypal-button-container"></div>
@@ -122,20 +133,6 @@ toEnum = function(value) {
                             </script>
   
                           </div>
-
-
-
-
-
-
-                          <div class="total order-details">
-                            <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
-                               <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
-                          </div>
-                        
-                          <div class="order-details">
-                            <label id ="orderMsg"></label>       
-                          </div>
       
                         <%} else {%> 
                           <div class="total order-details">
@@ -146,23 +143,7 @@ toEnum = function(value) {
 
 
 
-                      <%if( order.status == 0) {%> 
                       
-                        <div class="total order-details">
-                          <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
-                             <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
-                        </div>
-                       
-                        <div class="order-details">
-                          <label id ="orderMsg"></label>       
-                        </div>
-    
-                      <%} else {%> 
-                        <div class="total order-details">
-                          <span>&nbsp;</span><span>&nbsp; </span>  <span ><%= order.totalItems %> </span>  
-                             <span  ><%= order.total %> </span> 
-                        </div>
-                      <%} %> 
 
                     <% }); %>
                     
