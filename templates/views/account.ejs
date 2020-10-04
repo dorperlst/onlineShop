@@ -59,38 +59,42 @@ toEnum = function(value) {
                           <span> <%= product.product.name %> </span><span> <label class="calc"><%= product.product.price %> </label></span>  
                           <span  >  
                         </div>
-                        <span  > 
-                          <%if( order.status == 0){ %> 
-                            <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
-                            <%} %> 
-                            <label class="calc"><%= product.count %></label>  
-                          <%if( order.status == 0){ %> 
-                            <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
-                            <%} %> 
+                        <div class=" <%= line %> order-details"></div>
 
+                          <span  > 
+                            <%if( order.status == 0){ %> 
+                              <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
+                              <%} %> 
+                              <label class="calc"><%= product.count %></label>  
+                            <%if( order.status == 0){ %> 
+                              <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
+                              <%} %> 
                           </span> 
 
-                          <span class="calc" > <%= product.count * product.product.price %></span>
-                          <%if( order.status == 0) {%> 
-                            
-                           <span>
-
-                              <button class="btn-danger" onclick="deleteProduct('<%= product.product._id %>', '<%= order._id %>')" type="button">&nbsp </button>
-                             
-                              <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" type="button">&nbsp    </button>
-                                  
-
-                          
-                           </span>
-                         <%}%> 
-                          
-                         <%  line =line=='odd'? 'even-order' :'odd' %> 
+                            <span class="calc" > <%= product.count * product.product.price %></span>
+                            <%if( order.status == 0) {%> 
+                              <span>
+                                <button class="btn-danger" onclick="deleteProduct('<%= product.product._id %>', '<%= order._id %>')" type="button">&nbsp </button>
+                                <button onclick="updateOrder('<%= order._id %>')" class="btn-confirm" type="button">&nbsp    </button>
+                              </span>
+                            <%}%> 
+                        </div>
+                          <%  line =line=='odd'? 'even-order' :'odd' %> 
 
                         <% }); %> 
 
 
 
                         <%if( order.status == 0) {%> 
+
+                          <script src="https://www.paypal.com/sdk/js?client-id=<%=sb%>&currency=USD"></script>
+                      
+                  
+
+
+
+
+
 
 
 
