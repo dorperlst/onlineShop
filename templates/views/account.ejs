@@ -4,10 +4,6 @@
   <html>
     <%- include('../partials/head.ejs') %> 
    
-     
-      
- 
-    <body>
 <body>
 
   <%
@@ -27,7 +23,67 @@ toEnum = function(value) {
   <div class="wrapper static_wrapper">
       <%- include('../partials/header.ejs') %>
       
-   
+        <article class="main">
+          <div class="main-wrapper">
+            <article class="main-center">
+              <div class="center_content_fix">
+
+              <% if(user.orders.length > 0) { %>
+                <div class="center_title_bar">Orders</div>
+          
+           
+                <div class="center_title_bar">My Account</div>
+                 
+                <div class="center_prod_box_big">
+                  
+                  <form  class="contact_form" id= "form" enctype="multipart/form-data" action="/<%=shopname%>/account"  method="post">
+
+                    <div class="form_row">
+                      <img id="mainImg" src="<%= user.image %>" alt="" border="0">
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong> First Name:</strong></label>
+                      <input type="text" placeholder="first name" value ="<%=user.name%>" name="name" tabindex="1"  class="contact_input" required >
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong> Last Name:</strong></label>
+                      <input type="text" placeholder="last name"  value ="<%=user.last%>" name="last" tabindex="2"  class="contact_input" required >
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong>Email:</strong></label>
+                      <input tabindex="3" placeholder="email" value ="<%=user.email%>" name="email" type="text" class="contact_input" >
+                    </div>
+                    <div class="form_row">
+                      <label class="contact"><strong>Phone:</strong></label>
+                      <input  name="phone" placeholder="phone"  value ="<%=user.phone%>" tabindex="5" type="text" class="contact_input">
+                    </div>
+                    <div class="form_row">
+                      <input tabindex="7"  type="file" id="productFiles" name="avatar" >
+                    </div>
+
+                    <div class="form_row">
+                      <label class="contact"><strong>Address::</strong></label>
+                      <textarea  placeholder="Full Address" name="address" tabindex="6" class="contact_textarea"><%=user.address%></textarea>
+                    </div>
+
+
+
+
+                    <div class="form_row">
+                      <input class="prod_details" tabindex="8"  type="submit" value="Submit">  
+                    </div>
+                  </form>
+                </div>
+             
+          
+          
+          </article>
+            <%- include('../partials/aside.ejs') %>
+            <%- include('../partials/login_aside.ejs') %>
+          </div>
+
+
+      </article> 
       <%- include('../partials/footer.ejs') %> 
       </div>
   </div>

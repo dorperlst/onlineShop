@@ -15,7 +15,7 @@
   
   .main-wrapper {
     flex-flow: row;
-    height: 100%;
+    /* height: 100%; */
   }
 
   .static_wrapper {
@@ -32,8 +32,8 @@
   }
     
   .header {
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
   }
   .aside {font-family: Arial, Helvetica, sans-serif;padding: 10px;/* padding-right: 5px; */flex: 1 0 0;}
     
@@ -53,12 +53,13 @@
   .aside-2 { order: 3; }
   .footer  {
     display: flex;
+    width: 100%;
     justify-content: center;
     flex: 1 0 0;
     order: 3;
     }
     .footer > label{
-     padding: 5;
+     padding: 5px;
     }
      
  
@@ -128,7 +129,7 @@
   @media only screen and (max-width: 600px) {
       .main-nav {
           font-size: 0.5em;
-          padding: 0;
+          padding: 0px;
       }
   }
   
@@ -139,16 +140,16 @@
   
   ul {
      list-style: none;
-    margin: 0;
-    padding: 0;
-    font-weight: 500;
+     margin: 0;
+     padding: 0px;
+     font-weight: 500;
      }
    
      
 * :focus {
     outline:none;
   }
-
+html {height: 100%;}
 body {
     height: 100%;
     margin: 0;
@@ -527,7 +528,11 @@ input.contact_input{
   max-width: 50%;
 }
 
-.header-src {margin: auto;padding-top: 40;padding-left: 55;}
+.header-src {
+  margin: auto;
+  padding-top: 40px ;
+  padding-left: 55px;
+}
 
 #ul-attributes{  padding-top: 15px;}
 
@@ -625,7 +630,7 @@ output:after {
 .range { position: relative; margin: 50px;   }
 
 
-.multi-range, .multi-range * { box-sizing: border-box; padding: 0; margin: 0; }
+.multi-range, .multi-range * { box-sizing: border-box; padding: 0px; margin: 0px; }
 .multi-range {
     position: relative;
     width: 160px;
@@ -693,7 +698,7 @@ output:after {
 
 ul.pagination {
   display: inline-block;
-  padding: 0;
+  padding: 0px;
   margin: 0;
 }
 
@@ -728,4 +733,51 @@ div.center {display: flex;justify-content: center;}
   font-size: 14px;
   align-items: center;
   width: 100%;
+}
+
+.order-container{
+  padding: 20px;
+  border: 1px solid #ddd;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-color: #ddd 1px solid;
+  /* margin-bottom: 20px; */
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  }
+  
+  .even-order{background-color: #0489ab0f;}
+  .paypal{ width:200px;  margin: auto; }
+
+
+.btn-danger:focus {
+  outline:none;
+}
+
+.btn-danger{
+  height: 20px;
+  width: 20px;
+  border: none;
+  background: url(../../images/delete-small.png) no-repeat center;
+ }
+
+ .btn-confirm{
+  height: 20px;
+  width: 20px;
+  border: none;
+  background: url(../../images/confirm.png) no-repeat center;
+ }
+
+
+.logo-img{
+  height:100px;
+}
+ 
+
+.center_content_fix
+{
+  max-width: 1000px;
+  min-width: 600px;
+  margin: auto;
 }
