@@ -82,7 +82,22 @@ toEnum = function(value) {
                         </div>
                       <% }); %>
                      
-                      
+                      <%if( order.status == 0) {%> 
+                        <div class="total order-details">
+                          <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
+                             <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
+                        </div>
+                       
+                        <div class="order-details">
+                          <label id ="orderMsg"></label>       
+                        </div>
+    
+                      <%} else {%> 
+                        <div class="total order-details">
+                          <span>&nbsp;</span><span>&nbsp; </span>  <span ><%= order.totalItems %> </span>  
+                             <span  ><%= order.total %> </span> 
+                        </div>
+                      <%} %> 
 
                     <% }); %>
                     
@@ -90,13 +105,7 @@ toEnum = function(value) {
              
               <% } %> 
 
-              <% if (locals.errors) { %>
-                <ul>
-                    <% Object.values(errors).forEach(function(error){ %>
-                          <li><%= error.msg %></li>
-                    <% }); %>
-                </ul>
-                <% } %>
+           
                 <div class="center_title_bar">My Account</div>
                  
                 <div class="center_prod_box_big">
