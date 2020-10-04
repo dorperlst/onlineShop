@@ -55,8 +55,10 @@ toEnum = function(value) {
                   
             
                       <% order.products.forEach(function(product) { %>
-                        
-                        yyy44yyy -       <%=product %> 
+                        <div class=" <%= line %> order-details">
+                          <span> <%= product.product.name %> </span><span> <label class="calc"><%= product.product.price %> </label></span>  
+                          <span  >  
+                        </div>
 
                         <% }); %> 
                      
