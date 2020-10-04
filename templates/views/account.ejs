@@ -3,7 +3,7 @@
   <!DOCTYPE html>
   <html>
     <%- include('../partials/head.ejs') %> 
-   
+    <script src="/js/account.js"></script>
 <body>
 
   <%
@@ -85,9 +85,33 @@ toEnum = function(value) {
                          <%}%> 
                           
                          <%  line =line=='odd'? 'even-order' :'odd' %> 
-                         
+
                         <% }); %> 
-                     
+
+
+
+                        <%if( order.status == 0) {%> 
+
+
+
+                          <div class="total order-details">
+                            <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
+                               <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
+                          </div>
+                        
+                          <div class="order-details">
+                            <label id ="orderMsg"></label>       
+                          </div>
+      
+                        <%} else {%> 
+                          <div class="total order-details">
+                            <span>&nbsp;</span><span>&nbsp; </span>  <span ><%= order.totalItems %> </span>  
+                               <span  ><%= order.total %> </span> 
+                          </div>
+                        <%} %> 
+
+
+
                       <%if( order.status == 0) {%> 
                       
                         <div class="total order-details">
@@ -173,7 +197,7 @@ toEnum = function(value) {
 </html>
 
 
-<script src="/js/account.js"></script>
+
 
 
 
