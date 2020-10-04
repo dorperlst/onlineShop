@@ -36,21 +36,30 @@ router.get('/:shop/account', auth, async (req, res) => {
     const categories = await  Cat.getCategoriesTree(req.query.category, shop) 
     const orderStat=  await Order.orderStats(req.user._id, shop )
     const urlBase=`/${shop}/view`
-    await req.user.populate({
-        path: 'orders',
-        match:{shop: shop},
-        options: {sort:{"status": 1}},
-        populate: {
-            path: 'products.product  name',
-            model: 'Product'
-          } 
-    }).execPopulate()
-    res.render('account', {
-        title: 'Account', categories:categories, url_base: urlBase, sb: process.env.CLIENT_ID,
-         shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
-        user: req.user
- 
-    })
+  
+    try
+    {
+        await req.user.populate({
+            path: 'orders',
+            match:{shop: shop},
+            options: {sort:{"status": 1}},
+            populate: {
+                path: 'products.product  name',
+                model: 'Product'
+              } 
+        }).execPopulate()
+        res.render('account', {
+            title: 'Account', categories:categories, url_base: urlBase, sb: process.env.CLIENT_ID,
+             shopname: req.params.shop, username: req.user.name ,orderStat: orderStat,
+            user: req.user
+     
+        })
+    }
+    catch(ex)
+    {
+        res.send(ex.message)
+    }
+   
 })
 
 async function getShopOrders(shop, status)   {
