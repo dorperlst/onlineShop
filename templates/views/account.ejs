@@ -54,8 +54,11 @@ toEnum = function(value) {
                     
                   
             
-                      yyy33yyy -       <%=order %> 
+                      <% order.products.forEach(function(product) { %>
+                        
+                        yyy44yyy -       <%=product %> 
 
+                        <% }); %> 
                      
                       <%if( order.status == 0) {%> 
                         yyyyyy -       <%=order.status %> 
