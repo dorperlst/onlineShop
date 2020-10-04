@@ -59,11 +59,20 @@ toEnum = function(value) {
                           <span> <%= product.product.name %> </span><span> <label class="calc"><%= product.product.price %> </label></span>  
                           <span  >  
                         </div>
+                        <span  > 
+                          <%if( order.status == 0){ %> 
+                            <button onclick = "addCount(-1, this, '<%= product.product._id %>')" class="btn" type="button">-</button>
+                            <%} %> 
+                            <label class="calc"><%= product.count %></label>  
+                          <%if( order.status == 0){ %> 
+                            <button onclick = "addCount(1, this, '<%= product.product._id %>')" class="btn" type="button"> + </button>
+                            <%} %> 
 
+                          </span> 
                         <% }); %> 
                      
                       <%if( order.status == 0) {%> 
-                        yyyyyy -       <%=order.status %> 
+                      
                         <div class="total order-details">
                           <span>&nbsp;</span><span>&nbsp; </span>  <span id="order_total_items" ><%= orderStat.totalItems %> </span>  
                              <span id="order_total" ><%= orderStat.total %> </span>   <span id ="updateMsg">&nbsp;</span>    
