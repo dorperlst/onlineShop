@@ -7,7 +7,6 @@ const router = new express.Router()
 const ejs = require('ejs'); 
 const admin = require('../middleware/auth').admin;
 const multer = require('../multer/multer')
-// const path = require('path');
 const cloudinary = require('../cloudinary/cloudinary')
 
 router.get('/product/:id', async (req, res) => {

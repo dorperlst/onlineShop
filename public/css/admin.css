@@ -126,17 +126,6 @@ a {
     text-decoration: none;
 }
 
-.order-details >span {
-    width: 250px;
-    overflow: hidden;
-}
-.order-details {
-    height: 40px;
-    display: flex;
-    font-size: 14px;
-    align-items: center;
-    width: 100%;
-}
 
 .prod_details_red {
     border: none;
