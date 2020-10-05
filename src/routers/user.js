@@ -214,16 +214,22 @@ router.post('/users', multer.upload.single('avatar'), async function (req, res, 
 
     try {
         await user.save()
+        var href = req.body.currentUrl;
+        if(!href)
+        {
+            const shop =await Shop.findOne();
+            var shopName = shop.name
+            href=`/${shopName}/view`
+         }
         sendWelcomeEmail(user.email, user.name)
         redirectSession(req, res, user, href)
     } catch (e) {
-        console.log(e)
-        res.status(400).send(e)
+       
+        res.redirect("/signup");
     }
 
 })
- // todo confermation mail
- 
+  
 
 router.post('/login', multer.multer().none(), async (req, res) => {
     try {
