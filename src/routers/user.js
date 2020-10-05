@@ -225,8 +225,7 @@ router.post('/users', multer.upload.single('avatar'), async function (req, res, 
         redirectSession(req, res, user, href)
     } catch (e) {
        
-        res.redirect("/signup");
-    }
+        res.status(400).send(e)    }
 
 })
   
