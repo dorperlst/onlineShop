@@ -60,10 +60,10 @@
     <a class="attribute">
       Price
       </a>
-  <div class='multi-range' data-lbound='10' data-ubound='50'>
+  <div class='multi-range' data-lbound='<%=products.productInfo.min%>' data-ubound='<%=products.productInfo.max%>'>
       <hr />
       <input type='range' 
-            min='10' max='45' step='5' value='10' 
+            min='<%=products.productInfo.min%>' max='<%=products.productInfo.max%>' step='5' value='10' 
             oninput= oninputLbound(this) ;
       />
       <input type='range' 
