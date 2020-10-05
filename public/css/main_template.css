@@ -442,7 +442,7 @@ form >.field{   text-align-last: left;  }
   width:575px;
   text-align: center;
   padding:0 0 0 10px;
-  margin: 0 auto 20 auto;
+  margin: 0px auto 20px auto;
   line-height:31px;
   font-size:12px;
   background-color: aquamarine;
@@ -781,3 +781,7 @@ div.center {display: flex;justify-content: center;}
   min-width: 600px;
   margin: auto;
 }
+footer > img {
+  height:35px
+}
+ 

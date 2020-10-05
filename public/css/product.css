@@ -62,9 +62,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .btn-cart{
-    width: 145;
+    width: 145px;
     cursor: pointer;
-    height: 38;
+    height: 38px;
     background: url(../../images/btn-cart.png) no-repeat center;
     border-radius: 5px;
     -moz-border-radius: 5px;
