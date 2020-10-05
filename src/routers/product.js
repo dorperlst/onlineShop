@@ -58,77 +58,6 @@ router.get('/:shop/view',async (req, res) => {
         res.status(500).send(e.message)     }
 })
  
-router.get('/:shop/products', async (req, res) => {
-    try {
-        const products = await Product.find();
-        var cloudinary2 = require('cloudinary').v2;
-
-
- 
-var con =cloudinary2.config({ 
-    cloud_name: process.env.CLOUDINARY_NAME, 
-    api_key:process.env.CLOUDINARY_API_KEY, 
-    api_secret: process.env.CLOUDINARY_API_SECRET 
-    });
-
-
-
-        res.send({ con})
-    } catch (e) {
-        
-        res.send(e)
-    }
-})
-router.get('/:shop/products22', async (req, res) => {
-    try {
-        var cloudinary2= require('cloudinary').v2;
-
-        const products = await Product.find();
-        var cloudinary2 = require('cloudinary').v2;
-         
-        cloudinary2.config({ 
-            cloud_name: process.env.CLOUDINARY_NAME, 
-            api_key:process.env.CLOUDINARY_API_KEY, 
-            api_secret: process.env.CLOUDINARY_API_SECRET 
-            });
-            cloudinary2.uploader.upload(
-                "public/images/shop.png" , 
-                {public_id: "shodddp"}, 
-                function(error, result) { 
-                   return error 
-                }
-                );        
-
- 
- 
-    //cloudinary.upload("../../images/shop.png");
-
-
-        res.send({ products})
-    } catch (e) {
-       
-        res.send(e)
-    }
-})
-
-router.get('/:shop/products2', async (req, res) => {
-    try {
-
-        const products = await Product.find();
-
-
-        
-
- 
-    cloudinary.upload("shop.png");
-
-
-        res.send({ products})
-    } catch (e) {
-        console.log(e)
-        res.send(e)
-    }
-})
 router.get('/:shop/view/:id', async (req, res) => {
     var userName = req.session.name != undefined ? req.session.name : 'Guest'
     const shop = req.params.shop
@@ -141,7 +70,7 @@ router.get('/:shop/view/:id', async (req, res) => {
             const prod = await Product.aggregate(
                 [   
                   { $match : match },
-                  { $project: {price:1, name:1, commonToBoth:{ $size:{ $setIntersection: [ "$tags", product.tags ] }} } },
+                  { $project: {price:1,mainimage:1,images_url:1, images:1, name:1, commonToBoth:{ $size:{ $setIntersection: [ "$tags", product.tags ] }} } },
                   { "$sort": { "commonToBoth": -1  } },
 
                 ]
@@ -233,13 +162,18 @@ router.patch('/products',admin,  multer.upload.array('myFiles', 12), async funct
 
     removed.forEach(function (image){
 
-        const index = product.images_url.indexOf(cloudinary.url(image));
-        if (index > -1) {
-            product.images_url.splice(index, 1);
-            product.images.splice(index, 1);
-        }
+        try
+        {
+            const index = product.images.indexOf(image);
+            if (index > -1) {
+                product.images_url.splice(index, 1);
+                product.images.splice(index, 1);
+            }
+            cloudinary.destroy(image);
 
-        cloudinary.destroy(image);
+    
+        }
+        catch(e){}
     })
 
     product.imgattributes = JSON.parse(req.body.imgattributes)
