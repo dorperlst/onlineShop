@@ -28,7 +28,7 @@ app.use(orderRouter)
 app.use(categoryRouter)
 
 app.get('/signup', async (req, res) => {
-    res.render('/signup', {
+    res.render('signup', {
         title: 'signup'
     })
 })
